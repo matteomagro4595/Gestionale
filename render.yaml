@@ -23,7 +23,7 @@ services:
       - key: ACCESS_TOKEN_EXPIRE_MINUTES
         value: 30
       - key: FRONTEND_URL
-        value: https://gestionale-frontend-k8s7.onrender.com
+        value: https://gestionale-frontend-aa3q.onrender.com
     healthCheckPath: /api/health
 
   # Frontend React

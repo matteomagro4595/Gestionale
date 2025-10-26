@@ -43,6 +43,13 @@ const GroupDetail = () => {
       setUsers(usersRes.data);
     } catch (error) {
       console.error('Error loading data:', error);
+
+      // Check if group was deleted or doesn't exist
+      if (error.response && (error.response.status === 404 || error.response.status === 403)) {
+        alert('Questo gruppo non esiste più o è stato eliminato.');
+        navigate('/expenses');
+        return;
+      }
     } finally {
       setLoading(false);
     }
@@ -111,6 +118,18 @@ const GroupDetail = () => {
     }
   };
 
+  const handleDeleteGroup = async () => {
+    if (window.confirm('Sei sicuro di voler eliminare questo gruppo? Questa azione eliminerà anche tutte le spese associate e non può essere annullata.')) {
+      try {
+        await expensesAPI.deleteGroup(groupId);
+        navigate('/expenses');
+      } catch (error) {
+        console.error('Error deleting group:', error);
+        alert('Errore durante l\'eliminazione del gruppo');
+      }
+    }
+  };
+
   const getUserById = (userId) => {
     return users.find(u => u.id === userId);
   };
@@ -135,8 +154,19 @@ const GroupDetail = () => {
       </button>
 
       <div style={{ marginTop: '1rem', marginBottom: '2rem' }}>
-        <h1>{group?.nome}</h1>
-        <p style={{ color: '#7f8c8d' }}>{group?.descrizione}</p>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+          <h1 style={{ margin: 0 }}>{group?.nome}</h1>
+          {isCreator && (
+            <button
+              className="btn btn-danger"
+              onClick={handleDeleteGroup}
+              style={{ marginLeft: '1rem' }}
+            >
+              Elimina Gruppo
+            </button>
+          )}
+        </div>
+        <p style={{ color: '#7f8c8d', marginTop: '0.5rem' }}>{group?.descrizione}</p>
       </div>
 
       {/* Members Section */}

@@ -27,6 +27,13 @@ const GymCardDetail = () => {
       setCard(response.data);
     } catch (error) {
       console.error('Error loading card:', error);
+
+      // Check if card was deleted or doesn't exist
+      if (error.response && (error.response.status === 404 || error.response.status === 403)) {
+        alert('Questa scheda non esiste più o è stata eliminata.');
+        navigate('/gym');
+        return;
+      }
     } finally {
       setLoading(false);
     }
@@ -66,6 +73,18 @@ const GymCardDetail = () => {
     }
   };
 
+  const handleDeleteCard = async () => {
+    if (window.confirm('Sei sicuro di voler eliminare questa scheda? Questa azione eliminerà anche tutti gli esercizi associati e non può essere annullata.')) {
+      try {
+        await gymAPI.deleteCard(cardId);
+        navigate('/gym');
+      } catch (error) {
+        console.error('Error deleting card:', error);
+        alert('Errore durante l\'eliminazione della scheda');
+      }
+    }
+  };
+
   if (loading) return <div className="spinner"></div>;
 
   return (
@@ -79,8 +98,17 @@ const GymCardDetail = () => {
       </button>
 
       <div style={{ marginTop: '1rem', marginBottom: '2rem' }}>
-        <h1>{card?.nome}</h1>
-        <p style={{ color: '#7f8c8d' }}>{card?.descrizione}</p>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
+          <h1 style={{ margin: 0 }}>{card?.nome}</h1>
+          <button
+            className="btn btn-danger"
+            onClick={handleDeleteCard}
+            style={{ marginLeft: '1rem' }}
+          >
+            Elimina Scheda
+          </button>
+        </div>
+        <p style={{ color: '#7f8c8d', marginTop: '0.5rem' }}>{card?.descrizione}</p>
       </div>
 
       <div className="card">

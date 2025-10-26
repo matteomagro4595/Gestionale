@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from typing import List
 from database import get_db
 from models.user import User
@@ -63,12 +63,62 @@ def get_group(
             detail="Non sei membro di questo gruppo"
         )
 
-    group = db.query(ExpenseGroup).filter(ExpenseGroup.id == group_id).first()
+    group = db.query(ExpenseGroup)\
+        .options(joinedload(ExpenseGroup.creator))\
+        .options(joinedload(ExpenseGroup.members).joinedload(GroupMember.user))\
+        .filter(ExpenseGroup.id == group_id)\
+        .first()
+
     if not group:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Gruppo non trovato"
         )
+
+    # Build member_users list
+    member_users = [member.user for member in group.members if member.user]
+    group.member_users = member_users
+
+    return group
+
+@router.get("/groups/shared/{share_token}", response_model=GroupSchema)
+def get_group_by_token(
+    share_token: str,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    group = db.query(ExpenseGroup)\
+        .options(joinedload(ExpenseGroup.creator))\
+        .options(joinedload(ExpenseGroup.members).joinedload(GroupMember.user))\
+        .filter(ExpenseGroup.share_token == share_token)\
+        .first()
+
+    if not group:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Gruppo non trovato"
+        )
+
+    # Add user to group if not already a member
+    if group.creator_id != current_user.id:
+        existing_member = db.query(GroupMember).filter(
+            GroupMember.group_id == group.id,
+            GroupMember.user_id == current_user.id
+        ).first()
+
+        if not existing_member:
+            member = GroupMember(
+                group_id=group.id,
+                user_id=current_user.id
+            )
+            db.add(member)
+            db.commit()
+            db.refresh(group)
+
+    # Build member_users list
+    member_users = [member.user for member in group.members if member.user]
+    group.member_users = member_users
+
     return group
 
 @router.put("/groups/{group_id}", response_model=GroupSchema)

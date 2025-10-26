@@ -3,6 +3,16 @@ from datetime import datetime
 from typing import Optional, List
 from models.expense import ExpenseTag, DivisionType
 
+# User schema for nested relationships
+class UserBasic(BaseModel):
+    id: int
+    email: str
+    nome: str
+    cognome: str
+
+    class Config:
+        from_attributes = True
+
 # Expense Participants
 class ExpenseParticipantBase(BaseModel):
     user_id: int
@@ -68,6 +78,7 @@ class GroupMember(GroupMemberBase):
     id: int
     group_id: int
     joined_at: datetime
+    user: Optional[UserBasic] = None
 
     class Config:
         from_attributes = True
@@ -75,9 +86,12 @@ class GroupMember(GroupMemberBase):
 class Group(GroupBase):
     id: int
     creator_id: int
+    share_token: str
     created_at: datetime
     updated_at: Optional[datetime] = None
+    creator: Optional[UserBasic] = None
     members: List[GroupMember] = []
+    member_users: List[UserBasic] = []
     expenses: List[Expense] = []
 
     class Config:

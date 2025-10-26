@@ -3,6 +3,7 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from database import Base
 import enum
+import secrets
 
 class ExpenseTag(str, enum.Enum):
     BOLLETTA = "Bolletta"
@@ -23,10 +24,12 @@ class ExpenseGroup(Base):
     nome = Column(String, nullable=False)
     descrizione = Column(String)
     creator_id = Column(Integer, ForeignKey("users.id"))
+    share_token = Column(String, unique=True, index=True, default=lambda: secrets.token_urlsafe(32))
     created_at = Column(DateTime(timezone=True), server_default=func.now())
     updated_at = Column(DateTime(timezone=True), onupdate=func.now())
 
     # Relationships
+    creator = relationship("User")
     members = relationship("GroupMember", back_populates="group", cascade="all, delete-orphan")
     expenses = relationship("Expense", back_populates="group", cascade="all, delete-orphan")
 

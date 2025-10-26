@@ -13,8 +13,6 @@ const GroupDetail = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showExpenseModal, setShowExpenseModal] = useState(false);
-  const [showMemberModal, setShowMemberModal] = useState(false);
-  const [selectedUserId, setSelectedUserId] = useState('');
   const [newExpense, setNewExpense] = useState({
     descrizione: '',
     importo: '',
@@ -88,24 +86,6 @@ const GroupDetail = () => {
     }
   };
 
-  const handleAddMember = async (e) => {
-    e.preventDefault();
-    if (!selectedUserId) {
-      alert('Seleziona un utente');
-      return;
-    }
-
-    try {
-      await expensesAPI.addMember(groupId, { user_id: parseInt(selectedUserId) });
-      setSelectedUserId('');
-      setShowMemberModal(false);
-      loadData();
-    } catch (error) {
-      console.error('Error adding member:', error);
-      alert(error.response?.data?.detail || 'Errore durante l\'aggiunta del membro');
-    }
-  };
-
   const handleRemoveMember = async (userId) => {
     if (window.confirm('Sei sicuro di voler rimuovere questo membro dal gruppo?')) {
       try {
@@ -130,13 +110,31 @@ const GroupDetail = () => {
     }
   };
 
-  const getUserById = (userId) => {
-    return users.find(u => u.id === userId);
+  const copyShareToken = () => {
+    navigator.clipboard.writeText(group.share_token);
+    alert('Token copiato negli appunti!');
   };
 
-  const getAvailableUsers = () => {
-    const memberIds = group?.members?.map(m => m.user_id) || [];
-    return users.filter(u => !memberIds.includes(u.id));
+  const shareViaWhatsApp = () => {
+    const appUrl = window.location.origin;
+    const shareUrl = `${appUrl}/expenses/groups/join/${group.share_token}`;
+    const message = `Ciao! Ti invito a unirti al gruppo di spese "${group.nome}".
+
+Clicca sul link per accedere: ${shareUrl}`;
+
+    const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
+  };
+
+  const copyShareLink = () => {
+    const appUrl = window.location.origin;
+    const shareUrl = `${appUrl}/expenses/groups/join/${group.share_token}`;
+    navigator.clipboard.writeText(shareUrl);
+    alert('Link copiato negli appunti!');
+  };
+
+  const getUserById = (userId) => {
+    return users.find(u => u.id === userId);
   };
 
   const isCreator = group?.creator_id === currentUser?.id;
@@ -167,76 +165,142 @@ const GroupDetail = () => {
           )}
         </div>
         <p style={{ color: '#7f8c8d', marginTop: '0.5rem' }}>{group?.descrizione}</p>
+
+        {/* Share Section */}
+        <div style={{ marginTop: '1.5rem' }}>
+          <h3 style={{ fontSize: '1rem', marginBottom: '0.75rem' }}>Condividi Gruppo</h3>
+          <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+            <button className="btn btn-secondary" onClick={copyShareToken}>
+              Copia Token
+            </button>
+            <button className="btn btn-secondary" onClick={copyShareLink}>
+              Copia Link
+            </button>
+            <button
+              className="btn btn-primary"
+              onClick={shareViaWhatsApp}
+              style={{ backgroundColor: '#25D366', borderColor: '#25D366' }}
+            >
+              📱 Condividi su WhatsApp
+            </button>
+          </div>
+          <p style={{ marginTop: '0.5rem', fontSize: '0.85rem', color: '#7f8c8d' }}>
+            Token: {group?.share_token}
+          </p>
+        </div>
       </div>
 
       {/* Members Section */}
       <div className="card" style={{ marginBottom: '1rem' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '1rem' }}>
-          <h2>Membri del Gruppo</h2>
-          <button className="btn btn-success" onClick={() => setShowMemberModal(true)}>
-            Aggiungi Membro
-          </button>
-        </div>
+        <h2 style={{ marginBottom: '1rem' }}>Membri del Gruppo</h2>
 
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(250px, 1fr))', gap: '1rem' }}>
-          {group?.members?.map((member) => {
-            const user = getUserById(member.user_id);
-            return (
-              <div
-                key={member.id}
-                style={{
-                  padding: '1rem',
-                  background: '#f8f9fa',
-                  borderRadius: '8px',
+        {/* Creator */}
+        {group?.creator && (
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            marginBottom: '0.75rem',
+            padding: '0.75rem',
+            backgroundColor: '#fff',
+            borderRadius: '8px',
+            border: '1px solid #e9ecef'
+          }}>
+            <div style={{
+              width: '40px',
+              height: '40px',
+              borderRadius: '50%',
+              backgroundColor: '#3498db',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              color: '#fff',
+              fontWeight: 'bold',
+              marginRight: '0.75rem'
+            }}>
+              {group.creator.nome.charAt(0)}{group.creator.cognome.charAt(0)}
+            </div>
+            <div style={{ flex: 1 }}>
+              <div style={{ fontWeight: '500', color: '#2c3e50' }}>
+                {group.creator.nome} {group.creator.cognome}
+                <span style={{
+                  marginLeft: '0.5rem',
+                  fontSize: '0.85rem',
+                  color: '#3498db',
+                  fontWeight: 'bold'
+                }}>
+                  👑 Creatore
+                </span>
+              </div>
+              <div style={{ fontSize: '0.85rem', color: '#7f8c8d' }}>
+                {group.creator.email}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Other Members */}
+        {group?.member_users && group.member_users.filter(u => u.id !== group.creator_id).length > 0 && (
+          <>
+            {group.member_users.filter(u => u.id !== group.creator_id).map((user) => (
+              <div key={user.id} style={{
+                display: 'flex',
+                alignItems: 'center',
+                marginBottom: '0.75rem',
+                padding: '0.75rem',
+                backgroundColor: '#fff',
+                borderRadius: '8px',
+                border: '1px solid #e9ecef'
+              }}>
+                <div style={{
+                  width: '40px',
+                  height: '40px',
+                  borderRadius: '50%',
+                  backgroundColor: '#95a5a6',
                   display: 'flex',
-                  justifyContent: 'space-between',
                   alignItems: 'center',
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                  <div
-                    style={{
-                      width: '40px',
-                      height: '40px',
-                      borderRadius: '50%',
-                      background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      color: 'white',
-                      fontWeight: 'bold',
-                      fontSize: '0.9rem',
-                    }}
-                  >
-                    {user?.nome?.charAt(0)}{user?.cognome?.charAt(0)}
+                  justifyContent: 'center',
+                  color: '#fff',
+                  fontWeight: 'bold',
+                  marginRight: '0.75rem'
+                }}>
+                  {user.nome.charAt(0)}{user.cognome.charAt(0)}
+                </div>
+                <div style={{ flex: 1 }}>
+                  <div style={{ fontWeight: '500', color: '#2c3e50' }}>
+                    {user.nome} {user.cognome}
                   </div>
-                  <div>
-                    <div style={{ fontWeight: '600', color: '#2c3e50' }}>
-                      {user?.nome} {user?.cognome}
-                      {member.user_id === group.creator_id && (
-                        <span style={{ marginLeft: '0.5rem', fontSize: '0.8rem', color: '#f39c12' }}>
-                          👑 Creatore
-                        </span>
-                      )}
-                    </div>
-                    <div style={{ fontSize: '0.85rem', color: '#7f8c8d' }}>
-                      {user?.email}
-                    </div>
+                  <div style={{ fontSize: '0.85rem', color: '#7f8c8d' }}>
+                    {user.email}
                   </div>
                 </div>
-                {isCreator && member.user_id !== group.creator_id && (
+                {isCreator && (
                   <button
                     className="btn btn-danger"
-                    onClick={() => handleRemoveMember(member.user_id)}
+                    onClick={() => handleRemoveMember(user.id)}
                     style={{ padding: '0.25rem 0.75rem', fontSize: '0.85rem' }}
                   >
                     Rimuovi
                   </button>
                 )}
               </div>
-            );
-          })}
-        </div>
+            ))}
+          </>
+        )}
+
+        {/* No other members message */}
+        {(!group?.member_users || group.member_users.filter(u => u.id !== group.creator_id).length === 0) && (
+          <div style={{
+            fontSize: '0.9rem',
+            color: '#7f8c8d',
+            fontStyle: 'italic',
+            textAlign: 'center',
+            padding: '1rem',
+            backgroundColor: '#f8f9fa',
+            borderRadius: '8px'
+          }}>
+            Nessun altro membro. Condividi il gruppo per collaborare!
+          </div>
+        )}
       </div>
 
       {/* Balances */}
@@ -318,59 +382,6 @@ const GroupDetail = () => {
           </table>
         )}
       </div>
-
-      {/* Member Modal */}
-      {showMemberModal && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: 'rgba(0,0,0,0.5)',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          zIndex: 1000,
-        }}>
-          <div className="card" style={{ width: '500px', maxWidth: '90%' }}>
-            <h2>Aggiungi Membro al Gruppo</h2>
-            <form onSubmit={handleAddMember}>
-              <div className="form-group">
-                <label>Seleziona Utente</label>
-                <select
-                  value={selectedUserId}
-                  onChange={(e) => setSelectedUserId(e.target.value)}
-                  required
-                >
-                  <option value="">Seleziona un utente...</option>
-                  {getAvailableUsers().map((user) => (
-                    <option key={user.id} value={user.id}>
-                      {user.nome} {user.cognome} ({user.email})
-                    </option>
-                  ))}
-                </select>
-                {getAvailableUsers().length === 0 && (
-                  <p style={{ marginTop: '0.5rem', color: '#7f8c8d', fontSize: '0.9rem' }}>
-                    Tutti gli utenti sono già membri del gruppo
-                  </p>
-                )}
-              </div>
-              <div style={{ display: 'flex', gap: '1rem' }}>
-                <button type="submit" className="btn btn-success" disabled={!selectedUserId}>
-                  Aggiungi
-                </button>
-                <button type="button" className="btn btn-secondary" onClick={() => {
-                  setShowMemberModal(false);
-                  setSelectedUserId('');
-                }}>
-                  Annulla
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
 
       {/* Expense Modal */}
       {showExpenseModal && (

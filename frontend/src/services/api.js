@@ -42,6 +42,7 @@ export const expensesAPI = {
   createGroup: (data) => api.post('/api/expenses/groups', data),
   getGroups: () => api.get('/api/expenses/groups'),
   getGroup: (id) => api.get(`/api/expenses/groups/${id}`),
+  getGroupByToken: (token) => api.get(`/api/expenses/groups/shared/${token}`),
   updateGroup: (id, data) => api.put(`/api/expenses/groups/${id}`, data),
   deleteGroup: (id) => api.delete(`/api/expenses/groups/${id}`),
 

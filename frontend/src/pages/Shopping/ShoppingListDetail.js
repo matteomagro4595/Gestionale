@@ -91,6 +91,13 @@ Clicca sul link per accedere: ${shareUrl}`;
     window.open(whatsappUrl, '_blank');
   };
 
+  const copyShareLink = () => {
+    const appUrl = window.location.origin;
+    const shareUrl = `${appUrl}/shopping/join/${list.share_token}`;
+    navigator.clipboard.writeText(shareUrl);
+    alert('Link copiato negli appunti!');
+  };
+
   const handleDeleteList = async () => {
     if (window.confirm('Sei sicuro di voler eliminare questa lista? Questa azione non può essere annullata.')) {
       try {
@@ -131,7 +138,10 @@ Clicca sul link per accedere: ${shareUrl}`;
         <div style={{ marginTop: '1rem' }}>
           <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
             <button className="btn btn-secondary" onClick={copyShareToken}>
-              Copia Token di Condivisione
+              Copia Token
+            </button>
+            <button className="btn btn-secondary" onClick={copyShareLink}>
+              Copia Link
             </button>
             <button
               className="btn btn-primary"

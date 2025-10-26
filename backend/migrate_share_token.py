@@ -4,10 +4,12 @@ Run this script once to update the database schema
 """
 
 import secrets
+import sys
 from sqlalchemy import text
 from database import engine, SessionLocal
 
 def migrate():
+    """Run database migration for share_token"""
     print("Starting migration: Adding share_token to expense_groups...")
 
     db = SessionLocal()
@@ -22,7 +24,7 @@ def migrate():
 
         if result.fetchone():
             print("✓ share_token column already exists. Skipping migration.")
-            return
+            return True
 
         # Add share_token column
         print("Adding share_token column...")
@@ -63,13 +65,15 @@ def migrate():
         db.commit()
 
         print("✓ Migration completed successfully!")
+        return True
 
     except Exception as e:
         print(f"✗ Migration failed: {e}")
         db.rollback()
-        raise
+        return False
     finally:
         db.close()
 
 if __name__ == "__main__":
-    migrate()
+    success = migrate()
+    sys.exit(0 if success else 1)

@@ -7,6 +7,13 @@ from routers import auth, users, expenses, shopping_lists, gym
 # Create database tables
 Base.metadata.create_all(bind=engine)
 
+# Run migrations
+try:
+    from migrate_share_token import migrate
+    migrate()
+except Exception as e:
+    print(f"Migration warning: {e}")
+
 app = FastAPI(
     title="Gestionale API",
     description="API per la gestione di spese, liste della spesa e schede palestra",

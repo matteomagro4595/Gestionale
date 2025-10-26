@@ -51,13 +51,44 @@ code {
   transition: background-color 0.3s;
 }
 
-.btn-primary {
+/* Primary Button - Default Theme (Purple) */
+body.theme-default .btn-primary {
+  background-color: #667eea;
+  color: white;
+}
+
+body.theme-default .btn-primary:hover {
+  background-color: #5568d3;
+}
+
+/* Primary Button - Shopping Theme (Green) */
+body.theme-shopping .btn-primary {
+  background-color: #27ae60;
+  color: white;
+}
+
+body.theme-shopping .btn-primary:hover {
+  background-color: #229954;
+}
+
+/* Primary Button - Expenses Theme (Blue) */
+body.theme-expenses .btn-primary {
   background-color: #3498db;
   color: white;
 }
 
-.btn-primary:hover {
+body.theme-expenses .btn-primary:hover {
   background-color: #2980b9;
+}
+
+/* Primary Button - Gym Theme (Red) */
+body.theme-gym .btn-primary {
+  background-color: #e74c3c;
+  color: white;
+}
+
+body.theme-gym .btn-primary:hover {
+  background-color: #c0392b;
 }
 
 .btn-secondary {
@@ -113,7 +144,30 @@ code {
 .form-group select:focus,
 .form-group textarea:focus {
   outline: none;
+}
+
+body.theme-default .form-group input:focus,
+body.theme-default .form-group select:focus,
+body.theme-default .form-group textarea:focus {
+  border-color: #667eea;
+}
+
+body.theme-shopping .form-group input:focus,
+body.theme-shopping .form-group select:focus,
+body.theme-shopping .form-group textarea:focus {
+  border-color: #27ae60;
+}
+
+body.theme-expenses .form-group input:focus,
+body.theme-expenses .form-group select:focus,
+body.theme-expenses .form-group textarea:focus {
   border-color: #3498db;
+}
+
+body.theme-gym .form-group input:focus,
+body.theme-gym .form-group select:focus,
+body.theme-gym .form-group textarea:focus {
+  border-color: #e74c3c;
 }
 
 /* Grid */
@@ -175,12 +229,27 @@ table tr:hover {
 /* Loading spinner */
 .spinner {
   border: 4px solid #f3f3f3;
-  border-top: 4px solid #3498db;
   border-radius: 50%;
   width: 40px;
   height: 40px;
   animation: spin 1s linear infinite;
   margin: 2rem auto;
+}
+
+body.theme-default .spinner {
+  border-top: 4px solid #667eea;
+}
+
+body.theme-shopping .spinner {
+  border-top: 4px solid #27ae60;
+}
+
+body.theme-expenses .spinner {
+  border-top: 4px solid #3498db;
+}
+
+body.theme-gym .spinner {
+  border-top: 4px solid #e74c3c;
 }
 
 @keyframes spin {

@@ -1,12 +1,13 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, joinedload
 from typing import List
 from database import get_db
 from models.user import User
 from models.shopping import ShoppingList, ShoppingItem, SharedList
 from schemas.shopping import (
     ShoppingListCreate, ShoppingListUpdate, ShoppingList as ShoppingListSchema,
-    ShoppingItemCreate, ShoppingItemUpdate, ShoppingItem as ShoppingItemSchema
+    ShoppingItemCreate, ShoppingItemUpdate, ShoppingItem as ShoppingItemSchema,
+    UserBasic
 )
 from auth import get_current_user
 
@@ -54,7 +55,12 @@ def get_shopping_list(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    shopping_list = db.query(ShoppingList).filter(ShoppingList.id == list_id).first()
+    shopping_list = db.query(ShoppingList)\
+        .options(joinedload(ShoppingList.owner))\
+        .options(joinedload(ShoppingList.shared_with).joinedload(SharedList.user))\
+        .filter(ShoppingList.id == list_id)\
+        .first()
+
     if not shopping_list:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -73,6 +79,10 @@ def get_shopping_list(
                 detail="Non hai accesso a questa lista"
             )
 
+    # Build shared_users list from shared_with relationship
+    shared_users = [shared_item.user for shared_item in shopping_list.shared_with]
+    shopping_list.shared_users = shared_users
+
     return shopping_list
 
 @router.get("/shared/{share_token}", response_model=ShoppingListSchema)
@@ -81,9 +91,11 @@ def get_shopping_list_by_token(
     db: Session = Depends(get_db),
     current_user: User = Depends(get_current_user)
 ):
-    shopping_list = db.query(ShoppingList).filter(
-        ShoppingList.share_token == share_token
-    ).first()
+    shopping_list = db.query(ShoppingList)\
+        .options(joinedload(ShoppingList.owner))\
+        .options(joinedload(ShoppingList.shared_with).joinedload(SharedList.user))\
+        .filter(ShoppingList.share_token == share_token)\
+        .first()
 
     if not shopping_list:
         raise HTTPException(
@@ -105,6 +117,11 @@ def get_shopping_list_by_token(
             )
             db.add(shared)
             db.commit()
+            db.refresh(shopping_list)
+
+    # Build shared_users list from shared_with relationship
+    shared_users = [shared_item.user for shared_item in shopping_list.shared_with]
+    shopping_list.shared_users = shared_users
 
     return shopping_list
 

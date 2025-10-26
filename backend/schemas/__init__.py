@@ -8,7 +8,8 @@ from .expense import (
 )
 from .shopping import (
     ShoppingListCreate, ShoppingListUpdate, ShoppingList,
-    ShoppingItemCreate, ShoppingItemUpdate, ShoppingItem
+    ShoppingItemCreate, ShoppingItemUpdate, ShoppingItem,
+    UserBasic
 )
 from .gym import (
     WorkoutCardCreate, WorkoutCardUpdate, WorkoutCard,
@@ -24,6 +25,7 @@ __all__ = [
     "Balance",
     "ShoppingListCreate", "ShoppingListUpdate", "ShoppingList",
     "ShoppingItemCreate", "ShoppingItemUpdate", "ShoppingItem",
+    "UserBasic",
     "WorkoutCardCreate", "WorkoutCardUpdate", "WorkoutCard",
     "ExerciseCreate", "ExerciseUpdate", "Exercise"
 ]

@@ -35,8 +35,19 @@ const Navbar = () => {
     return location.pathname === path || location.pathname.startsWith(path + '/');
   };
 
+  const getThemeClass = () => {
+    if (location.pathname.startsWith('/shopping')) {
+      return 'theme-shopping';
+    } else if (location.pathname.startsWith('/expenses')) {
+      return 'theme-expenses';
+    } else if (location.pathname.startsWith('/gym')) {
+      return 'theme-gym';
+    }
+    return 'theme-default';
+  };
+
   return (
-    <nav className="navbar-modern">
+    <nav className={`navbar-modern ${getThemeClass()}`}>
       <div className="navbar-container">
         {/* Logo */}
         <div className="navbar-brand">

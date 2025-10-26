@@ -1,5 +1,5 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import React, { useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 
 // Pages
@@ -10,11 +10,35 @@ import ExpensesDashboard from './pages/Expenses/Dashboard';
 import GroupDetail from './pages/Expenses/GroupDetail';
 import ShoppingLists from './pages/Shopping/ShoppingLists';
 import ShoppingListDetail from './pages/Shopping/ShoppingListDetail';
+import ShoppingListJoin from './pages/Shopping/ShoppingListJoin';
 import GymCards from './pages/Gym/GymCards';
 import GymCardDetail from './pages/Gym/GymCardDetail';
 
 // Components
 import Navbar from './components/Navbar';
+
+// Theme Manager Component
+const ThemeManager = () => {
+  const location = useLocation();
+
+  useEffect(() => {
+    // Remove all theme classes
+    document.body.classList.remove('theme-default', 'theme-shopping', 'theme-expenses', 'theme-gym');
+
+    // Add appropriate theme class
+    if (location.pathname.startsWith('/shopping')) {
+      document.body.classList.add('theme-shopping');
+    } else if (location.pathname.startsWith('/expenses')) {
+      document.body.classList.add('theme-expenses');
+    } else if (location.pathname.startsWith('/gym')) {
+      document.body.classList.add('theme-gym');
+    } else {
+      document.body.classList.add('theme-default');
+    }
+  }, [location.pathname]);
+
+  return null;
+};
 
 // Protected Route Component
 const ProtectedRoute = ({ children }) => {
@@ -49,6 +73,7 @@ const PublicRoute = ({ children }) => {
 function AppContent() {
   return (
     <Router>
+      <ThemeManager />
       <div className="App">
         <Routes>
           {/* Public routes */}
@@ -103,6 +128,15 @@ function AppContent() {
               <ProtectedRoute>
                 <Navbar />
                 <ShoppingLists />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/shopping/join/:token"
+            element={
+              <ProtectedRoute>
+                <Navbar />
+                <ShoppingListJoin />
               </ProtectedRoute>
             }
           />

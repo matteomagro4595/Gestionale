@@ -1,11 +1,28 @@
 /* Modern Navbar Styles */
 .navbar-modern {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
   position: sticky;
   top: 0;
   z-index: 1000;
   backdrop-filter: blur(10px);
+  transition: background 0.3s ease;
+}
+
+/* Theme Colors */
+.navbar-modern.theme-default {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.navbar-modern.theme-shopping {
+  background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+}
+
+.navbar-modern.theme-expenses {
+  background: linear-gradient(135deg, #2980b9 0%, #3498db 100%);
+}
+
+.navbar-modern.theme-gym {
+  background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%);
 }
 
 .navbar-container {
@@ -218,12 +235,39 @@
 
 .user-profile-item {
   padding: 1.25rem;
-  background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
   cursor: default;
 }
 
-.user-profile-item:hover {
+.theme-default .user-profile-item {
   background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+}
+
+.theme-default .user-profile-item:hover {
+  background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+}
+
+.theme-shopping .user-profile-item {
+  background: linear-gradient(135deg, #27ae6015 0%, #2ecc7115 100%);
+}
+
+.theme-shopping .user-profile-item:hover {
+  background: linear-gradient(135deg, #27ae6015 0%, #2ecc7115 100%);
+}
+
+.theme-expenses .user-profile-item {
+  background: linear-gradient(135deg, #2980b915 0%, #3498db15 100%);
+}
+
+.theme-expenses .user-profile-item:hover {
+  background: linear-gradient(135deg, #2980b915 0%, #3498db15 100%);
+}
+
+.theme-gym .user-profile-item {
+  background: linear-gradient(135deg, #c0392b15 0%, #e74c3c15 100%);
+}
+
+.theme-gym .user-profile-item:hover {
+  background: linear-gradient(135deg, #c0392b15 0%, #e74c3c15 100%);
 }
 
 .user-avatar-large {

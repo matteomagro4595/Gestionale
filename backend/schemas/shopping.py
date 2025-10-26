@@ -1,6 +1,19 @@
 from pydantic import BaseModel
 from datetime import datetime
-from typing import Optional, List
+from typing import Optional, List, TYPE_CHECKING
+
+if TYPE_CHECKING:
+    from .user import User
+
+# User schema for nested relationships
+class UserBasic(BaseModel):
+    id: int
+    email: str
+    nome: str
+    cognome: str
+
+    class Config:
+        from_attributes = True
 
 # Shopping Items
 class ShoppingItemBase(BaseModel):
@@ -38,6 +51,14 @@ class ShoppingListCreate(ShoppingListBase):
 class ShoppingListUpdate(BaseModel):
     nome: Optional[str] = None
 
+# Shared List Member
+class SharedListMember(BaseModel):
+    user: UserBasic
+    shared_at: datetime
+
+    class Config:
+        from_attributes = True
+
 class ShoppingList(ShoppingListBase):
     id: int
     owner_id: int
@@ -45,6 +66,8 @@ class ShoppingList(ShoppingListBase):
     created_at: datetime
     updated_at: Optional[datetime] = None
     items: List[ShoppingItem] = []
+    owner: Optional[UserBasic] = None
+    shared_users: List[UserBasic] = []
 
     class Config:
         from_attributes = True

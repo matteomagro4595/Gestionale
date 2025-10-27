@@ -110,6 +110,21 @@ Clicca sul link per accedere: ${shareUrl}`;
     }
   };
 
+  // Sort items: unchecked first (alphabetically), then checked (alphabetically)
+  const getSortedItems = () => {
+    if (!list?.items) return [];
+
+    return [...list.items].sort((a, b) => {
+      // First sort by completion status (unchecked items first)
+      if (a.completato !== b.completato) {
+        return a.completato ? 1 : -1;
+      }
+
+      // Then sort alphabetically by name (case-insensitive)
+      return a.nome.toLowerCase().localeCompare(b.nome.toLowerCase());
+    });
+  };
+
   if (loading) return <div className="spinner"></div>;
 
   return (
@@ -276,7 +291,7 @@ Clicca sul link per accedere: ${shareUrl}`;
         </div>
 
         <div style={{ marginTop: '1rem' }}>
-          {list?.items?.map((item) => (
+          {getSortedItems().map((item) => (
             <div
               key={item.id}
               style={{

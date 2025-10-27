@@ -71,51 +71,64 @@ const Dashboard = () => {
 
       {/* Filters and Sort Section */}
       <div className="card" style={{ marginTop: '1.5rem' }}>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
-          <div className="form-group" style={{ marginBottom: 0 }}>
-            <label>Cerca gruppo</label>
-            <input
-              type="text"
-              placeholder="Nome o descrizione..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
+        <div style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start', flexWrap: 'wrap' }}>
+          {/* Filters - Left side */}
+          <div style={{ flex: '1 1 auto', minWidth: '280px' }}>
+            <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+              <div className="form-group" style={{ marginBottom: 0, flex: '1 1 200px' }}>
+                <label>Cerca gruppo</label>
+                <input
+                  type="text"
+                  placeholder="Nome o descrizione..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                />
+              </div>
+              <div className="form-group" style={{ marginBottom: 0, flex: '0 1 150px' }}>
+                <label>Min. membri</label>
+                <input
+                  type="number"
+                  placeholder="es. 2"
+                  min="1"
+                  value={minMembers}
+                  onChange={(e) => setMinMembers(e.target.value)}
+                />
+              </div>
+            </div>
+            {(searchTerm || minMembers) && (
+              <div style={{ marginTop: '0.75rem', display: 'flex', gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
+                <span style={{ fontSize: '0.85rem', color: '#7f8c8d' }}>
+                  {filteredAndSortedGroups.length} di {groups.length} gruppi
+                </span>
+                <button
+                  className="btn btn-secondary"
+                  onClick={() => {
+                    setSearchTerm('');
+                    setMinMembers('');
+                  }}
+                  style={{ padding: '0.2rem 0.6rem', fontSize: '0.8rem' }}
+                >
+                  Cancella
+                </button>
+              </div>
+            )}
           </div>
-          <div className="form-group" style={{ marginBottom: 0 }}>
-            <label>Ordina per nome</label>
-            <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}>
-              <option value="asc">A-Z (Crescente)</option>
-              <option value="desc">Z-A (Decrescente)</option>
-            </select>
-          </div>
-          <div className="form-group" style={{ marginBottom: 0 }}>
-            <label>Minimo membri</label>
-            <input
-              type="number"
-              placeholder="es. 2"
-              min="1"
-              value={minMembers}
-              onChange={(e) => setMinMembers(e.target.value)}
-            />
+
+          {/* Sort - Right side */}
+          <div style={{ flex: '0 0 auto', minWidth: '180px' }}>
+            <div className="form-group" style={{ marginBottom: 0 }}>
+              <label style={{ fontSize: '0.9rem' }}>Ordina</label>
+              <select
+                value={sortOrder}
+                onChange={(e) => setSortOrder(e.target.value)}
+                style={{ fontSize: '0.9rem' }}
+              >
+                <option value="asc">A-Z</option>
+                <option value="desc">Z-A</option>
+              </select>
+            </div>
           </div>
         </div>
-        {(searchTerm || minMembers) && (
-          <div style={{ marginTop: '1rem', display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
-            <span style={{ fontSize: '0.9rem', color: '#7f8c8d' }}>
-              Trovati {filteredAndSortedGroups.length} di {groups.length} gruppi
-            </span>
-            <button
-              className="btn btn-secondary"
-              onClick={() => {
-                setSearchTerm('');
-                setMinMembers('');
-              }}
-              style={{ padding: '0.25rem 0.75rem', fontSize: '0.85rem' }}
-            >
-              Cancella filtri
-            </button>
-          </div>
-        )}
       </div>
 
       {filteredAndSortedGroups.length === 0 ? (

@@ -54,6 +54,7 @@ export const expensesAPI = {
   createExpense: (data) => api.post('/api/expenses/expenses', data),
   getExpenses: (groupId) => api.get('/api/expenses/expenses', { params: { group_id: groupId } }),
   getExpense: (id) => api.get(`/api/expenses/expenses/${id}`),
+  updateExpense: (id, data) => api.put(`/api/expenses/expenses/${id}`, data),
   deleteExpense: (id) => api.delete(`/api/expenses/expenses/${id}`),
 
   // Balances

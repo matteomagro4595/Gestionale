@@ -13,6 +13,7 @@ const GroupDetail = () => {
   const [users, setUsers] = useState([]);
   const [loading, setLoading] = useState(true);
   const [showExpenseModal, setShowExpenseModal] = useState(false);
+  const [editingExpense, setEditingExpense] = useState(null);
   const [newExpense, setNewExpense] = useState({
     descrizione: '',
     importo: '',
@@ -83,6 +84,40 @@ const GroupDetail = () => {
     } catch (error) {
       console.error('Error creating expense:', error);
       alert('Errore durante la creazione della spesa');
+    }
+  };
+
+  const handleUpdateExpense = async (e) => {
+    e.preventDefault();
+    try {
+      await expensesAPI.updateExpense(editingExpense.id, {
+        descrizione: editingExpense.descrizione,
+        importo: parseFloat(editingExpense.importo),
+        tag: editingExpense.tag,
+        division_type: editingExpense.division_type,
+      });
+
+      setEditingExpense(null);
+      loadData();
+    } catch (error) {
+      console.error('Error updating expense:', error);
+      alert('Errore durante la modifica della spesa');
+    }
+  };
+
+  const handleEditExpense = (expense) => {
+    setEditingExpense({ ...expense });
+  };
+
+  const handleDeleteExpense = async (expenseId) => {
+    if (window.confirm('Sei sicuro di voler eliminare questa spesa?')) {
+      try {
+        await expensesAPI.deleteExpense(expenseId);
+        loadData();
+      } catch (error) {
+        console.error('Error deleting expense:', error);
+        alert('Errore durante l\'eliminazione della spesa');
+      }
     }
   };
 
@@ -351,11 +386,13 @@ Clicca sul link per accedere: ${shareUrl}`;
                 <th>Tag</th>
                 <th>Pagato da</th>
                 <th>Divisione</th>
+                <th>Azioni</th>
               </tr>
             </thead>
             <tbody>
               {expenses.map((expense) => {
                 const paidByUser = getUserById(expense.paid_by_id);
+                const canEdit = expense.paid_by_id === currentUser?.id;
                 return (
                   <tr key={expense.id}>
                     <td>{expense.descrizione || '-'}</td>
@@ -375,6 +412,26 @@ Clicca sul link per accedere: ${shareUrl}`;
                     </td>
                     <td>{paidByUser?.nome} {paidByUser?.cognome}</td>
                     <td>{expense.division_type}</td>
+                    <td>
+                      {canEdit && (
+                        <div style={{ display: 'flex', gap: '0.5rem' }}>
+                          <button
+                            className="btn btn-secondary"
+                            onClick={() => handleEditExpense(expense)}
+                            style={{ padding: '0.25rem 0.75rem', fontSize: '0.85rem' }}
+                          >
+                            Modifica
+                          </button>
+                          <button
+                            className="btn btn-danger"
+                            onClick={() => handleDeleteExpense(expense.id)}
+                            style={{ padding: '0.25rem 0.75rem', fontSize: '0.85rem' }}
+                          >
+                            Elimina
+                          </button>
+                        </div>
+                      )}
+                    </td>
                   </tr>
                 );
               })}
@@ -465,6 +522,78 @@ Clicca sul link per accedere: ${shareUrl}`;
               <div style={{ display: 'flex', gap: '1rem' }}>
                 <button type="submit" className="btn btn-primary">Crea</button>
                 <button type="button" className="btn btn-secondary" onClick={() => setShowExpenseModal(false)}>
+                  Annulla
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Expense Modal */}
+      {editingExpense && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0,0,0,0.5)',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          zIndex: 1000,
+        }}>
+          <div className="card" style={{ width: '500px', maxWidth: '90%' }}>
+            <h2>Modifica Spesa</h2>
+            <form onSubmit={handleUpdateExpense}>
+              <div className="form-group">
+                <label>Descrizione</label>
+                <input
+                  type="text"
+                  value={editingExpense.descrizione}
+                  onChange={(e) => setEditingExpense({ ...editingExpense, descrizione: e.target.value })}
+                  placeholder="es. Cena al ristorante"
+                />
+              </div>
+              <div className="form-group">
+                <label>Importo *</label>
+                <input
+                  type="number"
+                  step="0.01"
+                  value={editingExpense.importo}
+                  onChange={(e) => setEditingExpense({ ...editingExpense, importo: e.target.value })}
+                  placeholder="es. 50.00"
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Tag</label>
+                <select
+                  value={editingExpense.tag}
+                  onChange={(e) => setEditingExpense({ ...editingExpense, tag: e.target.value })}
+                >
+                  <option value="Bolletta">Bolletta</option>
+                  <option value="Spesa">Spesa</option>
+                  <option value="Pranzo/Cena">Pranzo/Cena</option>
+                  <option value="Cani">Cani</option>
+                  <option value="Altro">Altro</option>
+                </select>
+              </div>
+              <div className="form-group">
+                <label>Tipo di divisione</label>
+                <select
+                  value={editingExpense.division_type}
+                  onChange={(e) => setEditingExpense({ ...editingExpense, division_type: e.target.value })}
+                >
+                  <option value="Uguale">Uguale</option>
+                  <option value="Importi esatti">Importi esatti</option>
+                  <option value="Percentuale">Percentuale</option>
+                </select>
+              </div>
+              <div style={{ display: 'flex', gap: '1rem' }}>
+                <button type="submit" className="btn btn-primary">Salva</button>
+                <button type="button" className="btn btn-secondary" onClick={() => setEditingExpense(null)}>
                   Annulla
                 </button>
               </div>

@@ -331,6 +331,47 @@ def get_expense(
 
     return expense
 
+@router.put("/expenses/{expense_id}", response_model=ExpenseSchema)
+def update_expense(
+    expense_id: int,
+    expense_update: ExpenseUpdate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user)
+):
+    expense = db.query(Expense).filter(Expense.id == expense_id).first()
+    if not expense:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Spesa non trovata"
+        )
+
+    # Check if user is member of the group
+    member = db.query(GroupMember).filter(
+        GroupMember.group_id == expense.group_id,
+        GroupMember.user_id == current_user.id
+    ).first()
+
+    if not member:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Non hai accesso a questa spesa"
+        )
+
+    # Only the person who paid can edit the expense
+    if expense.paid_by_id != current_user.id:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Solo chi ha pagato può modificare la spesa"
+        )
+
+    # Update expense fields
+    for key, value in expense_update.dict(exclude_unset=True).items():
+        setattr(expense, key, value)
+
+    db.commit()
+    db.refresh(expense)
+    return expense
+
 @router.delete("/expenses/{expense_id}", status_code=status.HTTP_204_NO_CONTENT)
 def delete_expense(
     expense_id: int,

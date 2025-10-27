@@ -276,3 +276,123 @@ body.theme-gym .spinner {
   margin-bottom: 1rem;
   border-left: 4px solid #3c3;
 }
+
+/* Responsive styles */
+@media (max-width: 768px) {
+  .container {
+    padding: 10px;
+  }
+
+  .card {
+    padding: 1rem;
+  }
+
+  /* Table wrapper for horizontal scroll on mobile */
+  .table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  table {
+    min-width: 600px;
+    font-size: 0.85rem;
+  }
+
+  table th,
+  table td {
+    padding: 0.5rem;
+    white-space: nowrap;
+  }
+
+  /* Reduce button size on mobile */
+  .btn {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.875rem;
+  }
+
+  /* Mobile expense card */
+  .expense-card-mobile {
+    background: #fff;
+    border: 1px solid #e9ecef;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .expense-card-mobile-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 0.75rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 1px solid #e9ecef;
+  }
+
+  .expense-card-mobile-title {
+    font-weight: 600;
+    color: #2c3e50;
+    font-size: 1rem;
+    margin-bottom: 0.25rem;
+  }
+
+  .expense-card-mobile-amount {
+    font-weight: 700;
+    color: #2c3e50;
+    font-size: 1.1rem;
+  }
+
+  .expense-card-mobile-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .expense-card-mobile-row {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.875rem;
+  }
+
+  .expense-card-mobile-label {
+    color: #7f8c8d;
+    font-weight: 500;
+  }
+
+  .expense-card-mobile-value {
+    color: #2c3e50;
+  }
+
+  .expense-card-mobile-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid #e9ecef;
+  }
+
+  .expense-card-mobile-actions .btn {
+    flex: 1;
+    padding: 0.5rem;
+    font-size: 0.85rem;
+  }
+
+  /* Hide desktop table on mobile */
+  .desktop-only {
+    display: none !important;
+  }
+
+  .mobile-only {
+    display: block !important;
+  }
+}
+
+@media (min-width: 769px) {
+  .mobile-only {
+    display: none !important;
+  }
+
+  .desktop-only {
+    display: block !important;
+  }
+}

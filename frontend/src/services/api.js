@@ -63,8 +63,8 @@ export const expensesAPI = {
 
 // Shopping Lists APIs
 export const shoppingAPI = {
-  createList: (data) => api.post('/api/shopping-lists', data),
-  getLists: () => api.get('/api/shopping-lists'),
+  createList: (data) => api.post('/api/shopping-lists/', data),
+  getLists: () => api.get('/api/shopping-lists/'),
   getList: (id) => api.get(`/api/shopping-lists/${id}`),
   getListByToken: (token) => api.get(`/api/shopping-lists/shared/${token}`),
   updateList: (id, data) => api.put(`/api/shopping-lists/${id}`, data),

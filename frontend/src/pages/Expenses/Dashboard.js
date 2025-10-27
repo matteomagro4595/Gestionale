@@ -7,6 +7,9 @@ const Dashboard = () => {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [newGroup, setNewGroup] = useState({ nome: '', descrizione: '' });
+  const [searchTerm, setSearchTerm] = useState('');
+  const [sortOrder, setSortOrder] = useState('asc'); // 'asc' or 'desc'
+  const [minMembers, setMinMembers] = useState('');
 
   useEffect(() => {
     loadGroups();
@@ -35,19 +38,95 @@ const Dashboard = () => {
     }
   };
 
+  // Filter and sort groups
+  const filteredAndSortedGroups = groups
+    .filter(group => {
+      // Filter by search term
+      const matchesSearch = group.nome.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           (group.descrizione && group.descrizione.toLowerCase().includes(searchTerm.toLowerCase()));
+
+      // Filter by minimum members
+      const matchesMembers = minMembers === '' || (group.members?.length || 0) >= parseInt(minMembers);
+
+      return matchesSearch && matchesMembers;
+    })
+    .sort((a, b) => {
+      if (sortOrder === 'asc') {
+        return a.nome.localeCompare(b.nome);
+      } else {
+        return b.nome.localeCompare(a.nome);
+      }
+    });
+
   if (loading) return <div className="spinner"></div>;
 
   return (
     <div className="container">
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '2rem' }}>
-        <h1>Gestione Spese</h1>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '2rem', flexWrap: 'wrap', gap: '1rem' }}>
+        <h1 style={{ margin: 0 }}>Gestione Spese</h1>
         <button className="btn btn-primary" onClick={() => setShowModal(true)}>
           Nuovo Gruppo
         </button>
       </div>
 
-      <div className="grid" style={{ marginTop: '2rem' }}>
-        {groups.map((group) => (
+      {/* Filters and Sort Section */}
+      <div className="card" style={{ marginTop: '1.5rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
+          <div className="form-group" style={{ marginBottom: 0 }}>
+            <label>Cerca gruppo</label>
+            <input
+              type="text"
+              placeholder="Nome o descrizione..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+          </div>
+          <div className="form-group" style={{ marginBottom: 0 }}>
+            <label>Ordina per nome</label>
+            <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)}>
+              <option value="asc">A-Z (Crescente)</option>
+              <option value="desc">Z-A (Decrescente)</option>
+            </select>
+          </div>
+          <div className="form-group" style={{ marginBottom: 0 }}>
+            <label>Minimo membri</label>
+            <input
+              type="number"
+              placeholder="es. 2"
+              min="1"
+              value={minMembers}
+              onChange={(e) => setMinMembers(e.target.value)}
+            />
+          </div>
+        </div>
+        {(searchTerm || minMembers) && (
+          <div style={{ marginTop: '1rem', display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+            <span style={{ fontSize: '0.9rem', color: '#7f8c8d' }}>
+              Trovati {filteredAndSortedGroups.length} di {groups.length} gruppi
+            </span>
+            <button
+              className="btn btn-secondary"
+              onClick={() => {
+                setSearchTerm('');
+                setMinMembers('');
+              }}
+              style={{ padding: '0.25rem 0.75rem', fontSize: '0.85rem' }}
+            >
+              Cancella filtri
+            </button>
+          </div>
+        )}
+      </div>
+
+      {filteredAndSortedGroups.length === 0 ? (
+        <div className="card" style={{ marginTop: '1rem', textAlign: 'center', padding: '2rem' }}>
+          <p style={{ color: '#7f8c8d', fontSize: '1.1rem' }}>
+            {groups.length === 0 ? 'Nessun gruppo trovato. Crea il primo!' : 'Nessun gruppo corrisponde ai filtri.'}
+          </p>
+        </div>
+      ) : (
+        <div className="grid" style={{ marginTop: '1rem' }}>
+          {filteredAndSortedGroups.map((group) => (
           <Link key={group.id} to={`/expenses/groups/${group.id}`} style={{ textDecoration: 'none' }}>
             <div className="card" style={{ cursor: 'pointer' }}>
               <h2>{group.nome}</h2>
@@ -58,7 +137,8 @@ const Dashboard = () => {
             </div>
           </Link>
         ))}
-      </div>
+        </div>
+      )}
 
       {showModal && (
         <div style={{

@@ -204,22 +204,22 @@ Clicca sul link per accedere: ${shareUrl}`;
         {/* Share Section */}
         <div style={{ marginTop: '1.5rem' }}>
           <h3 style={{ fontSize: '1rem', marginBottom: '0.75rem' }}>Condividi Gruppo</h3>
-          <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-            <button className="btn btn-secondary" onClick={copyShareToken}>
+          <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+            <button className="btn btn-secondary" onClick={copyShareToken} style={{ flex: '1 1 auto' }}>
               Copia Token
             </button>
-            <button className="btn btn-secondary" onClick={copyShareLink}>
+            <button className="btn btn-secondary" onClick={copyShareLink} style={{ flex: '1 1 auto' }}>
               Copia Link
             </button>
             <button
               className="btn btn-primary"
               onClick={shareViaWhatsApp}
-              style={{ backgroundColor: '#25D366', borderColor: '#25D366' }}
+              style={{ backgroundColor: '#25D366', borderColor: '#25D366', flex: '1 1 100%' }}
             >
               📱 Condividi su WhatsApp
             </button>
           </div>
-          <p style={{ marginTop: '0.5rem', fontSize: '0.85rem', color: '#7f8c8d' }}>
+          <p style={{ marginTop: '0.5rem', fontSize: '0.85rem', color: '#7f8c8d', wordBreak: 'break-all' }}>
             Token: {group?.share_token}
           </p>
         </div>
@@ -341,34 +341,36 @@ Clicca sul link per accedere: ${shareUrl}`;
       {/* Balances */}
       <div className="card">
         <h2>Bilanci</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Utente</th>
-              <th>Totale Pagato</th>
-              <th>Totale Dovuto</th>
-              <th>Bilancio</th>
-            </tr>
-          </thead>
-          <tbody>
-            {balances.map((balance) => (
-              <tr key={balance.user_id}>
-                <td>{balance.user_name}</td>
-                <td>€{balance.total_paid.toFixed(2)}</td>
-                <td>€{balance.total_owed.toFixed(2)}</td>
-                <td style={{ color: balance.balance >= 0 ? '#2ecc71' : '#e74c3c', fontWeight: 'bold' }}>
-                  {balance.balance >= 0 ? '+' : ''}€{balance.balance.toFixed(2)}
-                </td>
+        <div className="table-wrapper">
+          <table>
+            <thead>
+              <tr>
+                <th>Utente</th>
+                <th>Totale Pagato</th>
+                <th>Totale Dovuto</th>
+                <th>Bilancio</th>
               </tr>
-            ))}
-          </tbody>
-        </table>
+            </thead>
+            <tbody>
+              {balances.map((balance) => (
+                <tr key={balance.user_id}>
+                  <td>{balance.user_name}</td>
+                  <td>€{balance.total_paid.toFixed(2)}</td>
+                  <td>€{balance.total_owed.toFixed(2)}</td>
+                  <td style={{ color: balance.balance >= 0 ? '#2ecc71' : '#e74c3c', fontWeight: 'bold' }}>
+                    {balance.balance >= 0 ? '+' : ''}€{balance.balance.toFixed(2)}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {/* Expenses */}
       <div className="card" style={{ marginTop: '1rem' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <h2>Spese</h2>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
+          <h2 style={{ margin: 0 }}>Spese</h2>
           <button className="btn btn-primary" onClick={() => setShowExpenseModal(true)}>
             Nuova Spesa
           </button>
@@ -378,65 +380,133 @@ Clicca sul link per accedere: ${shareUrl}`;
             Nessuna spesa registrata. Aggiungi la prima spesa!
           </p>
         ) : (
-          <table>
-            <thead>
-              <tr>
-                <th>Descrizione</th>
-                <th>Importo</th>
-                <th>Tag</th>
-                <th>Pagato da</th>
-                <th>Divisione</th>
-                <th>Azioni</th>
-              </tr>
-            </thead>
-            <tbody>
+          <>
+            {/* Desktop Table View */}
+            <div className="desktop-only table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Descrizione</th>
+                    <th>Importo</th>
+                    <th>Tag</th>
+                    <th>Pagato da</th>
+                    <th>Divisione</th>
+                    <th>Azioni</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {expenses.map((expense) => {
+                    const paidByUser = getUserById(expense.paid_by_id);
+                    const canEdit = expense.paid_by_id === currentUser?.id;
+                    return (
+                      <tr key={expense.id}>
+                        <td>{expense.descrizione || '-'}</td>
+                        <td style={{ fontWeight: '600' }}>€{expense.importo.toFixed(2)}</td>
+                        <td>
+                          <span
+                            style={{
+                              padding: '0.25rem 0.75rem',
+                              borderRadius: '12px',
+                              fontSize: '0.85rem',
+                              background: '#ecf0f1',
+                              color: '#2c3e50',
+                            }}
+                          >
+                            {expense.tag}
+                          </span>
+                        </td>
+                        <td>{paidByUser?.nome} {paidByUser?.cognome}</td>
+                        <td>{expense.division_type}</td>
+                        <td>
+                          {canEdit && (
+                            <div style={{ display: 'flex', gap: '0.5rem' }}>
+                              <button
+                                className="btn btn-secondary"
+                                onClick={() => handleEditExpense(expense)}
+                                style={{ padding: '0.25rem 0.75rem', fontSize: '0.85rem' }}
+                              >
+                                Modifica
+                              </button>
+                              <button
+                                className="btn btn-danger"
+                                onClick={() => handleDeleteExpense(expense.id)}
+                                style={{ padding: '0.25rem 0.75rem', fontSize: '0.85rem' }}
+                              >
+                                Elimina
+                              </button>
+                            </div>
+                          )}
+                        </td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Mobile Card View */}
+            <div className="mobile-only" style={{ marginTop: '1rem' }}>
               {expenses.map((expense) => {
                 const paidByUser = getUserById(expense.paid_by_id);
                 const canEdit = expense.paid_by_id === currentUser?.id;
                 return (
-                  <tr key={expense.id}>
-                    <td>{expense.descrizione || '-'}</td>
-                    <td style={{ fontWeight: '600' }}>€{expense.importo.toFixed(2)}</td>
-                    <td>
-                      <span
-                        style={{
-                          padding: '0.25rem 0.75rem',
-                          borderRadius: '12px',
-                          fontSize: '0.85rem',
-                          background: '#ecf0f1',
-                          color: '#2c3e50',
-                        }}
-                      >
-                        {expense.tag}
-                      </span>
-                    </td>
-                    <td>{paidByUser?.nome} {paidByUser?.cognome}</td>
-                    <td>{expense.division_type}</td>
-                    <td>
-                      {canEdit && (
-                        <div style={{ display: 'flex', gap: '0.5rem' }}>
-                          <button
-                            className="btn btn-secondary"
-                            onClick={() => handleEditExpense(expense)}
-                            style={{ padding: '0.25rem 0.75rem', fontSize: '0.85rem' }}
-                          >
-                            Modifica
-                          </button>
-                          <button
-                            className="btn btn-danger"
-                            onClick={() => handleDeleteExpense(expense.id)}
-                            style={{ padding: '0.25rem 0.75rem', fontSize: '0.85rem' }}
-                          >
-                            Elimina
-                          </button>
+                  <div key={expense.id} className="expense-card-mobile">
+                    <div className="expense-card-mobile-header">
+                      <div>
+                        <div className="expense-card-mobile-title">
+                          {expense.descrizione || 'Spesa senza descrizione'}
                         </div>
-                      )}
-                    </td>
-                  </tr>
+                        <span
+                          style={{
+                            padding: '0.25rem 0.5rem',
+                            borderRadius: '12px',
+                            fontSize: '0.75rem',
+                            background: '#ecf0f1',
+                            color: '#2c3e50',
+                            display: 'inline-block',
+                            marginTop: '0.25rem',
+                          }}
+                        >
+                          {expense.tag}
+                        </span>
+                      </div>
+                      <div className="expense-card-mobile-amount">
+                        €{expense.importo.toFixed(2)}
+                      </div>
+                    </div>
+                    <div className="expense-card-mobile-info">
+                      <div className="expense-card-mobile-row">
+                        <span className="expense-card-mobile-label">Pagato da:</span>
+                        <span className="expense-card-mobile-value">
+                          {paidByUser?.nome} {paidByUser?.cognome}
+                        </span>
+                      </div>
+                      <div className="expense-card-mobile-row">
+                        <span className="expense-card-mobile-label">Divisione:</span>
+                        <span className="expense-card-mobile-value">{expense.division_type}</span>
+                      </div>
+                    </div>
+                    {canEdit && (
+                      <div className="expense-card-mobile-actions">
+                        <button
+                          className="btn btn-secondary"
+                          onClick={() => handleEditExpense(expense)}
+                        >
+                          Modifica
+                        </button>
+                        <button
+                          className="btn btn-danger"
+                          onClick={() => handleDeleteExpense(expense.id)}
+                        >
+                          Elimina
+                        </button>
+                      </div>
+                    )}
+                  </div>
                 );
               })}
-            </tbody>
-          </table>
+            </div>
+          </>
         )}
       </div>
 

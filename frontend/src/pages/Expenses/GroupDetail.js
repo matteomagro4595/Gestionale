@@ -17,7 +17,7 @@ const GroupDetail = () => {
   const [newExpense, setNewExpense] = useState({
     descrizione: '',
     importo: '',
-    tag: 'Spesa',
+    tag: 'Spesa Alimentare',
     division_type: 'Uguale',
     paid_by_id: '',
     participants: [],
@@ -577,10 +577,17 @@ Clicca sul link per accedere: ${shareUrl}`;
                   value={newExpense.tag}
                   onChange={(e) => setNewExpense({ ...newExpense, tag: e.target.value })}
                 >
-                  <option value="Bolletta">Bolletta</option>
-                  <option value="Spesa">Spesa</option>
+                  <option value="Bolletta Acqua">Bolletta Acqua</option>
+                  <option value="Bolletta Luce">Bolletta Luce</option>
+                  <option value="Bolletta Gas">Bolletta Gas</option>
+                  <option value="Internet/Telefono">Internet/Telefono</option>
+                  <option value="Affitto">Affitto</option>
+                  <option value="Spesa Alimentare">Spesa Alimentare</option>
+                  <option value="Trasporti">Trasporti</option>
                   <option value="Pranzo/Cena">Pranzo/Cena</option>
-                  <option value="Cani">Cani</option>
+                  <option value="Salute">Salute</option>
+                  <option value="Animali Domestici">Animali Domestici</option>
+                  <option value="Svago/Intrattenimento">Svago/Intrattenimento</option>
                   <option value="Altro">Altro</option>
                 </select>
               </div>
@@ -667,10 +674,17 @@ Clicca sul link per accedere: ${shareUrl}`;
                   value={editingExpense.tag}
                   onChange={(e) => setEditingExpense({ ...editingExpense, tag: e.target.value })}
                 >
-                  <option value="Bolletta">Bolletta</option>
-                  <option value="Spesa">Spesa</option>
+                  <option value="Bolletta Acqua">Bolletta Acqua</option>
+                  <option value="Bolletta Luce">Bolletta Luce</option>
+                  <option value="Bolletta Gas">Bolletta Gas</option>
+                  <option value="Internet/Telefono">Internet/Telefono</option>
+                  <option value="Affitto">Affitto</option>
+                  <option value="Spesa Alimentare">Spesa Alimentare</option>
+                  <option value="Trasporti">Trasporti</option>
                   <option value="Pranzo/Cena">Pranzo/Cena</option>
-                  <option value="Cani">Cani</option>
+                  <option value="Salute">Salute</option>
+                  <option value="Animali Domestici">Animali Domestici</option>
+                  <option value="Svago/Intrattenimento">Svago/Intrattenimento</option>
                   <option value="Altro">Altro</option>
                 </select>
               </div>

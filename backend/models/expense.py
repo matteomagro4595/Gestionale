@@ -6,10 +6,17 @@ import enum
 import secrets
 
 class ExpenseTag(str, enum.Enum):
-    BOLLETTA = "Bolletta"
-    SPESA = "Spesa"
+    BOLLETTA_ACQUA = "Bolletta Acqua"
+    BOLLETTA_LUCE = "Bolletta Luce"
+    BOLLETTA_GAS = "Bolletta Gas"
+    INTERNET_TELEFONO = "Internet/Telefono"
+    AFFITTO = "Affitto"
+    SPESA_ALIMENTARE = "Spesa Alimentare"
+    TRASPORTI = "Trasporti"
     PRANZO_CENA = "Pranzo/Cena"
-    CANI = "Cani"
+    SALUTE = "Salute"
+    ANIMALI = "Animali Domestici"
+    SVAGO = "Svago/Intrattenimento"
     ALTRO = "Altro"
 
 class DivisionType(str, enum.Enum):
@@ -51,7 +58,7 @@ class Expense(Base):
     id = Column(Integer, primary_key=True, index=True)
     descrizione = Column(String)
     importo = Column(Float, nullable=False)
-    tag = Column(SQLEnum(ExpenseTag), nullable=False)
+    tag = Column(String(50), nullable=False)  # Changed from SQLEnum to String to match PostgreSQL values
     division_type = Column(SQLEnum(DivisionType), nullable=False, default=DivisionType.UGUALE)
     paid_by_id = Column(Integer, ForeignKey("users.id"))
     group_id = Column(Integer, ForeignKey("expense_groups.id"))

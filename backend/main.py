@@ -14,6 +14,12 @@ try:
 except Exception as e:
     print(f"Migration warning: {e}")
 
+try:
+    from migrate_expense_tags import migrate_tags
+    migrate_tags()
+except Exception as e:
+    print(f"Migration warning (expense tags): {e}")
+
 app = FastAPI(
     title="Gestionale API",
     description="API per la gestione di spese, liste della spesa e schede palestra",

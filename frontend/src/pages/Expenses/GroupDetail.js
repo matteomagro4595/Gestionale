@@ -367,6 +367,30 @@ Clicca sul link per accedere: ${shareUrl}`;
         </div>
       </div>
 
+      {/* Total Expenses Summary */}
+      <div className="card" style={{ marginTop: '1rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem' }}>
+          <div style={{ textAlign: 'center', padding: '1rem', backgroundColor: '#f8f9fa', borderRadius: '8px' }}>
+            <h3 style={{ fontSize: '2rem', margin: '0.5rem 0', color: '#3498db' }}>
+              {expenses.length}
+            </h3>
+            <p style={{ color: '#7f8c8d', margin: 0, fontSize: '0.9rem' }}>Spese Totali</p>
+          </div>
+          <div style={{ textAlign: 'center', padding: '1rem', backgroundColor: '#f8f9fa', borderRadius: '8px' }}>
+            <h3 style={{ fontSize: '2rem', margin: '0.5rem 0', color: '#2ecc71' }}>
+              €{expenses.reduce((sum, expense) => sum + expense.importo, 0).toFixed(2)}
+            </h3>
+            <p style={{ color: '#7f8c8d', margin: 0, fontSize: '0.9rem' }}>Importo Totale Pagato</p>
+          </div>
+          <div style={{ textAlign: 'center', padding: '1rem', backgroundColor: '#f8f9fa', borderRadius: '8px' }}>
+            <h3 style={{ fontSize: '2rem', margin: '0.5rem 0', color: '#9b59b6' }}>
+              €{expenses.length > 0 ? (expenses.reduce((sum, expense) => sum + expense.importo, 0) / expenses.length).toFixed(2) : '0.00'}
+            </h3>
+            <p style={{ color: '#7f8c8d', margin: 0, fontSize: '0.9rem' }}>Media per Spesa</p>
+          </div>
+        </div>
+      </div>
+
       {/* Expenses */}
       <div className="card" style={{ marginTop: '1rem' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>

@@ -64,9 +64,14 @@ const Dashboard = () => {
     <div className="container">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '2rem', flexWrap: 'wrap', gap: '1rem' }}>
         <h1 style={{ margin: 0 }}>Gestione Spese</h1>
-        <button className="btn btn-primary" onClick={() => setShowModal(true)}>
-          Nuovo Gruppo
-        </button>
+        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+          <Link to="/expenses/summary" className="btn btn-secondary">
+            📊 Riepilogo Generale
+          </Link>
+          <button className="btn btn-primary" onClick={() => setShowModal(true)}>
+            Nuovo Gruppo
+          </button>
+        </div>
       </div>
 
       {/* Filters and Sort Section */}

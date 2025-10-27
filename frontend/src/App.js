@@ -7,6 +7,7 @@ import Login from './pages/Auth/Login';
 import Register from './pages/Auth/Register';
 import Home from './pages/Home';
 import ExpensesDashboard from './pages/Expenses/Dashboard';
+import ExpensesSummary from './pages/Expenses/Summary';
 import GroupDetail from './pages/Expenses/GroupDetail';
 import GroupJoin from './pages/Expenses/GroupJoin';
 import ShoppingLists from './pages/Shopping/ShoppingLists';
@@ -111,6 +112,15 @@ function AppContent() {
               <ProtectedRoute>
                 <Navbar />
                 <ExpensesDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/expenses/summary"
+            element={
+              <ProtectedRoute>
+                <Navbar />
+                <ExpensesSummary />
               </ProtectedRoute>
             }
           />

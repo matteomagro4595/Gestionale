@@ -15,6 +15,7 @@ import ShoppingListDetail from './pages/Shopping/ShoppingListDetail';
 import ShoppingListJoin from './pages/Shopping/ShoppingListJoin';
 import GymCards from './pages/Gym/GymCards';
 import GymCardDetail from './pages/Gym/GymCardDetail';
+import Notifications from './pages/Notifications/Notifications';
 
 // Components
 import Navbar from './components/Navbar';
@@ -184,6 +185,15 @@ function AppContent() {
               <ProtectedRoute>
                 <Navbar />
                 <GymCardDetail />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/notifications"
+            element={
+              <ProtectedRoute>
+                <Navbar />
+                <Notifications />
               </ProtectedRoute>
             }
           />

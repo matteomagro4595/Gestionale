@@ -10,11 +10,25 @@ const ShoppingListDetail = () => {
   const [showModal, setShowModal] = useState(false);
   const [newItem, setNewItem] = useState({ nome: '', quantita: '', note: '' });
   const [currentUser, setCurrentUser] = useState(null);
+  const [suggestions, setSuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
 
   useEffect(() => {
     loadList();
     loadCurrentUser();
   }, [listId]);
+
+  // Close suggestions when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (showSuggestions && !event.target.closest('.form-group')) {
+        setShowSuggestions(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, [showSuggestions]);
 
   const loadCurrentUser = async () => {
     try {
@@ -43,16 +57,73 @@ const ShoppingListDetail = () => {
     }
   };
 
+  const handleNameChange = (e) => {
+    const value = e.target.value;
+    setNewItem({ ...newItem, nome: value });
+
+    // Filter existing items that match the input
+    if (value.trim().length > 0) {
+      const filtered = list?.items?.filter(item =>
+        item.nome.toLowerCase().includes(value.toLowerCase().trim())
+      ) || [];
+      setSuggestions(filtered);
+      setShowSuggestions(filtered.length > 0);
+    } else {
+      setSuggestions([]);
+      setShowSuggestions(false);
+    }
+  };
+
+  const handleSuggestionClick = async (item) => {
+    if (item.completato) {
+      // If item is completed, unflag it
+      try {
+        await shoppingAPI.updateItem(listId, item.id, { completato: false });
+        setNewItem({ nome: '', quantita: '', note: '' });
+        setShowModal(false);
+        setSuggestions([]);
+        setShowSuggestions(false);
+        loadList();
+      } catch (error) {
+        console.error('Error updating item:', error);
+      }
+    } else {
+      // Item is already in the list and not completed
+      alert(`L'articolo "${item.nome}" è già presente nella lista da acquistare.`);
+    }
+  };
+
   const handleCreateItem = async (e) => {
     e.preventDefault();
-    try {
-      await shoppingAPI.createItem(listId, newItem);
-      setNewItem({ nome: '', quantita: '', note: '' });
-      setShowModal(false);
-      loadList();
-    } catch (error) {
-      console.error('Error creating item:', error);
+
+    // Check if item already exists (case-insensitive exact match)
+    const existingItem = list?.items?.find(
+      item => item.nome.toLowerCase().trim() === newItem.nome.toLowerCase().trim()
+    );
+
+    if (existingItem) {
+      if (existingItem.completato) {
+        // Unflag it
+        await shoppingAPI.updateItem(listId, existingItem.id, { completato: false });
+      } else {
+        alert(`L'articolo "${existingItem.nome}" è già presente nella lista.`);
+        return;
+      }
+    } else {
+      // Create new item
+      try {
+        await shoppingAPI.createItem(listId, newItem);
+      } catch (error) {
+        console.error('Error creating item:', error);
+        return;
+      }
     }
+
+    setNewItem({ nome: '', quantita: '', note: '' });
+    setSuggestions([]);
+    setShowSuggestions(false);
+    setShowModal(false);
+    loadList();
   };
 
   const handleToggleItem = async (itemId, completed) => {
@@ -395,14 +466,81 @@ Clicca sul link per accedere: ${shareUrl}`;
           <div className="card" style={{ width: '500px', maxWidth: '90%' }}>
             <h2>Nuovo Articolo</h2>
             <form onSubmit={handleCreateItem}>
-              <div className="form-group">
+              <div className="form-group" style={{ position: 'relative' }}>
                 <label>Nome</label>
                 <input
                   type="text"
                   value={newItem.nome}
-                  onChange={(e) => setNewItem({ ...newItem, nome: e.target.value })}
+                  onChange={handleNameChange}
+                  onFocus={() => {
+                    if (newItem.nome.trim().length > 0 && suggestions.length > 0) {
+                      setShowSuggestions(true);
+                    }
+                  }}
                   required
+                  autoComplete="off"
                 />
+                {showSuggestions && suggestions.length > 0 && (
+                  <div style={{
+                    position: 'absolute',
+                    top: '100%',
+                    left: 0,
+                    right: 0,
+                    backgroundColor: 'white',
+                    border: '1px solid #ddd',
+                    borderRadius: '4px',
+                    maxHeight: '200px',
+                    overflowY: 'auto',
+                    zIndex: 1001,
+                    boxShadow: '0 4px 6px rgba(0,0,0,0.1)',
+                    marginTop: '4px'
+                  }}>
+                    {suggestions.map((item) => (
+                      <div
+                        key={item.id}
+                        onClick={() => handleSuggestionClick(item)}
+                        style={{
+                          padding: '0.75rem',
+                          cursor: 'pointer',
+                          borderBottom: '1px solid #f0f0f0',
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          backgroundColor: item.completato ? '#f0f9ff' : '#fff5f5'
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.backgroundColor = item.completato ? '#dbeafe' : '#fee2e2'}
+                        onMouseLeave={(e) => e.currentTarget.style.backgroundColor = item.completato ? '#f0f9ff' : '#fff5f5'}
+                      >
+                        <span style={{
+                          flex: 1,
+                          textDecoration: item.completato ? 'line-through' : 'none',
+                          color: item.completato ? '#6b7280' : '#991b1b'
+                        }}>
+                          {item.nome}
+                        </span>
+                        <span style={{
+                          fontSize: '0.75rem',
+                          padding: '0.25rem 0.5rem',
+                          borderRadius: '12px',
+                          backgroundColor: item.completato ? '#3b82f6' : '#ef4444',
+                          color: 'white',
+                          fontWeight: '600'
+                        }}>
+                          {item.completato ? '✓ Completato' : '⚠ Già presente'}
+                        </span>
+                      </div>
+                    ))}
+                    <div style={{
+                      padding: '0.5rem',
+                      fontSize: '0.75rem',
+                      color: '#6b7280',
+                      textAlign: 'center',
+                      fontStyle: 'italic'
+                    }}>
+                      Clicca su un articolo completato per rimetterlo nella lista
+                    </div>
+                  </div>
+                )}
               </div>
               <div className="form-group">
                 <label>Quantità</label>

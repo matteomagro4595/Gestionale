@@ -3,6 +3,11 @@ from models.notification import Notification
 from models.shopping import ShoppingList, SharedList
 from models.expense import ExpenseGroup, GroupMember
 from typing import List
+import asyncio
+from websocket_manager import manager
+import logging
+
+logger = logging.getLogger(__name__)
 
 def create_notification(
     db: Session,
@@ -26,6 +31,34 @@ def create_notification(
     db.add(notification)
     db.commit()
     db.refresh(notification)
+
+    # Send push notification via WebSocket if user is connected
+    if manager.is_user_connected(user_id):
+        notification_data = {
+            "type": "notification",
+            "id": notification.id,
+            "title": notification.title,
+            "message": notification.message,
+            "notification_type": notification.type,
+            "reference_id": notification.reference_id,
+            "reference_type": notification.reference_type,
+            "created_at": notification.created_at.isoformat(),
+            "is_read": notification.is_read
+        }
+
+        # Try to send WebSocket message
+        try:
+            # Get the running event loop
+            loop = asyncio.get_running_loop()
+            # Schedule the coroutine in the event loop
+            asyncio.ensure_future(manager.send_personal_message(notification_data, user_id), loop=loop)
+        except RuntimeError:
+            # No event loop running, this is expected in sync context
+            # The notification is still saved in DB and will be fetched on next poll
+            logger.debug(f"No event loop available to send WebSocket notification to user {user_id}")
+        except Exception as e:
+            logger.error(f"Error sending WebSocket notification: {e}")
+
     return notification
 
 def notify_shopping_list_members(
@@ -61,10 +94,10 @@ def notify_shopping_list_members(
 
     # Notify shared users
     for shared in shared_users:
-        if shared.user_id != exclude_user_id:
+        if shared.shared_with_id != exclude_user_id:
             create_notification(
                 db=db,
-                user_id=shared.user_id,
+                user_id=shared.shared_with_id,
                 notification_type=notification_type,
                 title=title,
                 message=message,

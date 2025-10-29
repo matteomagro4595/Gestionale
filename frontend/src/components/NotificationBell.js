@@ -1,6 +1,7 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { notificationsAPI } from '../services/api';
 import { useNavigate } from 'react-router-dom';
+import useNotificationWebSocket from '../hooks/useNotificationWebSocket';
 import './NotificationBell.css';
 
 const NotificationBell = () => {
@@ -34,11 +35,51 @@ const NotificationBell = () => {
     }
   };
 
-  // Poll for new notifications every 30 seconds
+  // Handle incoming WebSocket notification
+  const handleWebSocketNotification = useCallback((notification) => {
+    console.log('Received push notification:', notification);
+
+    // Add notification to the list if it's not already there
+    setNotifications(prev => {
+      const exists = prev.some(n => n.id === notification.id);
+      if (!exists) {
+        return [notification, ...prev];
+      }
+      return prev;
+    });
+
+    // Increment unread count
+    setUnreadCount(prev => prev + 1);
+
+    // Optional: Show browser notification if permission granted
+    if ('Notification' in window && Notification.permission === 'granted') {
+      new Notification(notification.title, {
+        body: notification.message,
+        icon: '/logo192.png',
+        badge: '/logo192.png'
+      });
+    }
+  }, []);
+
+  // Connect to WebSocket for real-time notifications
+  const { isConnected } = useNotificationWebSocket(handleWebSocketNotification);
+
+  // Initial fetch on mount and request browser notification permission
   useEffect(() => {
     fetchUnreadCount();
-    const interval = setInterval(fetchUnreadCount, 30000);
-    return () => clearInterval(interval);
+
+    // Request browser notification permission if not already granted
+    if ('Notification' in window && Notification.permission === 'default') {
+      // Only request after user interaction to avoid being intrusive
+      const requestPermission = () => {
+        Notification.requestPermission().then(permission => {
+          console.log('Notification permission:', permission);
+        });
+      };
+
+      // Request permission after a small delay
+      setTimeout(requestPermission, 3000);
+    }
   }, []);
 
   // Fetch notifications when dropdown opens
@@ -115,6 +156,7 @@ const NotificationBell = () => {
         className="notification-bell-button"
         onClick={() => setIsOpen(!isOpen)}
         aria-label="Notifiche"
+        title={isConnected ? "Notifiche in tempo reale attive" : "Connessione in corso..."}
       >
         <svg
           width="24"
@@ -129,6 +171,7 @@ const NotificationBell = () => {
           <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
           <path d="M13.73 21a2 2 0 0 1-3.46 0" />
         </svg>
+        {isConnected && <span className="notification-connection-indicator"></span>}
         {unreadCount > 0 && (
           <span className="notification-badge">{unreadCount > 99 ? '99+' : unreadCount}</span>
         )}

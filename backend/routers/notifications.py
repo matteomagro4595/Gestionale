@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, WebSocket, WebSocketDisconnect
 from sqlalchemy.orm import Session
 from typing import List
 from database import get_db
@@ -6,6 +6,12 @@ from models.user import User
 from models.notification import Notification
 from schemas.notification import Notification as NotificationSchema, NotificationMarkRead
 from auth import get_current_user
+from websocket_manager import manager
+from jose import JWTError, jwt
+from config import settings
+import logging
+
+logger = logging.getLogger(__name__)
 
 router = APIRouter()
 
@@ -96,3 +102,49 @@ def delete_notification(
     db.delete(notification)
     db.commit()
     return {"message": "Notifica eliminata"}
+
+@router.websocket("/ws")
+async def websocket_endpoint(websocket: WebSocket, token: str = None):
+    """WebSocket endpoint for real-time notifications"""
+    if not token:
+        await websocket.close(code=1008, reason="Missing authentication token")
+        return
+
+    # Verify token and get user
+    try:
+        payload = jwt.decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
+        email: str = payload.get("sub")
+        if email is None:
+            await websocket.close(code=1008, reason="Invalid token")
+            return
+    except JWTError:
+        await websocket.close(code=1008, reason="Invalid token")
+        return
+
+    # Get user from database
+    db = next(get_db())
+    try:
+        user = db.query(User).filter(User.email == email).first()
+        if not user:
+            await websocket.close(code=1008, reason="User not found")
+            return
+
+        # Connect user
+        await manager.connect(websocket, user.id)
+        logger.info(f"WebSocket connected for user {user.id} ({user.email})")
+
+        try:
+            # Keep connection alive and handle incoming messages
+            while True:
+                # Wait for any message from client (ping/pong to keep alive)
+                data = await websocket.receive_text()
+                # Echo back to confirm connection is alive
+                await websocket.send_json({"type": "pong", "message": "Connection alive"})
+        except WebSocketDisconnect:
+            logger.info(f"WebSocket disconnected for user {user.id}")
+        except Exception as e:
+            logger.error(f"WebSocket error for user {user.id}: {e}")
+        finally:
+            manager.disconnect(websocket, user.id)
+    finally:
+        db.close()

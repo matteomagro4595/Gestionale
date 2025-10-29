@@ -222,6 +222,7 @@ const Help = () => {
           <ul>
             <li>Creare schede di allenamento personalizzate</li>
             <li>Aggiungere esercizi con serie, ripetizioni, peso</li>
+            <li>Modificare esercizi esistenti per aggiornare progressi</li>
             <li>Organizzare esercizi in ordine di esecuzione</li>
             <li>Tracciare progressi e note per ogni esercizio</li>
             <li>Gestire multiple schede (Push/Pull/Legs, Upper/Lower, etc.)</li>
@@ -468,7 +469,7 @@ const Help = () => {
           <p>No, le schede sono personali e private.</p>
 
           <h4>Posso modificare un esercizio?</h4>
-          <p>Attualmente no, eliminalo e ricrealo con dati aggiornati.</p>
+          <p>Sì, clicca il pulsante "Modifica" nella tabella degli esercizi.</p>
         </>
       ),
     },

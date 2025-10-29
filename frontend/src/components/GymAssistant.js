@@ -159,13 +159,25 @@ const GymAssistant = () => {
                 </p>
               </div>
 
+              {/* Editing Exercises */}
+              <div className="assistant-section">
+                <h3>✏️ Modificare Esercizi</h3>
+                <p>Puoi modificare qualsiasi campo di un esercizio:</p>
+                <ol>
+                  <li>Trova l'esercizio nella tabella</li>
+                  <li>Clicca il pulsante <strong>Modifica</strong></li>
+                  <li>Aggiorna i campi desiderati</li>
+                  <li>Clicca <strong>Salva</strong> per confermare</li>
+                </ol>
+                <div className="assistant-tip">
+                  <strong>💡 Suggerimento:</strong> Usa la modifica per aggiornare i pesi quando fai
+                  progressi o per correggere errori senza dover eliminare e ricreare l'esercizio.
+                </div>
+              </div>
+
               {/* Common Issues */}
               <div className="assistant-section">
                 <h3>🆘 Problemi Comuni</h3>
-                <p><strong>Non posso modificare un esercizio</strong></p>
-                <p style={{ fontSize: '0.9rem', marginLeft: '1.5rem' }}>
-                  Attualmente la modifica non è supportata. Elimina l'esercizio e ricrealo con i dati aggiornati.
-                </p>
                 <p><strong>Gli esercizi non sono nell'ordine giusto</strong></p>
                 <p style={{ fontSize: '0.9rem', marginLeft: '1.5rem' }}>
                   L'ordine è determinato dall'inserimento. Ricrea gli esercizi nell'ordine desiderato.

@@ -36,6 +36,13 @@ Gli esercizi vengono automaticamente ordinati:
 - Gli esercizi appaiono nella sequenza in cui li aggiungi
 - Utile per seguire la progressione dell'allenamento
 
+### Modificare un Esercizio
+1. Trova l'esercizio nella tabella
+2. Clicca **Modifica** nella colonna Azioni
+3. Aggiorna i campi desiderati (nome, serie, ripetizioni, peso, note)
+4. Clicca **Salva** per confermare le modifiche
+5. L'esercizio viene aggiornato immediatamente
+
 ### Eliminare un Esercizio
 1. Trova l'esercizio nella tabella
 2. Clicca **Elimina** nella colonna Azioni
@@ -293,7 +300,7 @@ Puoi creare quante schede vuoi. Organizzale come preferisci per il tuo programma
 No, le schede sono personali. Ogni utente gestisce le proprie schede individualmente.
 
 ### Posso modificare un esercizio dopo averlo creato?
-Attualmente non è possibile modificare un esercizio. Puoi eliminarlo e ricrearlo con i dati aggiornati.
+Sì! Clicca il pulsante **Modifica** accanto all'esercizio nella tabella, aggiorna i campi desiderati (nome, serie, ripetizioni, peso, note) e clicca **Salva**.
 
 ### Come tengo traccia dei progressi?
 Puoi aggiornare manualmente i pesi negli esercizi o creare nuove versioni della scheda con i pesi progressivi.
@@ -345,6 +352,14 @@ Usa le note per tracciare:
 - "Aumentare di 2.5kg prossima volta"
 - "Difficoltà nelle ultime 2 serie"
 - "Rest 90s tra le serie"
+
+### Aggiornamento Progressi
+Usa il pulsante **Modifica** per:
+- Aggiornare il peso quando fai progressi
+- Correggere errori di inserimento
+- Modificare serie/ripetizioni basandoti sui risultati
+- Aggiungere note dopo l'allenamento
+- Esempio: Da "Panca 60kg x 8" a "Panca 62.5kg x 8"
 
 ### Cicli di Allenamento
 Organizza le schede per cicli:

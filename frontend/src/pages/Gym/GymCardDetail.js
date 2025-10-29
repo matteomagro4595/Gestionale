@@ -8,6 +8,8 @@ const GymCardDetail = () => {
   const [card, setCard] = useState(null);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [editingExercise, setEditingExercise] = useState(null);
   const [newExercise, setNewExercise] = useState({
     nome: '',
     serie: '',
@@ -59,6 +61,35 @@ const GymCardDetail = () => {
       loadCard();
     } catch (error) {
       console.error('Error creating exercise:', error);
+    }
+  };
+
+  const handleEditExercise = (exercise) => {
+    setEditingExercise({
+      ...exercise,
+      serie: exercise.serie || '',
+      ripetizioni: exercise.ripetizioni || '',
+      peso: exercise.peso || '',
+      note: exercise.note || '',
+    });
+    setShowEditModal(true);
+  };
+
+  const handleUpdateExercise = async (e) => {
+    e.preventDefault();
+    try {
+      await gymAPI.updateExercise(cardId, editingExercise.id, {
+        nome: editingExercise.nome,
+        serie: editingExercise.serie ? parseInt(editingExercise.serie) : null,
+        ripetizioni: editingExercise.ripetizioni || null,
+        peso: editingExercise.peso || null,
+        note: editingExercise.note || null,
+      });
+      setEditingExercise(null);
+      setShowEditModal(false);
+      loadCard();
+    } catch (error) {
+      console.error('Error updating exercise:', error);
     }
   };
 
@@ -141,13 +172,22 @@ const GymCardDetail = () => {
                   <td>{exercise.peso || '-'}</td>
                   <td>{exercise.note || '-'}</td>
                   <td>
-                    <button
-                      className="btn btn-danger"
-                      onClick={() => handleDeleteExercise(exercise.id)}
-                      style={{ padding: '0.25rem 0.5rem', fontSize: '0.9rem' }}
-                    >
-                      Elimina
-                    </button>
+                    <div style={{ display: 'flex', gap: '0.5rem' }}>
+                      <button
+                        className="btn btn-secondary"
+                        onClick={() => handleEditExercise(exercise)}
+                        style={{ padding: '0.25rem 0.5rem', fontSize: '0.9rem' }}
+                      >
+                        Modifica
+                      </button>
+                      <button
+                        className="btn btn-danger"
+                        onClick={() => handleDeleteExercise(exercise.id)}
+                        style={{ padding: '0.25rem 0.5rem', fontSize: '0.9rem' }}
+                      >
+                        Elimina
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))}
@@ -219,6 +259,82 @@ const GymCardDetail = () => {
               <div style={{ display: 'flex', gap: '1rem' }}>
                 <button type="submit" className="btn btn-primary">Aggiungi</button>
                 <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>
+                  Annulla
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Edit Modal */}
+      {showEditModal && editingExercise && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0,
+          backgroundColor: 'rgba(0,0,0,0.5)',
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          zIndex: 1000,
+        }}>
+          <div className="card" style={{ width: '500px', maxWidth: '90%' }}>
+            <h2>Modifica Esercizio</h2>
+            <form onSubmit={handleUpdateExercise}>
+              <div className="form-group">
+                <label>Nome</label>
+                <input
+                  type="text"
+                  value={editingExercise.nome}
+                  onChange={(e) => setEditingExercise({ ...editingExercise, nome: e.target.value })}
+                  required
+                />
+              </div>
+              <div className="form-group">
+                <label>Serie</label>
+                <input
+                  type="number"
+                  value={editingExercise.serie}
+                  onChange={(e) => setEditingExercise({ ...editingExercise, serie: e.target.value })}
+                  placeholder="es. 3"
+                />
+              </div>
+              <div className="form-group">
+                <label>Ripetizioni</label>
+                <input
+                  type="text"
+                  value={editingExercise.ripetizioni}
+                  onChange={(e) => setEditingExercise({ ...editingExercise, ripetizioni: e.target.value })}
+                  placeholder="es. 10-12"
+                />
+              </div>
+              <div className="form-group">
+                <label>Peso</label>
+                <input
+                  type="text"
+                  value={editingExercise.peso}
+                  onChange={(e) => setEditingExercise({ ...editingExercise, peso: e.target.value })}
+                  placeholder="es. 20kg"
+                />
+              </div>
+              <div className="form-group">
+                <label>Note</label>
+                <textarea
+                  value={editingExercise.note}
+                  onChange={(e) => setEditingExercise({ ...editingExercise, note: e.target.value })}
+                  rows="3"
+                  placeholder="Note aggiuntive..."
+                />
+              </div>
+              <div style={{ display: 'flex', gap: '1rem' }}>
+                <button type="submit" className="btn btn-primary">Salva</button>
+                <button type="button" className="btn btn-secondary" onClick={() => {
+                  setShowEditModal(false);
+                  setEditingExercise(null);
+                }}>
                   Annulla
                 </button>
               </div>

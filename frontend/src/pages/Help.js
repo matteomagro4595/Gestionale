@@ -237,6 +237,35 @@ const Help = () => {
             <li>Inizia ad aggiungere esercizi!</li>
           </ol>
 
+          <h3>Gestire gli Esercizi</h3>
+
+          <h4>Aggiungere un Esercizio</h4>
+          <ol>
+            <li>Apri la scheda</li>
+            <li>Clicca "Nuovo Esercizio"</li>
+            <li>Compila i campi: nome, serie, ripetizioni, peso, note</li>
+            <li>Gli esercizi appaiono nell'ordine di inserimento</li>
+          </ol>
+
+          <h4>Modificare un Esercizio</h4>
+          <ol>
+            <li>Trova l'esercizio nella tabella</li>
+            <li>Clicca il pulsante "Modifica"</li>
+            <li>Aggiorna i campi desiderati</li>
+            <li>Clicca "Salva" per confermare</li>
+          </ol>
+
+          <div className="help-tip">
+            <strong>💡 Uso pratico:</strong> Usa la modifica per aggiornare i pesi quando fai
+            progressi. Esempio: modifica "Panca 60kg" in "Panca 62.5kg" dopo aver aumentato il
+            carico. Puoi anche aggiungere note dopo l'allenamento per tracciare come è andata.
+          </div>
+
+          <h4>Eliminare un Esercizio</h4>
+          <p>
+            Clicca "Elimina" accanto all'esercizio e conferma. L'eliminazione è permanente.
+          </p>
+
           <h3>Tipi di Schede</h3>
           <ul>
             <li>
@@ -470,6 +499,18 @@ const Help = () => {
 
           <h4>Posso modificare un esercizio?</h4>
           <p>Sì, clicca il pulsante "Modifica" nella tabella degli esercizi.</p>
+
+          <h4>Come tracciare i progressi?</h4>
+          <p>
+            Usa la funzione "Modifica" per aggiornare i pesi quando aumenti il carico. Puoi anche
+            aggiungere note per registrare come è andato l'allenamento.
+          </p>
+
+          <h4>Cosa succede se modifico un esercizio per errore?</h4>
+          <p>
+            Puoi sempre modificarlo di nuovo con i dati corretti. Non c'è un limite al numero di
+            modifiche.
+          </p>
         </>
       ),
     },

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { shoppingAPI } from '../../services/api';
+import ShoppingAssistant from '../../components/ShoppingAssistant';
 
 const ShoppingLists = () => {
   const [lists, setLists] = useState([]);
@@ -158,6 +159,8 @@ const ShoppingLists = () => {
           </div>
         </div>
       )}
+
+      <ShoppingAssistant />
     </div>
   );
 };

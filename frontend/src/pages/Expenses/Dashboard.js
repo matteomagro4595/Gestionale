@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { expensesAPI } from '../../services/api';
+import ExpensesAssistant from '../../components/ExpensesAssistant';
 
 const Dashboard = () => {
   const [groups, setGroups] = useState([]);
@@ -201,6 +202,8 @@ const Dashboard = () => {
           </div>
         </div>
       )}
+
+      <ExpensesAssistant />
     </div>
   );
 };

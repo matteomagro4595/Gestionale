@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { gymAPI } from '../../services/api';
+import GymAssistant from '../../components/GymAssistant';
 
 const GymCards = () => {
   const [cards, setCards] = useState([]);
@@ -103,6 +104,8 @@ const GymCards = () => {
           </div>
         </div>
       )}
+
+      <GymAssistant />
     </div>
   );
 };

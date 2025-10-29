@@ -16,6 +16,7 @@ import ShoppingListJoin from './pages/Shopping/ShoppingListJoin';
 import GymCards from './pages/Gym/GymCards';
 import GymCardDetail from './pages/Gym/GymCardDetail';
 import Notifications from './pages/Notifications/Notifications';
+import Help from './pages/Help';
 
 // Components
 import Navbar from './components/Navbar';
@@ -194,6 +195,15 @@ function AppContent() {
               <ProtectedRoute>
                 <Navbar />
                 <Notifications />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/help"
+            element={
+              <ProtectedRoute>
+                <Navbar />
+                <Help />
               </ProtectedRoute>
             }
           />

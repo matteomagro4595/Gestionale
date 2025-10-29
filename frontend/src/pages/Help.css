@@ -1,0 +1,283 @@
+.help-container {
+  display: flex;
+  min-height: calc(100vh - 70px);
+  background: #f8f9fa;
+}
+
+.help-sidebar {
+  width: 280px;
+  background: white;
+  border-right: 1px solid #e9ecef;
+  padding: 2rem 0;
+  position: sticky;
+  top: 0;
+  height: calc(100vh - 70px);
+  overflow-y: auto;
+}
+
+.help-sidebar h2 {
+  padding: 0 1.5rem;
+  margin: 0 0 1.5rem 0;
+  color: #2c3e50;
+  font-size: 1.5rem;
+}
+
+.help-nav {
+  display: flex;
+  flex-direction: column;
+}
+
+.help-nav-item {
+  background: none;
+  border: none;
+  text-align: left;
+  padding: 0.75rem 1.5rem;
+  font-size: 0.95rem;
+  color: #7f8c8d;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-left: 3px solid transparent;
+}
+
+.help-nav-item:hover {
+  background: #f8f9fa;
+  color: #2c3e50;
+}
+
+.help-nav-item.active {
+  background: #f0f4ff;
+  color: #667eea;
+  border-left-color: #667eea;
+  font-weight: 600;
+}
+
+.help-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 2rem;
+}
+
+.help-content-inner {
+  max-width: 900px;
+  margin: 0 auto;
+  background: white;
+  border-radius: 12px;
+  padding: 3rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.help-content-inner h1 {
+  color: #2c3e50;
+  font-size: 2rem;
+  margin-bottom: 2rem;
+  padding-bottom: 1rem;
+  border-bottom: 2px solid #e9ecef;
+}
+
+.help-content-inner h2 {
+  color: #2c3e50;
+  font-size: 1.5rem;
+  margin-top: 2rem;
+  margin-bottom: 1rem;
+}
+
+.help-content-inner h3 {
+  color: #2c3e50;
+  font-size: 1.25rem;
+  margin-top: 1.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.help-content-inner h4 {
+  color: #2c3e50;
+  font-size: 1.1rem;
+  margin-top: 1.25rem;
+  margin-bottom: 0.5rem;
+}
+
+.help-content-inner p {
+  color: #7f8c8d;
+  line-height: 1.8;
+  margin-bottom: 1rem;
+}
+
+.help-content-inner ul,
+.help-content-inner ol {
+  color: #7f8c8d;
+  line-height: 1.8;
+  margin-bottom: 1rem;
+  padding-left: 1.5rem;
+}
+
+.help-content-inner li {
+  margin-bottom: 0.5rem;
+}
+
+.help-content-inner strong {
+  color: #2c3e50;
+  font-weight: 600;
+}
+
+.help-modules {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.help-module-card {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 2rem;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.3s;
+  text-align: center;
+}
+
+.help-module-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.4);
+}
+
+.help-module-icon {
+  font-size: 3rem;
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.help-module-card h3 {
+  color: white;
+  margin: 0 0 0.5rem 0;
+  font-size: 1.25rem;
+}
+
+.help-module-card p {
+  color: rgba(255, 255, 255, 0.9);
+  margin: 0;
+  font-size: 0.9rem;
+}
+
+.help-tip {
+  background: #f0f4ff;
+  border-left: 4px solid #667eea;
+  padding: 1rem 1.5rem;
+  border-radius: 4px;
+  margin: 1.5rem 0;
+}
+
+.help-tip p,
+.help-tip strong {
+  margin: 0;
+  color: #2c3e50;
+}
+
+.help-tip strong {
+  color: #667eea;
+}
+
+.help-warning {
+  background: #fff5f5;
+  border-left: 4px solid #e53e3e;
+  padding: 1rem 1.5rem;
+  border-radius: 4px;
+  margin: 1.5rem 0;
+}
+
+.help-warning p,
+.help-warning strong {
+  margin: 0;
+  color: #2c3e50;
+}
+
+.help-warning strong {
+  color: #e53e3e;
+}
+
+.help-footer {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 2px solid #e9ecef;
+}
+
+.help-footer p {
+  margin-bottom: 0.5rem;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 1024px) {
+  .help-sidebar {
+    width: 240px;
+  }
+
+  .help-content-inner {
+    padding: 2rem;
+  }
+
+  .help-content-inner h1 {
+    font-size: 1.75rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .help-container {
+    flex-direction: column;
+  }
+
+  .help-sidebar {
+    width: 100%;
+    height: auto;
+    position: static;
+    border-right: none;
+    border-bottom: 1px solid #e9ecef;
+    padding: 1rem 0;
+  }
+
+  .help-sidebar h2 {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+    padding: 0 1rem;
+  }
+
+  .help-nav {
+    flex-direction: row;
+    overflow-x: auto;
+    padding: 0 1rem;
+    gap: 0.5rem;
+  }
+
+  .help-nav-item {
+    white-space: nowrap;
+    padding: 0.5rem 1rem;
+    border-left: none;
+    border-radius: 20px;
+    font-size: 0.85rem;
+  }
+
+  .help-nav-item.active {
+    background: #667eea;
+    color: white;
+  }
+
+  .help-content {
+    padding: 1rem;
+  }
+
+  .help-content-inner {
+    padding: 1.5rem;
+  }
+
+  .help-content-inner h1 {
+    font-size: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .help-modules {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .help-module-card {
+    padding: 1.5rem;
+  }
+}

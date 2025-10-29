@@ -1,0 +1,254 @@
+.assistant-fab {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  border: none;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  color: white;
+  transition: all 0.3s ease;
+  z-index: 999;
+}
+
+.assistant-fab:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+}
+
+.assistant-fab:active {
+  transform: scale(0.95);
+}
+
+.assistant-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.assistant-modal {
+  background: white;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 700px;
+  max-height: 85vh;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.assistant-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  padding: 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.assistant-header h2 {
+  margin: 0;
+  font-size: 1.5rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.assistant-close {
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  color: white;
+  font-size: 1.25rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.2s;
+}
+
+.assistant-close:hover {
+  background: rgba(255, 255, 255, 0.3);
+}
+
+.assistant-content {
+  padding: 2rem;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.assistant-section {
+  margin-bottom: 2rem;
+}
+
+.assistant-section:last-child {
+  margin-bottom: 0;
+}
+
+.assistant-section h3 {
+  color: #2c3e50;
+  font-size: 1.25rem;
+  margin-bottom: 1rem;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.assistant-section p {
+  color: #7f8c8d;
+  line-height: 1.6;
+  margin-bottom: 0.75rem;
+}
+
+.assistant-section ul {
+  list-style: none;
+  padding: 0;
+}
+
+.assistant-section li {
+  color: #2c3e50;
+  padding: 0.5rem 0;
+  padding-left: 1.5rem;
+  position: relative;
+  line-height: 1.5;
+}
+
+.assistant-section li:before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  color: #667eea;
+  font-weight: bold;
+}
+
+.assistant-tip {
+  background: #f0f4ff;
+  border-left: 4px solid #667eea;
+  padding: 1rem;
+  border-radius: 4px;
+  margin-top: 1rem;
+}
+
+.assistant-tip p {
+  margin: 0;
+  color: #2c3e50;
+  font-size: 0.95rem;
+}
+
+.assistant-tip strong {
+  color: #667eea;
+}
+
+.assistant-actions {
+  padding: 1rem 2rem;
+  border-top: 1px solid #e9ecef;
+  display: flex;
+  gap: 1rem;
+  background: #f8f9fa;
+}
+
+.assistant-btn {
+  flex: 1;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  border: none;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-weight: 500;
+}
+
+.assistant-btn-primary {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.assistant-btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.assistant-btn-secondary {
+  background: white;
+  color: #667eea;
+  border: 2px solid #667eea;
+}
+
+.assistant-btn-secondary:hover {
+  background: #f0f4ff;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .assistant-fab {
+    bottom: 1rem;
+    right: 1rem;
+    width: 56px;
+    height: 56px;
+  }
+
+  .assistant-modal {
+    width: 95%;
+    max-height: 90vh;
+  }
+
+  .assistant-header {
+    padding: 1rem;
+  }
+
+  .assistant-header h2 {
+    font-size: 1.25rem;
+  }
+
+  .assistant-content {
+    padding: 1.5rem;
+  }
+
+  .assistant-actions {
+    padding: 1rem;
+    flex-direction: column;
+  }
+
+  .assistant-btn {
+    width: 100%;
+  }
+}

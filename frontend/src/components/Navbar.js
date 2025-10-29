@@ -88,6 +88,13 @@ const Navbar = () => {
             <span className="nav-icon">💪</span>
             <span>Palestra</span>
           </Link>
+          <Link
+            to="/help"
+            className={`nav-link ${isActive('/help') ? 'active' : ''}`}
+          >
+            <span className="nav-icon">📚</span>
+            <span>Aiuto</span>
+          </Link>
         </div>
 
         {/* Notifications */}

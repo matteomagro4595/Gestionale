@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import NotificationBell from './NotificationBell';
 import './Navbar.css';
 
 const Navbar = () => {
@@ -88,6 +89,9 @@ const Navbar = () => {
             <span>Palestra</span>
           </Link>
         </div>
+
+        {/* Notifications */}
+        <NotificationBell />
 
         {/* User Menu */}
         <div className="navbar-user" ref={dropdownRef}>

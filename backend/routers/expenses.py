@@ -10,6 +10,7 @@ from schemas.expense import (
     GroupMemberCreate, Balance
 )
 from auth import get_current_user
+from utils.notifications import notify_expense_group_members
 
 router = APIRouter()
 
@@ -115,6 +116,16 @@ def get_group_by_token(
             db.commit()
             db.refresh(group)
 
+            # Notify other members
+            notify_expense_group_members(
+                db=db,
+                group_id=group.id,
+                notification_type="expense_group",
+                title="Nuovo membro nel gruppo",
+                message=f"{current_user.nome} {current_user.cognome} si è unito al gruppo '{group.nome}'",
+                exclude_user_id=current_user.id
+            )
+
     # Build member_users list
     member_users = [member.user for member in group.members if member.user]
     group.member_users = member_users
@@ -201,6 +212,20 @@ def add_group_member(
     db_member = GroupMember(group_id=group_id, user_id=member.user_id)
     db.add(db_member)
     db.commit()
+
+    # Get the added user
+    added_user = db.query(User).filter(User.id == member.user_id).first()
+
+    # Notify all members including the new one
+    notify_expense_group_members(
+        db=db,
+        group_id=group_id,
+        notification_type="expense_group",
+        title="Nuovo membro aggiunto",
+        message=f"{added_user.nome} {added_user.cognome} è stato aggiunto al gruppo '{group.nome}'",
+        exclude_user_id=current_user.id
+    )
+
     return {"message": "Membro aggiunto con successo"}
 
 @router.delete("/groups/{group_id}/members/{user_id}", status_code=status.HTTP_204_NO_CONTENT)
@@ -274,6 +299,20 @@ def create_expense(
 
     db.commit()
     db.refresh(db_expense)
+
+    # Get group info for notification
+    group = db.query(ExpenseGroup).filter(ExpenseGroup.id == expense.group_id).first()
+
+    # Notify group members
+    notify_expense_group_members(
+        db=db,
+        group_id=expense.group_id,
+        notification_type="expense_group",
+        title="Nuova spesa aggiunta",
+        message=f"{current_user.nome} ha aggiunto una spesa di €{db_expense.importo:.2f} per '{db_expense.descrizione}' in '{group.nome}'",
+        exclude_user_id=current_user.id
+    )
+
     return db_expense
 
 @router.get("/expenses", response_model=List[ExpenseSchema])

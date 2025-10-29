@@ -2,7 +2,7 @@ import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from database import engine, Base
-from routers import auth, users, expenses, shopping_lists, gym
+from routers import auth, users, expenses, shopping_lists, gym, notifications
 
 # Create database tables
 Base.metadata.create_all(bind=engine)
@@ -48,6 +48,7 @@ app.include_router(users.router, prefix="/api/users", tags=["Users"])
 app.include_router(expenses.router, prefix="/api/expenses", tags=["Gestione Spese"])
 app.include_router(shopping_lists.router, prefix="/api/shopping-lists", tags=["Lista della Spesa"])
 app.include_router(gym.router, prefix="/api/gym", tags=["Schede Palestra"])
+app.include_router(notifications.router, prefix="/api/notifications", tags=["Notifiche"])
 
 @app.get("/")
 def read_root():

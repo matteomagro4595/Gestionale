@@ -10,6 +10,7 @@ from schemas.shopping import (
     UserBasic
 )
 from auth import get_current_user
+from utils.notifications import notify_shopping_list_members
 
 router = APIRouter()
 
@@ -119,6 +120,16 @@ def get_shopping_list_by_token(
             db.commit()
             db.refresh(shopping_list)
 
+            # Notify other members
+            notify_shopping_list_members(
+                db=db,
+                shopping_list_id=shopping_list.id,
+                notification_type="shopping_list",
+                title="Nuovo membro nella lista",
+                message=f"{current_user.nome} {current_user.cognome} si è unito alla lista '{shopping_list.nome}'",
+                exclude_user_id=current_user.id
+            )
+
     # Build shared_users list from shared_with relationship
     shared_users = [shared_item.user for shared_item in shopping_list.shared_with]
     shopping_list.shared_users = shared_users
@@ -206,6 +217,17 @@ def create_shopping_item(
     db.add(db_item)
     db.commit()
     db.refresh(db_item)
+
+    # Notify other members
+    notify_shopping_list_members(
+        db=db,
+        shopping_list_id=list_id,
+        notification_type="shopping_list",
+        title="Nuovo articolo aggiunto",
+        message=f"{current_user.nome} ha aggiunto '{db_item.nome}' alla lista '{shopping_list.nome}'",
+        exclude_user_id=current_user.id
+    )
+
     return db_item
 
 @router.put("/{list_id}/items/{item_id}", response_model=ShoppingItemSchema)
@@ -246,6 +268,10 @@ def update_shopping_item(
             detail="Articolo non trovato"
         )
 
+    # Check if item is being marked as completed
+    was_completed_before = item.completato
+    is_being_completed = item_update.completato is True and not was_completed_before
+
     for key, value in item_update.dict(exclude_unset=True).items():
         setattr(item, key, value)
 
@@ -255,6 +281,18 @@ def update_shopping_item(
 
     db.commit()
     db.refresh(item)
+
+    # Notify other members if item was completed
+    if is_being_completed:
+        notify_shopping_list_members(
+            db=db,
+            shopping_list_id=list_id,
+            notification_type="shopping_list",
+            title="Articolo completato",
+            message=f"{current_user.nome} ha completato '{item.nome}' nella lista '{shopping_list.nome}'",
+            exclude_user_id=current_user.id
+        )
+
     return item
 
 @router.delete("/{list_id}/items/{item_id}", status_code=status.HTTP_204_NO_CONTENT)

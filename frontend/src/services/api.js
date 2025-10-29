@@ -90,4 +90,13 @@ export const gymAPI = {
   deleteExercise: (cardId, exerciseId) => api.delete(`/api/gym/cards/${cardId}/exercises/${exerciseId}`),
 };
 
+// Notifications APIs
+export const notificationsAPI = {
+  getNotifications: (params) => api.get('/api/notifications/', { params }),
+  getUnreadCount: () => api.get('/api/notifications/unread-count'),
+  markAsRead: (id, isRead) => api.put(`/api/notifications/${id}/mark-read`, { is_read: isRead }),
+  markAllAsRead: () => api.put('/api/notifications/mark-all-read'),
+  deleteNotification: (id) => api.delete(`/api/notifications/${id}`),
+};
+
 export default api;

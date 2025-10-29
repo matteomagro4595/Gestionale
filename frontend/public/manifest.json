@@ -1,0 +1,23 @@
+{
+  "short_name": "Gestionale",
+  "name": "Gestionale - Spese, Shopping, Palestra",
+  "description": "Applicazione per gestione spese condivise, liste della spesa e schede palestra",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "type": "image/svg+xml",
+      "sizes": "any"
+    },
+    {
+      "src": "logo.svg",
+      "type": "image/svg+xml",
+      "sizes": "any",
+      "purpose": "any maskable"
+    }
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#667eea",
+  "background_color": "#f8f9fa",
+  "orientation": "portrait"
+}

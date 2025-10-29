@@ -201,6 +201,36 @@ docker-compose down -v
 
 ## Sviluppo
 
+### 🤖 Claude Code (Consigliato)
+
+Questo progetto è configurato per lavorare con [Claude Code](https://claude.ai/claude-code), un AI coding assistant che può aiutarti a:
+- Comprendere rapidamente il codebase
+- Aggiungere nuove feature seguendo le best practices del progetto
+- Debuggare problemi in modo sistematico
+- Gestire Docker e database migrations
+
+#### Setup Claude Code
+
+1. Installa Claude Code seguendo le istruzioni su [claude.com/claude-code](https://claude.com/claude-code)
+
+2. Apri il progetto:
+   ```bash
+   cd Gestionale
+   claude-code .
+   ```
+
+3. La configurazione in `.claude/` viene applicata automaticamente
+
+#### Comandi Disponibili
+
+- `/dev-setup` - Setup completo ambiente di sviluppo
+- `/check-services` - Controlla stato di tutti i servizi
+- `/add-feature` - Workflow guidato per aggiungere feature
+- `/debug-issue` - Processo sistematico di debug
+- `/db-migrate` - Gestione migrazioni database
+
+Vedi `.claude/README.md` per documentazione completa.
+
 ### Struttura del Progetto
 
 ```

@@ -1,0 +1,10 @@
+# Ignore local settings (personal configurations)
+*.local.json
+settings.local.json
+
+# Ignore personal history
+.history/
+
+# Keep shared settings and commands
+!settings.json
+!commands/

@@ -343,16 +343,15 @@
     padding: 0.5rem 1rem;
   }
 
-  .brand-text {
+  /* Hide brand/logo on mobile */
+  .navbar-brand {
     display: none;
   }
 
-  .brand-icon {
-    font-size: 2rem;
-  }
-
+  /* Home on the left */
   .navbar-menu {
-    gap: 0.25rem;
+    gap: 0.5rem;
+    order: 1;
   }
 
   .nav-link span:not(.nav-icon) {
@@ -367,6 +366,21 @@
     font-size: 1.5rem;
   }
 
+  /* Hide secondary navigation on mobile - only keep Home */
+  .nav-link:not(:first-child) {
+    display: none;
+  }
+
+  /* Notifications and User on the right */
+  .notification-bell {
+    order: 2;
+    margin-left: auto;
+  }
+
+  .navbar-user {
+    order: 3;
+  }
+
   .user-menu-trigger {
     padding: 0.5rem;
   }
@@ -374,11 +388,15 @@
   .dropdown-arrow {
     display: none;
   }
+
+  .user-dropdown {
+    right: 0;
+  }
 }
 
 @media (max-width: 480px) {
   .navbar-menu {
-    gap: 0.125rem;
+    gap: 0.25rem;
   }
 
   .nav-link {
@@ -386,7 +404,11 @@
   }
 
   .user-dropdown {
-    right: -1rem;
-    min-width: 260px;
+    left: -0.5rem;
+    min-width: 280px;
+  }
+
+  .navbar-container {
+    padding: 0.5rem 0.75rem;
   }
 }

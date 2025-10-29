@@ -344,6 +344,25 @@ MIT License
 
 Le contribuzioni sono benvenute! Sentiti libero di aprire issue o pull request.
 
+### ⚠️ IMPORTANTE: Documentazione Obbligatoria
+
+**REGOLA FONDAMENTALE**: Ogni modifica al codice deve essere accompagnata da un aggiornamento della documentazione appropriata.
+
+Prima di contribuire, leggi **[CONTRIBUTING.md](./CONTRIBUTING.md)** per:
+- Workflow completo di sviluppo
+- Guida su quale documentazione aggiornare
+- Standard di commit e best practices
+- Esempi pratici
+
+### Documentazione del Progetto
+
+- **Guide Utente**: `docs/` (EXPENSES_GUIDE.md, SHOPPING_GUIDE.md, GYM_GUIDE.md)
+- **Assistenti Interattivi**: `frontend/src/components/*Assistant.js`
+- **Pagina Aiuto**: `frontend/src/pages/Help.js`
+- **Guide Sviluppatori**: `.claude/` (per utenti Claude Code)
+
+**Un codice senza documentazione aggiornata è un codice incompleto e non sarà accettato.**
+
 ## Supporto
 
 Per problemi o domande, apri un issue su GitHub.

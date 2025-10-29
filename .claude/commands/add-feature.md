@@ -32,14 +32,27 @@ Quando l'utente richiede una nuova feature, segui questa procedura sistematica:
 - Controlla che le autorizzazioni siano corrette
 - Verifica mobile responsiveness
 
-## 5. Documentazione
-- Aggiorna le guide appropriate in `docs/`
-- Aggiorna gli assistenti se la feature è significativa
-- Aggiungi note alla pagina Help se necessario
+## 5. Documentazione (⚠️ OBBLIGATORIO)
+
+**REGOLA FONDAMENTALE: OGNI MODIFICA AL CODICE RICHIEDE AGGIORNAMENTO DOCUMENTAZIONE**
+
+Checklist documentazione da aggiornare:
+- [ ] Guide in `docs/` (EXPENSES_GUIDE.md, SHOPPING_GUIDE.md, GYM_GUIDE.md)
+- [ ] Assistenti interattivi in `frontend/src/components/` (*Assistant.js)
+- [ ] Pagina Help in `frontend/src/pages/Help.js`
+- [ ] README.md se la feature è significativa
+- [ ] CONTRIBUTING.md se cambiano workflow
+
+**Non procedere al commit senza aver aggiornato la documentazione appropriata!**
 
 ## 6. Commit
 - Usa git add per staging
 - Crea un commit descrittivo seguendo il formato del progetto
+- **Menziona nel messaggio quale documentazione è stata aggiornata**
 - Include emoji appropriati nel messaggio
 
-Segui sempre questo workflow per mantenere il progetto organizzato e ben documentato.
+## Promemoria
+
+Una feature NON è completa finché la documentazione non è aggiornata. Il codice senza documentazione è codice incompleto.
+
+Vedi `CONTRIBUTING.md` per dettagli completi sul workflow di contribuzione.

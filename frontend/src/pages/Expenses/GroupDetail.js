@@ -187,13 +187,27 @@ Clicca sul link per accedere: ${shareUrl}`;
       </button>
 
       <div style={{ marginTop: '1rem', marginBottom: '2rem' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-          <h1 style={{ margin: 0 }}>{group?.nome}</h1>
+        <div style={{
+          display: 'flex',
+          flexWrap: 'wrap',
+          gap: '1rem',
+          alignItems: 'center',
+          marginBottom: '0.5rem'
+        }}>
+          <h1 style={{
+            margin: 0,
+            flex: '1 1 auto',
+            minWidth: '200px',
+            wordWrap: 'break-word',
+            overflowWrap: 'break-word'
+          }}>
+            {group?.nome}
+          </h1>
           {isCreator && (
             <button
               className="btn btn-danger"
               onClick={handleDeleteGroup}
-              style={{ marginLeft: '1rem' }}
+              style={{ flexShrink: 0 }}
             >
               Elimina Gruppo
             </button>
@@ -219,9 +233,30 @@ Clicca sul link per accedere: ${shareUrl}`;
               📱 Condividi su WhatsApp
             </button>
           </div>
-          <p style={{ marginTop: '0.5rem', fontSize: '0.85rem', color: '#7f8c8d', wordBreak: 'break-all' }}>
-            Token: {group?.share_token}
-          </p>
+          <div style={{
+            marginTop: '0.5rem',
+            padding: '0.5rem',
+            backgroundColor: '#f8f9fa',
+            borderRadius: '4px',
+            border: '1px solid #e2e8f0'
+          }}>
+            <p style={{ fontSize: '0.85rem', color: '#7f8c8d', margin: '0 0 0.25rem 0' }}>
+              Token:
+            </p>
+            <div style={{
+              overflowX: 'auto',
+              whiteSpace: 'nowrap',
+              fontSize: '0.85rem',
+              fontFamily: 'monospace',
+              color: '#2c3e50',
+              padding: '0.25rem',
+              backgroundColor: '#ffffff',
+              borderRadius: '3px',
+              border: '1px solid #dee2e6'
+            }}>
+              {group?.share_token}
+            </div>
+          </div>
         </div>
       </div>
 

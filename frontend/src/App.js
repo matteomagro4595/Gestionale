@@ -17,6 +17,7 @@ import GymCards from './pages/Gym/GymCards';
 import GymCardDetail from './pages/Gym/GymCardDetail';
 import Notifications from './pages/Notifications/Notifications';
 import Help from './pages/Help';
+import Profile from './pages/Profile/Profile';
 
 // Components
 import Navbar from './components/Navbar';
@@ -204,6 +205,15 @@ function AppContent() {
               <ProtectedRoute>
                 <Navbar />
                 <Help />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <Navbar />
+                <Profile />
               </ProtectedRoute>
             }
           />

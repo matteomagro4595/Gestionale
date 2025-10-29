@@ -28,3 +28,11 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     email: Optional[str] = None
+
+class UpdateEmail(BaseModel):
+    email: EmailStr
+    password: str  # Require password confirmation
+
+class UpdatePassword(BaseModel):
+    current_password: str
+    new_password: str

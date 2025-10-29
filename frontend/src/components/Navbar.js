@@ -128,6 +128,11 @@ const Navbar = () => {
                 </div>
               </div>
               <div className="dropdown-divider"></div>
+              <Link to="/profile" className="dropdown-item" onClick={() => setShowUserMenu(false)}>
+                <span>👤</span>
+                <span>Profilo</span>
+              </Link>
+              <div className="dropdown-divider"></div>
               <button className="dropdown-item logout-item" onClick={handleLogout}>
                 <span>🚪</span>
                 <span>Esci</span>

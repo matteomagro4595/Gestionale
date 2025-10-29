@@ -3,7 +3,7 @@ from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
 from database import get_db
 from models.user import User
-from schemas.user import UserCreate, UserLogin, Token, User as UserSchema
+from schemas.user import UserCreate, UserLogin, Token, User as UserSchema, UpdateEmail, UpdatePassword
 from auth import get_password_hash, verify_password, create_access_token, get_current_user
 
 router = APIRouter()
@@ -72,3 +72,61 @@ def login(user_credentials: UserLogin, db: Session = Depends(get_db)):
 @router.get("/me", response_model=UserSchema)
 def get_me(current_user: User = Depends(get_current_user)):
     return current_user
+
+@router.put("/update-email", response_model=UserSchema)
+def update_email(
+    update_data: UpdateEmail,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Update user email. Requires password confirmation.
+    """
+    # Verify password
+    if not verify_password(update_data.password, current_user.hashed_password):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Password non corretta"
+        )
+
+    # Check if new email is already taken
+    existing_user = db.query(User).filter(User.email == update_data.email).first()
+    if existing_user and existing_user.id != current_user.id:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Email già utilizzata da un altro utente"
+        )
+
+    # Update email
+    current_user.email = update_data.email
+    db.commit()
+    db.refresh(current_user)
+    return current_user
+
+@router.put("/update-password")
+def update_password(
+    update_data: UpdatePassword,
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Update user password. Requires current password confirmation.
+    """
+    # Verify current password
+    if not verify_password(update_data.current_password, current_user.hashed_password):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Password attuale non corretta"
+        )
+
+    # Validate new password
+    if len(update_data.new_password) < 6:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="La nuova password deve essere di almeno 6 caratteri"
+        )
+
+    # Update password
+    current_user.hashed_password = get_password_hash(update_data.new_password)
+    db.commit()
+    return {"message": "Password aggiornata con successo"}

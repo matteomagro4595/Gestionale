@@ -28,6 +28,8 @@ export const authAPI = {
   register: (data) => api.post('/api/auth/register', data),
   login: (data) => api.post('/api/auth/login', data),
   getMe: () => api.get('/api/auth/me'),
+  updateEmail: (data) => api.put('/api/auth/update-email', data),
+  updatePassword: (data) => api.put('/api/auth/update-password', data),
 };
 
 // Users APIs

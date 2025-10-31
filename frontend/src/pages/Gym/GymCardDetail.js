@@ -15,6 +15,8 @@ const GymCardDetail = () => {
   const [touchStartY, setTouchStartY] = useState(null);
   const [touchCurrentY, setTouchCurrentY] = useState(null);
   const [draggedRow, setDraggedRow] = useState(null);
+  const [saveTimeout, setSaveTimeout] = useState(null);
+  const [isSaving, setIsSaving] = useState(false);
   const [newExercise, setNewExercise] = useState({
     nome: '',
     serie: '',
@@ -27,6 +29,15 @@ const GymCardDetail = () => {
   useEffect(() => {
     loadCard();
   }, [cardId]);
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (saveTimeout) {
+        clearTimeout(saveTimeout);
+      }
+    };
+  }, [saveTimeout]);
 
   const loadCard = async () => {
     try {
@@ -121,21 +132,64 @@ const GymCardDetail = () => {
     }
   };
 
-  // Reorder exercises and update backend
-  const reorderExercises = async (exercises) => {
-    try {
-      // Update each exercise with new order
-      for (let i = 0; i < exercises.length; i++) {
-        await gymAPI.updateExercise(cardId, exercises[i].id, {
-          ...exercises[i],
-          ordine: i,
-        });
-      }
-      loadCard();
-    } catch (error) {
-      console.error('Error reordering exercises:', error);
-      alert('Errore durante il riordinamento degli esercizi');
+  // Optimistic UI update - update local state immediately
+  const updateLocalOrder = (exercises) => {
+    const updatedExercises = exercises.map((ex, index) => ({
+      ...ex,
+      ordine: index,
+    }));
+
+    setCard({
+      ...card,
+      exercises: updatedExercises,
+    });
+
+    return updatedExercises;
+  };
+
+  // Debounced save to backend
+  const saveOrderToBackend = async (exercises) => {
+    // Clear any existing timeout
+    if (saveTimeout) {
+      clearTimeout(saveTimeout);
     }
+
+    // Set a new timeout to save after 1 second of no changes
+    const timeout = setTimeout(async () => {
+      setIsSaving(true);
+      const previousState = card.exercises;
+
+      try {
+        // Update each exercise with new order
+        for (let i = 0; i < exercises.length; i++) {
+          await gymAPI.updateExercise(cardId, exercises[i].id, {
+            ...exercises[i],
+            ordine: i,
+          });
+        }
+        setIsSaving(false);
+      } catch (error) {
+        console.error('Error saving order:', error);
+        // Rollback to previous state on error
+        setCard({
+          ...card,
+          exercises: previousState,
+        });
+        alert('Errore durante il salvataggio dell\'ordine. Riprovare.');
+        setIsSaving(false);
+      }
+    }, 1000); // Wait 1 second after last change
+
+    setSaveTimeout(timeout);
+  };
+
+  // Reorder exercises with optimistic update
+  const reorderExercises = (exercises) => {
+    // Update UI immediately for instant feedback
+    const updatedExercises = updateLocalOrder(exercises);
+
+    // Save to backend with debounce
+    saveOrderToBackend(updatedExercises);
   };
 
   // Drag and drop handlers (desktop)
@@ -265,7 +319,22 @@ const GymCardDetail = () => {
 
       <div className="card">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
-          <h2 style={{ margin: 0 }}>Esercizi</h2>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <h2 style={{ margin: 0 }}>Esercizi</h2>
+            {isSaving && (
+              <span style={{
+                fontSize: '0.85rem',
+                color: '#7f8c8d',
+                fontStyle: 'italic',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.5rem'
+              }}>
+                <div className="spinner-small"></div>
+                Salvataggio...
+              </span>
+            )}
+          </div>
           <button
             className="btn btn-primary"
             onClick={() => setShowModal(true)}

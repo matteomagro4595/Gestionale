@@ -147,14 +147,18 @@ const ShoppingListDetail = () => {
     }
   };
 
+  const getShareUrl = () => {
+    const appUrl = window.location.origin;
+    return `${appUrl}/shopping/join/${list.share_token}`;
+  };
+
   const copyShareToken = () => {
     navigator.clipboard.writeText(list.share_token);
     alert('Token copiato negli appunti!');
   };
 
   const shareViaWhatsApp = () => {
-    const appUrl = window.location.origin;
-    const shareUrl = `${appUrl}/shopping/join/${list.share_token}`;
+    const shareUrl = getShareUrl();
     const message = `Ciao! Ti invito a collaborare alla lista della spesa "${list.nome}".
 
 Clicca sul link per accedere: ${shareUrl}`;
@@ -164,8 +168,7 @@ Clicca sul link per accedere: ${shareUrl}`;
   };
 
   const copyShareLink = () => {
-    const appUrl = window.location.origin;
-    const shareUrl = `${appUrl}/shopping/join/${list.share_token}`;
+    const shareUrl = getShareUrl();
     navigator.clipboard.writeText(shareUrl);
     alert('Link copiato negli appunti!');
   };

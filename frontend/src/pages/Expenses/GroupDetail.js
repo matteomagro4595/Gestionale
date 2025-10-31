@@ -146,14 +146,18 @@ const GroupDetail = () => {
     }
   };
 
+  const getShareUrl = () => {
+    const appUrl = window.location.origin;
+    return `${appUrl}/expenses/groups/join/${group.share_token}`;
+  };
+
   const copyShareToken = () => {
     navigator.clipboard.writeText(group.share_token);
     alert('Token copiato negli appunti!');
   };
 
   const shareViaWhatsApp = () => {
-    const appUrl = window.location.origin;
-    const shareUrl = `${appUrl}/expenses/groups/join/${group.share_token}`;
+    const shareUrl = getShareUrl();
     const message = `Ciao! Ti invito a unirti al gruppo di spese "${group.nome}".
 
 Clicca sul link per accedere: ${shareUrl}`;
@@ -163,8 +167,7 @@ Clicca sul link per accedere: ${shareUrl}`;
   };
 
   const copyShareLink = () => {
-    const appUrl = window.location.origin;
-    const shareUrl = `${appUrl}/expenses/groups/join/${group.share_token}`;
+    const shareUrl = getShareUrl();
     navigator.clipboard.writeText(shareUrl);
     alert('Link copiato negli appunti!');
   };

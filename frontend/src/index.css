@@ -245,16 +245,30 @@ table th {
 }
 
 /* Draggable rows */
-tr[draggable="true"] {
-  transition: background-color 0.2s, box-shadow 0.2s;
+.draggable-row {
+  transition: background-color 0.2s, box-shadow 0.2s, transform 0.1s;
+  touch-action: none; /* Prevent default touch behaviors */
 }
 
-tr[draggable="true"]:hover {
+.draggable-row:hover {
   background-color: #f8f9fa;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-tr[draggable="true"]:active {
+.draggable-row:active {
+  cursor: grabbing;
+}
+
+/* Grip handle cursor */
+.draggable-row td:first-child {
+  cursor: grab;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.draggable-row:active td:first-child {
   cursor: grabbing;
 }
 

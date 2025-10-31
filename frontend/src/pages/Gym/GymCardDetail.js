@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { gymAPI } from '../../services/api';
-import { PlusIcon, EditIcon, TrashIcon, CheckIcon, XIcon, ArrowUpIcon, ArrowDownIcon, GripIcon } from '../../components/Icons';
+import { PlusIcon, EditIcon, TrashIcon, CheckIcon, XIcon, GripIcon } from '../../components/Icons';
 
 const GymCardDetail = () => {
   const { cardId } = useParams();
@@ -12,6 +12,9 @@ const GymCardDetail = () => {
   const [showEditModal, setShowEditModal] = useState(false);
   const [editingExercise, setEditingExercise] = useState(null);
   const [draggedExercise, setDraggedExercise] = useState(null);
+  const [touchStartY, setTouchStartY] = useState(null);
+  const [touchCurrentY, setTouchCurrentY] = useState(null);
+  const [draggedRow, setDraggedRow] = useState(null);
   const [newExercise, setNewExercise] = useState({
     nome: '',
     serie: '',
@@ -135,24 +138,6 @@ const GymCardDetail = () => {
     }
   };
 
-  // Move exercise up
-  const handleMoveUp = (index) => {
-    if (index === 0) return;
-    const sortedExercises = [...card.exercises].sort((a, b) => a.ordine - b.ordine);
-    const newExercises = [...sortedExercises];
-    [newExercises[index - 1], newExercises[index]] = [newExercises[index], newExercises[index - 1]];
-    reorderExercises(newExercises);
-  };
-
-  // Move exercise down
-  const handleMoveDown = (index) => {
-    const sortedExercises = [...card.exercises].sort((a, b) => a.ordine - b.ordine);
-    if (index === sortedExercises.length - 1) return;
-    const newExercises = [...sortedExercises];
-    [newExercises[index], newExercises[index + 1]] = [newExercises[index + 1], newExercises[index]];
-    reorderExercises(newExercises);
-  };
-
   // Drag and drop handlers (desktop)
   const handleDragStart = (e, exercise) => {
     setDraggedExercise(exercise);
@@ -183,6 +168,73 @@ const GymCardDetail = () => {
     newExercises.splice(targetIndex, 0, draggedExercise);
 
     reorderExercises(newExercises);
+  };
+
+  // Touch handlers for mobile drag and drop
+  const handleTouchStart = (e, exercise) => {
+    const touch = e.touches[0];
+    setTouchStartY(touch.clientY);
+    setTouchCurrentY(touch.clientY);
+    setDraggedExercise(exercise);
+    setDraggedRow(e.currentTarget);
+    e.currentTarget.style.opacity = '0.7';
+    e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.2)';
+  };
+
+  const handleTouchMove = (e, exercise) => {
+    if (!draggedExercise) return;
+
+    const touch = e.touches[0];
+    setTouchCurrentY(touch.clientY);
+
+    // Prevent default scrolling while dragging
+    e.preventDefault();
+
+    // Visual feedback: move the row
+    if (draggedRow) {
+      const deltaY = touch.clientY - touchStartY;
+      draggedRow.style.transform = `translateY(${deltaY}px)`;
+    }
+  };
+
+  const handleTouchEnd = (e) => {
+    if (!draggedExercise || !draggedRow) return;
+
+    // Reset styles
+    draggedRow.style.opacity = '1';
+    draggedRow.style.transform = '';
+    draggedRow.style.boxShadow = '';
+
+    // Calculate if we should swap
+    const deltaY = touchCurrentY - touchStartY;
+    const threshold = 50; // pixels to trigger swap
+
+    if (Math.abs(deltaY) > threshold) {
+      const sortedExercises = [...card.exercises].sort((a, b) => a.ordine - b.ordine);
+      const draggedIndex = sortedExercises.findIndex(ex => ex.id === draggedExercise.id);
+
+      let targetIndex = draggedIndex;
+      if (deltaY < 0 && draggedIndex > 0) {
+        // Swiped up
+        targetIndex = draggedIndex - 1;
+      } else if (deltaY > 0 && draggedIndex < sortedExercises.length - 1) {
+        // Swiped down
+        targetIndex = draggedIndex + 1;
+      }
+
+      if (targetIndex !== draggedIndex) {
+        const newExercises = [...sortedExercises];
+        newExercises.splice(draggedIndex, 1);
+        newExercises.splice(targetIndex, 0, draggedExercise);
+        reorderExercises(newExercises);
+      }
+    }
+
+    // Reset state
+    setDraggedExercise(null);
+    setTouchStartY(null);
+    setTouchCurrentY(null);
+    setDraggedRow(null);
   };
 
   if (loading) return <div className="spinner"></div>;
@@ -227,7 +279,7 @@ const GymCardDetail = () => {
           <table style={{ marginTop: '1rem' }}>
             <thead>
               <tr>
-                <th style={{ width: '60px', textAlign: 'center' }}>Ordine</th>
+                <th style={{ width: '50px', textAlign: 'center' }}></th>
                 <th>Esercizio</th>
                 <th>Serie</th>
                 <th>Ripetizioni</th>
@@ -247,33 +299,15 @@ const GymCardDetail = () => {
                     onDragEnd={handleDragEnd}
                     onDragOver={handleDragOver}
                     onDrop={(e) => handleDrop(e, exercise)}
-                    style={{ cursor: 'move' }}
+                    onTouchStart={(e) => handleTouchStart(e, exercise)}
+                    onTouchMove={(e) => handleTouchMove(e, exercise)}
+                    onTouchEnd={handleTouchEnd}
+                    style={{ cursor: 'move', userSelect: 'none' }}
+                    className="draggable-row"
                   >
-                    <td style={{ textAlign: 'center' }}>
-                      {/* Desktop: Drag handle */}
-                      <div className="desktop-only" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#7f8c8d' }}>
+                    <td style={{ textAlign: 'center', padding: '0.5rem' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#7f8c8d', cursor: 'grab' }}>
                         <GripIcon size={20} />
-                      </div>
-                      {/* Mobile: Arrow buttons */}
-                      <div className="mobile-only" style={{ display: 'flex', gap: '0.25rem', justifyContent: 'center' }}>
-                        <button
-                          className="btn btn-secondary"
-                          onClick={() => handleMoveUp(index)}
-                          disabled={index === 0}
-                          style={{ padding: '0.25rem', minWidth: '32px' }}
-                          title="Sposta su"
-                        >
-                          <ArrowUpIcon size={16} />
-                        </button>
-                        <button
-                          className="btn btn-secondary"
-                          onClick={() => handleMoveDown(index)}
-                          disabled={index === card.exercises.length - 1}
-                          style={{ padding: '0.25rem', minWidth: '32px' }}
-                          title="Sposta giù"
-                        >
-                          <ArrowDownIcon size={16} />
-                        </button>
                       </div>
                     </td>
                     <td>{exercise.nome}</td>

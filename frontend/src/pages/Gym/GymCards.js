@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { gymAPI } from '../../services/api';
 import GymAssistant from '../../components/GymAssistant';
+import { PlusIcon, CheckIcon, XIcon } from '../../components/Icons';
 
 const GymCards = () => {
   const [cards, setCards] = useState([]);
@@ -42,8 +43,12 @@ const GymCards = () => {
     <div className="container">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', marginTop: '2rem' }}>
         <h1 style={{ margin: 0 }}>Schede Palestra</h1>
-        <button className="btn btn-primary" onClick={() => setShowModal(true)}>
-          Nuova Scheda
+        <button
+          className="btn btn-primary"
+          onClick={() => setShowModal(true)}
+        >
+          <span className="btn-icon"><PlusIcon size={20} /></span>
+          <span className="btn-text">Nuova Scheda</span>
         </button>
       </div>
 
@@ -95,9 +100,17 @@ const GymCards = () => {
                 />
               </div>
               <div style={{ display: 'flex', gap: '1rem' }}>
-                <button type="submit" className="btn btn-primary">Crea</button>
-                <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>
-                  Annulla
+                <button type="submit" className="btn btn-primary">
+                  <span className="btn-icon"><CheckIcon size={20} /></span>
+                  <span className="btn-text">Crea</span>
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={() => setShowModal(false)}
+                >
+                  <span className="btn-icon"><XIcon size={20} /></span>
+                  <span className="btn-text">Annulla</span>
                 </button>
               </div>
             </form>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { shoppingAPI, authAPI } from '../../services/api';
+import { PlusIcon, TrashIcon, ClipboardIcon, LinkIcon, WhatsAppIcon, CheckIcon, XIcon } from '../../components/Icons';
 
 const ShoppingListDetail = () => {
   const { listId } = useParams();
@@ -231,24 +232,28 @@ Clicca sul link per accedere: ${shareUrl}`;
               onClick={handleDeleteList}
               style={{ flexShrink: 0 }}
             >
-              Elimina Lista
+              <span className="btn-icon"><TrashIcon size={20} /></span>
+              <span className="btn-text">Elimina Lista</span>
             </button>
           )}
         </div>
         <div style={{ marginTop: '1rem' }}>
           <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
             <button className="btn btn-secondary" onClick={copyShareToken}>
-              Copia Token
+              <span className="btn-icon"><ClipboardIcon size={20} /></span>
+              <span className="btn-text">Copia Token</span>
             </button>
             <button className="btn btn-secondary" onClick={copyShareLink}>
-              Copia Link
+              <span className="btn-icon"><LinkIcon size={20} /></span>
+              <span className="btn-text">Copia Link</span>
             </button>
             <button
               className="btn btn-primary"
               onClick={shareViaWhatsApp}
               style={{ backgroundColor: '#25D366', borderColor: '#25D366' }}
             >
-              📱 Condividi su WhatsApp
+              <span><WhatsAppIcon size={20} /></span>
+              <span className="btn-text" style={{ marginLeft: '0.25rem' }}>Condividi su WhatsApp</span>
             </button>
           </div>
           <div style={{
@@ -389,10 +394,11 @@ Clicca sul link per accedere: ${shareUrl}`;
       </div>
 
       <div className="card">
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <h2>Articoli</h2>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+          <h2 style={{ margin: 0 }}>Articoli</h2>
           <button className="btn btn-primary" onClick={() => setShowModal(true)}>
-            Nuovo Articolo
+            <span className="btn-icon"><PlusIcon size={20} /></span>
+            <span className="btn-text">Nuovo Articolo</span>
           </button>
         </div>
 
@@ -442,7 +448,8 @@ Clicca sul link per accedere: ${shareUrl}`;
                 onClick={() => handleDeleteItem(item.id)}
                 style={{ marginLeft: '1rem' }}
               >
-                Elimina
+                <span className="btn-icon"><TrashIcon size={18} /></span>
+                <span className="btn-text">Elimina</span>
               </button>
             </div>
           ))}
@@ -561,9 +568,13 @@ Clicca sul link per accedere: ${shareUrl}`;
                 />
               </div>
               <div style={{ display: 'flex', gap: '1rem' }}>
-                <button type="submit" className="btn btn-primary">Aggiungi</button>
+                <button type="submit" className="btn btn-primary">
+                  <span className="btn-icon"><CheckIcon size={20} /></span>
+                  <span className="btn-text">Aggiungi</span>
+                </button>
                 <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>
-                  Annulla
+                  <span className="btn-icon"><XIcon size={20} /></span>
+                  <span className="btn-text">Annulla</span>
                 </button>
               </div>
             </form>

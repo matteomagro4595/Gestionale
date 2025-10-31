@@ -48,7 +48,29 @@ code {
   border-radius: 4px;
   cursor: pointer;
   font-size: 1rem;
-  transition: background-color 0.3s;
+  transition: all 0.3s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.btn:active {
+  transform: translateY(0);
+}
+
+/* Button text and icon visibility */
+.btn-text {
+  display: inline;
+}
+
+.btn-icon {
+  display: none;
 }
 
 /* Primary Button - Default Theme (Purple) */
@@ -306,8 +328,19 @@ body.theme-gym .spinner {
 
   /* Reduce button size on mobile */
   .btn {
-    padding: 0.4rem 0.8rem;
+    padding: 0.5rem 0.75rem;
     font-size: 0.875rem;
+    min-width: 40px;
+    min-height: 40px;
+  }
+
+  /* Show icons, hide text on mobile */
+  .btn-text {
+    display: none;
+  }
+
+  .btn-icon {
+    display: inline;
   }
 
   /* Grid responsiveness for smaller screens */

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { expensesAPI } from '../../services/api';
 import ExpensesAssistant from '../../components/ExpensesAssistant';
+import { PlusIcon, BarChartIcon, XIcon, CheckIcon } from '../../components/Icons';
 
 const Dashboard = () => {
   const [groups, setGroups] = useState([]);
@@ -67,10 +68,12 @@ const Dashboard = () => {
         <h1 style={{ margin: 0 }}>Gestione Spese</h1>
         <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
           <Link to="/expenses/summary" className="btn btn-secondary">
-            📊 Riepilogo Generale
+            <span><BarChartIcon size={20} /></span>
+            <span className="btn-text" style={{ marginLeft: '0.25rem' }}>Riepilogo Generale</span>
           </Link>
           <button className="btn btn-primary" onClick={() => setShowModal(true)}>
-            Nuovo Gruppo
+            <span className="btn-icon"><PlusIcon size={20} /></span>
+            <span className="btn-text">Nuovo Gruppo</span>
           </button>
         </div>
       </div>
@@ -114,7 +117,8 @@ const Dashboard = () => {
                   }}
                   style={{ padding: '0.2rem 0.6rem', fontSize: '0.8rem' }}
                 >
-                  Cancella
+                  <span className="btn-icon"><XIcon size={16} /></span>
+                  <span className="btn-text">Cancella</span>
                 </button>
               </div>
             )}
@@ -193,9 +197,13 @@ const Dashboard = () => {
                 />
               </div>
               <div style={{ display: 'flex', gap: '1rem' }}>
-                <button type="submit" className="btn btn-primary">Crea</button>
+                <button type="submit" className="btn btn-primary">
+                  <span className="btn-icon"><CheckIcon size={20} /></span>
+                  <span className="btn-text">Crea</span>
+                </button>
                 <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>
-                  Annulla
+                  <span className="btn-icon"><XIcon size={20} /></span>
+                  <span className="btn-text">Annulla</span>
                 </button>
               </div>
             </form>

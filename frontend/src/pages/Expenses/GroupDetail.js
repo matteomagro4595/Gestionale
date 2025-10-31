@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { expensesAPI, usersAPI } from '../../services/api';
 import { useAuth } from '../../context/AuthContext';
+import { PlusIcon, EditIcon, TrashIcon, ClipboardIcon, LinkIcon, WhatsAppIcon, CheckIcon, XIcon } from '../../components/Icons';
 
 const GroupDetail = () => {
   const { groupId } = useParams();
@@ -209,7 +210,8 @@ Clicca sul link per accedere: ${shareUrl}`;
               onClick={handleDeleteGroup}
               style={{ flexShrink: 0 }}
             >
-              Elimina Gruppo
+              <span className="btn-icon"><TrashIcon size={20} /></span>
+              <span className="btn-text">Elimina Gruppo</span>
             </button>
           )}
         </div>
@@ -220,17 +222,20 @@ Clicca sul link per accedere: ${shareUrl}`;
           <h3 style={{ fontSize: '1rem', marginBottom: '0.75rem' }}>Condividi Gruppo</h3>
           <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
             <button className="btn btn-secondary" onClick={copyShareToken} style={{ flex: '1 1 auto' }}>
-              Copia Token
+              <span className="btn-icon"><ClipboardIcon size={20} /></span>
+              <span className="btn-text">Copia Token</span>
             </button>
             <button className="btn btn-secondary" onClick={copyShareLink} style={{ flex: '1 1 auto' }}>
-              Copia Link
+              <span className="btn-icon"><LinkIcon size={20} /></span>
+              <span className="btn-text">Copia Link</span>
             </button>
             <button
               className="btn btn-primary"
               onClick={shareViaWhatsApp}
               style={{ backgroundColor: '#25D366', borderColor: '#25D366', flex: '1 1 100%' }}
             >
-              📱 Condividi su WhatsApp
+              <span><WhatsAppIcon size={20} /></span>
+              <span className="btn-text" style={{ marginLeft: '0.25rem' }}>Condividi su WhatsApp</span>
             </button>
           </div>
           <div style={{
@@ -349,7 +354,8 @@ Clicca sul link per accedere: ${shareUrl}`;
                     onClick={() => handleRemoveMember(user.id)}
                     style={{ padding: '0.25rem 0.75rem', fontSize: '0.85rem' }}
                   >
-                    Rimuovi
+                    <span className="btn-icon"><XIcon size={16} /></span>
+                    <span className="btn-text">Rimuovi</span>
                   </button>
                 )}
               </div>
@@ -428,10 +434,11 @@ Clicca sul link per accedere: ${shareUrl}`;
 
       {/* Expenses */}
       <div className="card" style={{ marginTop: '1rem' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.5rem' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
           <h2 style={{ margin: 0 }}>Spese</h2>
           <button className="btn btn-primary" onClick={() => setShowExpenseModal(true)}>
-            Nuova Spesa
+            <span className="btn-icon"><PlusIcon size={20} /></span>
+            <span className="btn-text">Nuova Spesa</span>
           </button>
         </div>
         {expenses.length === 0 ? (
@@ -484,14 +491,16 @@ Clicca sul link per accedere: ${shareUrl}`;
                                 onClick={() => handleEditExpense(expense)}
                                 style={{ padding: '0.25rem 0.75rem', fontSize: '0.85rem' }}
                               >
-                                Modifica
+                                <span className="btn-icon"><EditIcon size={18} /></span>
+                                <span className="btn-text">Modifica</span>
                               </button>
                               <button
                                 className="btn btn-danger"
                                 onClick={() => handleDeleteExpense(expense.id)}
                                 style={{ padding: '0.25rem 0.75rem', fontSize: '0.85rem' }}
                               >
-                                Elimina
+                                <span className="btn-icon"><TrashIcon size={18} /></span>
+                                <span className="btn-text">Elimina</span>
                               </button>
                             </div>
                           )}
@@ -551,13 +560,15 @@ Clicca sul link per accedere: ${shareUrl}`;
                           className="btn btn-secondary"
                           onClick={() => handleEditExpense(expense)}
                         >
-                          Modifica
+                          <span className="btn-icon"><EditIcon size={18} /></span>
+                          <span className="btn-text">Modifica</span>
                         </button>
                         <button
                           className="btn btn-danger"
                           onClick={() => handleDeleteExpense(expense.id)}
                         >
-                          Elimina
+                          <span className="btn-icon"><TrashIcon size={18} /></span>
+                          <span className="btn-text">Elimina</span>
                         </button>
                       </div>
                     )}
@@ -656,9 +667,13 @@ Clicca sul link per accedere: ${shareUrl}`;
                 </select>
               </div>
               <div style={{ display: 'flex', gap: '1rem' }}>
-                <button type="submit" className="btn btn-primary">Crea</button>
+                <button type="submit" className="btn btn-primary">
+                  <span className="btn-icon"><CheckIcon size={20} /></span>
+                  <span className="btn-text">Crea</span>
+                </button>
                 <button type="button" className="btn btn-secondary" onClick={() => setShowExpenseModal(false)}>
-                  Annulla
+                  <span className="btn-icon"><XIcon size={20} /></span>
+                  <span className="btn-text">Annulla</span>
                 </button>
               </div>
             </form>
@@ -735,9 +750,13 @@ Clicca sul link per accedere: ${shareUrl}`;
                 </select>
               </div>
               <div style={{ display: 'flex', gap: '1rem' }}>
-                <button type="submit" className="btn btn-primary">Salva</button>
+                <button type="submit" className="btn btn-primary">
+                  <span className="btn-icon"><CheckIcon size={20} /></span>
+                  <span className="btn-text">Salva</span>
+                </button>
                 <button type="button" className="btn btn-secondary" onClick={() => setEditingExpense(null)}>
-                  Annulla
+                  <span className="btn-icon"><XIcon size={20} /></span>
+                  <span className="btn-text">Annulla</span>
                 </button>
               </div>
             </form>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { gymAPI } from '../../services/api';
+import { PlusIcon, EditIcon, TrashIcon, CheckIcon, XIcon } from '../../components/Icons';
 
 const GymCardDetail = () => {
   const { cardId } = useParams();
@@ -135,7 +136,8 @@ const GymCardDetail = () => {
             className="btn btn-danger"
             onClick={handleDeleteCard}
           >
-            Elimina Scheda
+            <span className="btn-icon"><TrashIcon size={20} /></span>
+            <span className="btn-text">Elimina Scheda</span>
           </button>
         </div>
         <p style={{ color: '#7f8c8d', marginTop: '0.5rem' }}>{card?.descrizione}</p>
@@ -144,8 +146,12 @@ const GymCardDetail = () => {
       <div className="card">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
           <h2 style={{ margin: 0 }}>Esercizi</h2>
-          <button className="btn btn-primary" onClick={() => setShowModal(true)}>
-            Nuovo Esercizio
+          <button
+            className="btn btn-primary"
+            onClick={() => setShowModal(true)}
+          >
+            <span className="btn-icon"><PlusIcon size={20} /></span>
+            <span className="btn-text">Nuovo Esercizio</span>
           </button>
         </div>
 
@@ -176,16 +182,18 @@ const GymCardDetail = () => {
                         <button
                           className="btn btn-secondary"
                           onClick={() => handleEditExercise(exercise)}
-                          style={{ padding: '0.25rem 0.5rem', fontSize: '0.9rem' }}
+                          style={{ padding: '0.25rem 0.5rem' }}
                         >
-                          Modifica
+                          <span className="btn-icon"><EditIcon size={18} /></span>
+                          <span className="btn-text">Modifica</span>
                         </button>
                         <button
                           className="btn btn-danger"
                           onClick={() => handleDeleteExercise(exercise.id)}
-                          style={{ padding: '0.25rem 0.5rem', fontSize: '0.9rem' }}
+                          style={{ padding: '0.25rem 0.5rem' }}
                         >
-                          Elimina
+                          <span className="btn-icon"><TrashIcon size={18} /></span>
+                          <span className="btn-text">Elimina</span>
                         </button>
                       </div>
                     </td>
@@ -258,9 +266,17 @@ const GymCardDetail = () => {
                 />
               </div>
               <div style={{ display: 'flex', gap: '1rem' }}>
-                <button type="submit" className="btn btn-primary">Aggiungi</button>
-                <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>
-                  Annulla
+                <button type="submit" className="btn btn-primary">
+                  <span className="btn-icon"><CheckIcon size={20} /></span>
+                  <span className="btn-text">Aggiungi</span>
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={() => setShowModal(false)}
+                >
+                  <span className="btn-icon"><XIcon size={20} /></span>
+                  <span className="btn-text">Annulla</span>
                 </button>
               </div>
             </form>
@@ -331,12 +347,20 @@ const GymCardDetail = () => {
                 />
               </div>
               <div style={{ display: 'flex', gap: '1rem' }}>
-                <button type="submit" className="btn btn-primary">Salva</button>
-                <button type="button" className="btn btn-secondary" onClick={() => {
-                  setShowEditModal(false);
-                  setEditingExercise(null);
-                }}>
-                  Annulla
+                <button type="submit" className="btn btn-primary">
+                  <span className="btn-icon"><CheckIcon size={20} /></span>
+                  <span className="btn-text">Salva</span>
+                </button>
+                <button
+                  type="button"
+                  className="btn btn-secondary"
+                  onClick={() => {
+                    setShowEditModal(false);
+                    setEditingExercise(null);
+                  }}
+                >
+                  <span className="btn-icon"><XIcon size={20} /></span>
+                  <span className="btn-text">Annulla</span>
                 </button>
               </div>
             </form>

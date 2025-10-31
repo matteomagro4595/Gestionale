@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { shoppingAPI } from '../../services/api';
 import ShoppingAssistant from '../../components/ShoppingAssistant';
+import { PlusIcon, KeyIcon, CheckIcon, XIcon } from '../../components/Icons';
 
 const ShoppingLists = () => {
   const [lists, setLists] = useState([]);
@@ -59,12 +60,14 @@ const ShoppingLists = () => {
     <div className="container">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '2rem' }}>
         <h1>Liste della Spesa</h1>
-        <div style={{ display: 'flex', gap: '1rem' }}>
+        <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
           <button className="btn btn-secondary" onClick={() => setShowShareModal(true)}>
-            Accedi con Token
+            <span className="btn-icon"><KeyIcon size={20} /></span>
+            <span className="btn-text">Accedi con Token</span>
           </button>
           <button className="btn btn-primary" onClick={() => setShowModal(true)}>
-            Nuova Lista
+            <span className="btn-icon"><PlusIcon size={20} /></span>
+            <span className="btn-text">Nuova Lista</span>
           </button>
         </div>
       </div>
@@ -112,9 +115,13 @@ const ShoppingLists = () => {
                 />
               </div>
               <div style={{ display: 'flex', gap: '1rem' }}>
-                <button type="submit" className="btn btn-primary">Crea</button>
+                <button type="submit" className="btn btn-primary">
+                  <span className="btn-icon"><CheckIcon size={20} /></span>
+                  <span className="btn-text">Crea</span>
+                </button>
                 <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>
-                  Annulla
+                  <span className="btn-icon"><XIcon size={20} /></span>
+                  <span className="btn-text">Annulla</span>
                 </button>
               </div>
             </form>
@@ -150,9 +157,13 @@ const ShoppingLists = () => {
                 />
               </div>
               <div style={{ display: 'flex', gap: '1rem' }}>
-                <button type="submit" className="btn btn-primary">Accedi</button>
+                <button type="submit" className="btn btn-primary">
+                  <span className="btn-icon"><CheckIcon size={20} /></span>
+                  <span className="btn-text">Accedi</span>
+                </button>
                 <button type="button" className="btn btn-secondary" onClick={() => setShowShareModal(false)}>
-                  Annulla
+                  <span className="btn-icon"><XIcon size={20} /></span>
+                  <span className="btn-text">Annulla</span>
                 </button>
               </div>
             </form>

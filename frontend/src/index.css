@@ -244,6 +244,26 @@ table th {
   color: #2c3e50;
 }
 
+/* Draggable rows */
+tr[draggable="true"] {
+  transition: background-color 0.2s, box-shadow 0.2s;
+}
+
+tr[draggable="true"]:hover {
+  background-color: #f8f9fa;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+tr[draggable="true"]:active {
+  cursor: grabbing;
+}
+
+/* Disabled button styles */
+.btn:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
 table tr:hover {
   background-color: #f8f9fa;
 }

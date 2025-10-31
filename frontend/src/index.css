@@ -310,6 +310,12 @@ body.theme-gym .spinner {
     font-size: 0.875rem;
   }
 
+  /* Grid responsiveness for smaller screens */
+  .grid {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+  }
+
   /* Mobile expense card */
   .expense-card-mobile {
     background: #fff;
@@ -384,6 +390,28 @@ body.theme-gym .spinner {
 
   .mobile-only {
     display: block !important;
+  }
+
+  /* Gym page specific mobile styles */
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  h2 {
+    font-size: 1.25rem;
+  }
+
+  /* Make table action buttons stack on very small screens */
+  @media (max-width: 480px) {
+    table td > div {
+      flex-direction: column;
+      gap: 0.25rem;
+    }
+
+    table td .btn {
+      width: 100%;
+      text-align: center;
+    }
   }
 }
 

@@ -40,8 +40,8 @@ const GymCards = () => {
 
   return (
     <div className="container">
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '2rem' }}>
-        <h1>Schede Palestra</h1>
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', marginTop: '2rem' }}>
+        <h1 style={{ margin: 0 }}>Schede Palestra</h1>
         <button className="btn btn-primary" onClick={() => setShowModal(true)}>
           Nuova Scheda
         </button>

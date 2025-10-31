@@ -129,12 +129,11 @@ const GymCardDetail = () => {
       </button>
 
       <div style={{ marginTop: '1rem', marginBottom: '2rem' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-          <h1 style={{ margin: 0 }}>{card?.nome}</h1>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '1rem', marginBottom: '0.5rem' }}>
+          <h1 style={{ margin: 0, flex: '1 1 auto' }}>{card?.nome}</h1>
           <button
             className="btn btn-danger"
             onClick={handleDeleteCard}
-            style={{ marginLeft: '1rem' }}
           >
             Elimina Scheda
           </button>
@@ -143,56 +142,58 @@ const GymCardDetail = () => {
       </div>
 
       <div className="card">
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <h2>Esercizi</h2>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
+          <h2 style={{ margin: 0 }}>Esercizi</h2>
           <button className="btn btn-primary" onClick={() => setShowModal(true)}>
             Nuovo Esercizio
           </button>
         </div>
 
-        <table style={{ marginTop: '1rem' }}>
-          <thead>
-            <tr>
-              <th>Esercizio</th>
-              <th>Serie</th>
-              <th>Ripetizioni</th>
-              <th>Peso</th>
-              <th>Note</th>
-              <th>Azioni</th>
-            </tr>
-          </thead>
-          <tbody>
-            {card?.exercises
-              ?.sort((a, b) => a.ordine - b.ordine)
-              .map((exercise) => (
-                <tr key={exercise.id}>
-                  <td>{exercise.nome}</td>
-                  <td>{exercise.serie || '-'}</td>
-                  <td>{exercise.ripetizioni || '-'}</td>
-                  <td>{exercise.peso || '-'}</td>
-                  <td>{exercise.note || '-'}</td>
-                  <td>
-                    <div style={{ display: 'flex', gap: '0.5rem' }}>
-                      <button
-                        className="btn btn-secondary"
-                        onClick={() => handleEditExercise(exercise)}
-                        style={{ padding: '0.25rem 0.5rem', fontSize: '0.9rem' }}
-                      >
-                        Modifica
-                      </button>
-                      <button
-                        className="btn btn-danger"
-                        onClick={() => handleDeleteExercise(exercise.id)}
-                        style={{ padding: '0.25rem 0.5rem', fontSize: '0.9rem' }}
-                      >
-                        Elimina
-                      </button>
-                    </div>
-                  </td>
-                </tr>
-              ))}
-          </tbody>
-        </table>
+        <div className="table-wrapper">
+          <table style={{ marginTop: '1rem' }}>
+            <thead>
+              <tr>
+                <th>Esercizio</th>
+                <th>Serie</th>
+                <th>Ripetizioni</th>
+                <th>Peso</th>
+                <th>Note</th>
+                <th>Azioni</th>
+              </tr>
+            </thead>
+            <tbody>
+              {card?.exercises
+                ?.sort((a, b) => a.ordine - b.ordine)
+                .map((exercise) => (
+                  <tr key={exercise.id}>
+                    <td>{exercise.nome}</td>
+                    <td>{exercise.serie || '-'}</td>
+                    <td>{exercise.ripetizioni || '-'}</td>
+                    <td>{exercise.peso || '-'}</td>
+                    <td>{exercise.note || '-'}</td>
+                    <td>
+                      <div style={{ display: 'flex', gap: '0.5rem' }}>
+                        <button
+                          className="btn btn-secondary"
+                          onClick={() => handleEditExercise(exercise)}
+                          style={{ padding: '0.25rem 0.5rem', fontSize: '0.9rem' }}
+                        >
+                          Modifica
+                        </button>
+                        <button
+                          className="btn btn-danger"
+                          onClick={() => handleDeleteExercise(exercise.id)}
+                          style={{ padding: '0.25rem 0.5rem', fontSize: '0.9rem' }}
+                        >
+                          Elimina
+                        </button>
+                      </div>
+                    </td>
+                  </tr>
+                ))}
+            </tbody>
+          </table>
+        </div>
       </div>
 
       {showModal && (

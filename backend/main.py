@@ -28,6 +28,12 @@ try:
 except Exception as e:
     print(f"Migration warning (fix tag case): {e}")
 
+try:
+    from migrate_workout_days import migrate as migrate_workout_days
+    migrate_workout_days()
+except Exception as e:
+    print(f"Migration warning (workout days): {e}")
+
 app = FastAPI(
     title="Gestionale API",
     description="API per la gestione di spese, liste della spesa e schede palestra",

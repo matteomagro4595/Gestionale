@@ -80,16 +80,22 @@ export const shoppingAPI = {
 
 // Gym APIs
 export const gymAPI = {
+  // Workout Cards
   createCard: (data) => api.post('/api/gym/cards', data),
   getCards: () => api.get('/api/gym/cards'),
   getCard: (id) => api.get(`/api/gym/cards/${id}`),
   updateCard: (id, data) => api.put(`/api/gym/cards/${id}`, data),
   deleteCard: (id) => api.delete(`/api/gym/cards/${id}`),
 
+  // Workout Days
+  createDay: (cardId, data) => api.post(`/api/gym/cards/${cardId}/days`, data),
+  updateDay: (cardId, dayId, data) => api.put(`/api/gym/cards/${cardId}/days/${dayId}`, data),
+  deleteDay: (cardId, dayId) => api.delete(`/api/gym/cards/${cardId}/days/${dayId}`),
+
   // Exercises
-  createExercise: (cardId, data) => api.post(`/api/gym/cards/${cardId}/exercises`, data),
-  updateExercise: (cardId, exerciseId, data) => api.put(`/api/gym/cards/${cardId}/exercises/${exerciseId}`, data),
-  deleteExercise: (cardId, exerciseId) => api.delete(`/api/gym/cards/${cardId}/exercises/${exerciseId}`),
+  createExercise: (dayId, data) => api.post(`/api/gym/days/${dayId}/exercises`, data),
+  updateExercise: (dayId, exerciseId, data) => api.put(`/api/gym/days/${dayId}/exercises/${exerciseId}`, data),
+  deleteExercise: (dayId, exerciseId) => api.delete(`/api/gym/days/${dayId}/exercises/${exerciseId}`),
 };
 
 // Notifications APIs

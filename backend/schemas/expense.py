@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 from datetime import datetime
 from typing import Optional, List
 from models.expense import ExpenseTag, DivisionType
@@ -52,6 +52,33 @@ class Expense(ExpenseBase):
     created_at: datetime
     updated_at: Optional[datetime] = None
     participants: List[ExpenseParticipant] = []
+
+    @field_validator('tag', mode='before')
+    @classmethod
+    def normalize_tag(cls, v):
+        """Normalize tag values from database to match enum values"""
+        if isinstance(v, str):
+            # Mapping of old/wrong case tags to correct enum values
+            tag_mapping = {
+                'ALTRO': 'Altro',
+                'BOLLETTA': 'Altro',
+                'SPESA': 'Spesa Alimentare',
+                'CANI': 'Animali Domestici',
+                'PRANZO/CENA': 'Pranzo/Cena',
+                # Add uppercase versions
+                'BOLLETTA ACQUA': 'Bolletta Acqua',
+                'BOLLETTA LUCE': 'Bolletta Luce',
+                'BOLLETTA GAS': 'Bolletta Gas',
+                'INTERNET/TELEFONO': 'Internet/Telefono',
+                'AFFITTO': 'Affitto',
+                'SPESA ALIMENTARE': 'Spesa Alimentare',
+                'TRASPORTI': 'Trasporti',
+                'SALUTE': 'Salute',
+                'ANIMALI DOMESTICI': 'Animali Domestici',
+                'SVAGO/INTRATTENIMENTO': 'Svago/Intrattenimento',
+            }
+            return tag_mapping.get(v, v)
+        return v
 
     class Config:
         from_attributes = True

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- app_name viene sovrascritto dai product flavors -->
+    <string name="app_name">Gestionale</string>
+
+    <!-- Auth -->
+    <string name="login">Accedi</string>
+    <string name="register">Registrati</string>
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="first_name">Nome</string>
+    <string name="last_name">Cognome</string>
+    <string name="logout">Esci</string>
+
+    <!-- Navigation -->
+    <string name="nav_expenses">Spese</string>
+    <string name="nav_shopping">Spesa</string>
+    <string name="nav_gym">Palestra</string>
+    <string name="nav_profile">Profilo</string>
+
+    <!-- Expenses -->
+    <string name="expenses_title">Spese Condivise</string>
+    <string name="create_group">Crea Gruppo</string>
+    <string name="add_expense">Aggiungi Spesa</string>
+    <string name="group_name">Nome Gruppo</string>
+    <string name="expense_description">Descrizione</string>
+    <string name="amount">Importo</string>
+    <string name="balances">Bilanci</string>
+
+    <!-- Shopping Lists -->
+    <string name="shopping_lists_title">Liste della Spesa</string>
+    <string name="create_list">Crea Lista</string>
+    <string name="add_item">Aggiungi Articolo</string>
+    <string name="item_name">Nome Articolo</string>
+    <string name="quantity">Quantità</string>
+
+    <!-- Gym -->
+    <string name="gym_title">Schede Palestra</string>
+    <string name="create_card">Crea Scheda</string>
+    <string name="add_exercise">Aggiungi Esercizio</string>
+    <string name="exercise_name">Nome Esercizio</string>
+    <string name="sets">Serie</string>
+    <string name="reps">Ripetizioni</string>
+    <string name="weight">Peso (kg)</string>
+
+    <!-- Common -->
+    <string name="save">Salva</string>
+    <string name="cancel">Annulla</string>
+    <string name="delete">Elimina</string>
+    <string name="edit">Modifica</string>
+    <string name="share">Condividi</string>
+    <string name="loading">Caricamento…</string>
+    <string name="error">Errore</string>
+    <string name="retry">Riprova</string>
+    <string name="no_data">Nessun dato disponibile</string>
+</resources>

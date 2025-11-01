@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { shoppingAPI, authAPI } from '../../services/api';
 import { PlusIcon, TrashIcon, ClipboardIcon, LinkIcon, WhatsAppIcon, CheckIcon, XIcon, EditIcon } from '../../components/Icons';
+import './ShoppingListDetail.css';
 
 const ShoppingListDetail = () => {
   const { listId } = useParams();
@@ -454,50 +455,38 @@ Clicca sul link per accedere: ${shareUrl}`;
           {getSortedItems().map((item) => (
             <div
               key={item.id}
-              style={{
-                padding: '1rem',
-                borderBottom: '1px solid #ddd',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'space-between',
-              }}
+              className={`shopping-item ${item.completato ? 'completed' : ''}`}
             >
-              <div style={{ display: 'flex', alignItems: 'center', flex: 1 }}>
+              <div className="shopping-item-content">
                 <input
                   type="checkbox"
                   checked={item.completato}
                   onChange={() => handleToggleItem(item.id, item.completato)}
-                  style={{ marginRight: '1rem', width: '20px', height: '20px' }}
+                  className="shopping-item-checkbox"
                 />
-                <div style={{ flex: 1 }}>
-                  <h3
-                    style={{
-                      textDecoration: item.completato ? 'line-through' : 'none',
-                      color: item.completato ? '#7f8c8d' : '#2c3e50',
-                      margin: 0,
-                    }}
-                  >
+                <div className="shopping-item-details">
+                  <h3 className={`shopping-item-title ${item.completato ? 'completed' : ''}`}>
                     {item.nome}
                   </h3>
                   {item.quantita && (
-                    <p style={{ margin: '0.25rem 0 0 0', color: '#7f8c8d', fontSize: '0.9rem' }}>
-                      Quantità: {item.quantita}
+                    <p className="shopping-item-info">
+                      <strong>Quantità:</strong> {item.quantita}
                     </p>
                   )}
                   {item.note && (
-                    <p style={{ margin: '0.25rem 0 0 0', color: '#7f8c8d', fontSize: '0.9rem' }}>
-                      Note: {item.note}
+                    <p className="shopping-item-note">
+                      <strong>Note:</strong> {item.note}
                     </p>
                   )}
                 </div>
               </div>
-              <div style={{ display: 'flex', gap: '0.5rem', marginLeft: '1rem' }}>
+              <div className="shopping-item-actions">
                 <button
                   className="btn btn-secondary"
                   onClick={() => openEditModal(item)}
                   title="Modifica articolo"
                 >
-                  <span className="btn-icon"><EditIcon size={18} /></span>
+                  <span className="btn-icon"><EditIcon size={20} /></span>
                   <span className="btn-text">Modifica</span>
                 </button>
                 <button
@@ -505,7 +494,7 @@ Clicca sul link per accedere: ${shareUrl}`;
                   onClick={() => handleDeleteItem(item.id)}
                   title="Elimina articolo"
                 >
-                  <span className="btn-icon"><TrashIcon size={18} /></span>
+                  <span className="btn-icon"><TrashIcon size={20} /></span>
                   <span className="btn-text">Elimina</span>
                 </button>
               </div>

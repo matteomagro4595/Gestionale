@@ -1,0 +1,130 @@
+/* Shopping List Detail Styles */
+
+.shopping-item {
+  padding: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  transition: background-color 0.2s;
+}
+
+.shopping-item.completed {
+  background-color: #f9fafb;
+}
+
+.shopping-item-content {
+  display: flex;
+  align-items: flex-start;
+  flex: 1 1 300px;
+  min-width: 0;
+}
+
+.shopping-item-checkbox {
+  margin-right: 1rem;
+  margin-top: 0.25rem;
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  cursor: pointer;
+}
+
+.shopping-item-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.shopping-item-title {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.shopping-item-title.completed {
+  text-decoration: line-through;
+  color: #7f8c8d;
+}
+
+.shopping-item-info {
+  margin: 0.5rem 0 0 0;
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+.shopping-item-note {
+  margin: 0.25rem 0 0 0;
+  color: #6b7280;
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+.shopping-item-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+
+.shopping-item-actions .btn {
+  padding: 0.75rem 1.25rem;
+  min-width: 48px;
+  min-height: 48px;
+  font-weight: 500;
+}
+
+.shopping-item-actions .btn-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Mobile optimizations */
+@media (max-width: 768px) {
+  .shopping-item {
+    padding: 0.875rem;
+    gap: 0.75rem;
+  }
+
+  .shopping-item-actions {
+    width: 100%;
+    justify-content: flex-end;
+  }
+
+  .shopping-item-actions .btn {
+    padding: 0.875rem;
+    min-width: 52px;
+    min-height: 52px;
+    flex: 0 0 auto;
+  }
+
+  .shopping-item-actions .btn-icon svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .shopping-item-title {
+    font-size: 1rem;
+  }
+
+  .shopping-item-info,
+  .shopping-item-note {
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .shopping-item-actions .btn {
+    padding: 1rem;
+    min-width: 56px;
+    min-height: 56px;
+  }
+
+  .shopping-item-actions .btn-icon svg {
+    width: 24px;
+    height: 24px;
+  }
+}

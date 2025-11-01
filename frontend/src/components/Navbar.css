@@ -30,7 +30,7 @@
 .navbar-container {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 0.75rem 2rem;
+  padding: 0.5rem 1rem;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -74,14 +74,13 @@
   align-items: center;
   gap: 0.5rem;
   flex: 1;
-  justify-content: center;
 }
 
 .nav-link {
   display: flex;
   align-items: center;
   gap: 0.5rem;
-  padding: 0.75rem 1.25rem;
+  padding: 0.5rem .75rem;
   color: rgba(255, 255, 255, 0.9);
   text-decoration: none;
   border-radius: 12px;
@@ -136,7 +135,7 @@
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding: 0.5rem 1rem;
+  padding: 0.25rem .5rem;
   background: rgba(255, 255, 255, 0.2);
   border-radius: 50px;
   cursor: pointer;
@@ -154,8 +153,8 @@
 }
 
 .user-avatar {
-  width: 40px;
-  height: 40px;
+  width: 30px;
+  height: 30px;
   border-radius: 50%;
   background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
   display: flex;
@@ -163,7 +162,7 @@
   justify-content: center;
   color: white;
   font-weight: 700;
-  font-size: 0.9rem;
+  font-size: 0.8rem;
   text-transform: uppercase;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
   border: 2px solid white;
@@ -329,7 +328,7 @@
 /* Responsive Design */
 @media (max-width: 1024px) {
   .navbar-container {
-    padding: 0.75rem 1.5rem;
+    padding: 0.5rem 1rem;
     gap: 1rem;
   }
 

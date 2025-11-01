@@ -478,14 +478,8 @@
 }
 
 .btn-secondary {
-  background: #f8fafc;
   color: #374151;
   border: 1px solid #e2e8f0;
-}
-
-.btn-secondary:hover {
-  background: #f1f5f9;
-  border-color: #cbd5e0;
 }
 
 .btn-icon {
@@ -502,7 +496,6 @@
 }
 
 .btn-icon:hover {
-  background: #f8fafc;
   color: #374151;
 }
 

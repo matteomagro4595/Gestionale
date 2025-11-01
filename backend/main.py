@@ -20,6 +20,12 @@ try:
 except Exception as e:
     print(f"Migration warning (expense tags): {e}")
 
+try:
+    from fix_tag_case import fix_tag_case
+    fix_tag_case()
+except Exception as e:
+    print(f"Migration warning (fix tag case): {e}")
+
 app = FastAPI(
     title="Gestionale API",
     description="API per la gestione di spese, liste della spesa e schede palestra",

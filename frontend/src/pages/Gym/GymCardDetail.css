@@ -465,12 +465,15 @@
   transform: translateY(0);
 }
 
-.btn-primary {
+/* Scope btn-primary to gym section only */
+.gym-card-detail .btn-primary,
+.modal-content .btn-primary {
   background: linear-gradient(135deg, #c0392b 0%, #e74c3c 100%);
   color: white;
 }
 
-.btn-primary:hover {
+.gym-card-detail .btn-primary:hover,
+.modal-content .btn-primary:hover {
   background: linear-gradient(135deg, #a93226 0%, #d43f31 100%);
 }
 

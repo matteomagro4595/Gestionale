@@ -29,6 +29,21 @@
   flex-wrap: wrap;
 }
 
+/* Force blue color for primary buttons in expenses dashboard */
+.expenses-dashboard-container .btn-primary {
+  background-color: #3498db !important;
+}
+
+.expenses-dashboard-container .btn-primary:hover {
+  background-color: #2980b9 !important;
+}
+
+.expenses-dashboard-container .btn-primary .btn-icon,
+.expenses-dashboard-container .btn-primary .btn-icon svg {
+  color: white !important;
+  stroke: white !important;
+}
+
 /* Filters Card */
 .expenses-filters-card {
   background: white;

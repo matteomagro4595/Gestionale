@@ -291,11 +291,16 @@ Clicca sul link per accedere: ${shareUrl}`;
               <span className="btn-text">Copia Link</span>
             </button>
             <button
-              className="btn btn-primary"
+              className="btn"
               onClick={shareViaWhatsApp}
-              style={{ backgroundColor: '#25D366', borderColor: '#25D366' }}
+              style={{
+                backgroundColor: '#25D366',
+                borderColor: '#25D366',
+                color: 'white',
+                border: '1px solid #25D366'
+              }}
             >
-              <span><WhatsAppIcon size={20} /></span>
+              <span className="btn-icon" style={{ color: 'white' }}><WhatsAppIcon size={20} /></span>
               <span className="btn-text" style={{ marginLeft: '0.25rem' }}>Condividi su WhatsApp</span>
             </button>
           </div>

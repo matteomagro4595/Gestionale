@@ -29,6 +29,21 @@
   flex-wrap: wrap;
 }
 
+/* Force green color for primary buttons in shopping lists */
+.shopping-lists-container .btn-primary {
+  background-color: #27ae60 !important;
+}
+
+.shopping-lists-container .btn-primary:hover {
+  background-color: #229954 !important;
+}
+
+.shopping-lists-container .btn-primary .btn-icon,
+.shopping-lists-container .btn-primary .btn-icon svg {
+  color: white !important;
+  stroke: white !important;
+}
+
 /* Shopping List Cards Grid */
 .shopping-lists-grid {
   display: grid;

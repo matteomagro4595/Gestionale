@@ -1,5 +1,20 @@
 /* Shopping List Detail Styles */
 
+/* Force green color for primary buttons in shopping list detail */
+.container .btn-primary {
+  background-color: #27ae60 !important;
+}
+
+.container .btn-primary:hover {
+  background-color: #229954 !important;
+}
+
+.container .btn-primary .btn-icon,
+.container .btn-primary .btn-icon svg {
+  color: white !important;
+  stroke: white !important;
+}
+
 .shopping-item {
   padding: 1rem;
   border-bottom: 1px solid #e5e7eb;

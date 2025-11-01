@@ -1,0 +1,337 @@
+/* Expenses Dashboard - Modern App-like Design */
+
+.expenses-dashboard-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.expenses-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.expenses-header h1 {
+  margin: 0;
+  font-size: 2rem;
+  color: #1a202c;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+.expenses-header-actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+/* Filters Card */
+.expenses-filters-card {
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.expenses-filters-content {
+  display: flex;
+  gap: 1.5rem;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.expenses-filters-left {
+  flex: 1 1 auto;
+  min-width: 280px;
+}
+
+.expenses-filters-inputs {
+  display: flex;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.expenses-filter-group {
+  flex: 1 1 200px;
+  margin-bottom: 0;
+}
+
+.expenses-filter-group-small {
+  flex: 0 1 150px;
+  margin-bottom: 0;
+}
+
+.expenses-filters-status {
+  margin-top: 0.75rem;
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.expenses-filters-count {
+  font-size: 0.85rem;
+  color: #6b7280;
+  font-weight: 500;
+  padding: 0.375rem 0.875rem;
+  background: linear-gradient(135deg, #dbeafe 0%, #eff6ff 100%);
+  border-radius: 16px;
+  border: 1px solid #bfdbfe;
+}
+
+.expenses-filters-clear {
+  padding: 0.375rem 0.875rem;
+  font-size: 0.85rem;
+  min-height: auto;
+}
+
+.expenses-filters-right {
+  flex: 0 0 auto;
+  min-width: 180px;
+}
+
+/* Groups Grid */
+.expenses-groups-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1.5rem;
+}
+
+.expenses-group-card {
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  text-decoration: none;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  position: relative;
+  overflow: hidden;
+}
+
+.expenses-group-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(135deg, #2980b9 0%, #3498db 100%);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.expenses-group-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(52, 152, 219, 0.15), 0 6px 12px rgba(52, 152, 219, 0.08);
+  border-color: rgba(52, 152, 219, 0.1);
+}
+
+.expenses-group-card:hover::before {
+  transform: scaleX(1);
+}
+
+.expenses-group-card h2 {
+  margin: 0 0 0.75rem 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1a202c;
+  letter-spacing: -0.015em;
+}
+
+.expenses-group-description {
+  color: #6b7280;
+  font-size: 0.95rem;
+  margin: 0 0 1rem 0;
+  line-height: 1.5;
+}
+
+.expenses-group-stats {
+  display: flex;
+  gap: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid #e9ecef;
+}
+
+.expenses-group-stat {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.expenses-group-stat-icon {
+  color: #3498db;
+}
+
+/* Empty State */
+.expenses-empty-state {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.expenses-empty-icon {
+  font-size: 4rem;
+  color: #cbd5e0;
+  margin-bottom: 1rem;
+}
+
+.expenses-empty-state h3 {
+  margin: 0 0 0.5rem 0;
+  color: #2d3748;
+  font-size: 1.25rem;
+}
+
+.expenses-empty-state p {
+  margin: 0;
+  color: #718096;
+  font-size: 0.95rem;
+}
+
+/* Modal Styles */
+.expenses-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 1rem;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.expenses-modal-card {
+  background: white;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25), 0 8px 20px rgba(0, 0, 0, 0.15);
+  animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.expenses-modal-card h2 {
+  padding: 1.5rem;
+  margin: 0;
+  border-bottom: 1px solid #e9ecef;
+  font-size: 1.5rem;
+  color: #1a202c;
+  font-weight: 700;
+}
+
+.expenses-modal-form {
+  padding: 1.5rem;
+}
+
+.expenses-modal-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .expenses-dashboard-container {
+    padding: 1rem;
+  }
+
+  .expenses-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .expenses-filters-content {
+    flex-direction: column;
+  }
+
+  .expenses-filters-left,
+  .expenses-filters-right {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .expenses-groups-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .expenses-group-card {
+    padding: 1.25rem;
+  }
+
+  .expenses-modal-card h2 {
+    font-size: 1.25rem;
+    padding: 1.25rem;
+  }
+
+  .expenses-modal-form {
+    padding: 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .expenses-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .expenses-header-actions {
+    width: 100%;
+  }
+
+  .expenses-header-actions .btn {
+    flex: 1;
+  }
+
+  .expenses-filters-inputs {
+    flex-direction: column;
+  }
+
+  .expenses-filter-group,
+  .expenses-filter-group-small {
+    flex: 1 1 auto;
+    width: 100%;
+  }
+
+  .expenses-group-stats {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+}

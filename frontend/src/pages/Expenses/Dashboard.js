@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { expensesAPI } from '../../services/api';
 import ExpensesAssistant from '../../components/ExpensesAssistant';
-import { PlusIcon, BarChartIcon, XIcon, CheckIcon } from '../../components/Icons';
+import { PlusIcon, BarChartIcon, XIcon, CheckIcon, UsersIcon } from '../../components/Icons';
+import './Dashboard.css';
 
 const Dashboard = () => {
   const [groups, setGroups] = useState([]);
@@ -63,10 +64,10 @@ const Dashboard = () => {
   if (loading) return <div className="spinner"></div>;
 
   return (
-    <div className="container">
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '2rem', flexWrap: 'wrap', gap: '1rem' }}>
-        <h1 style={{ margin: 0 }}>Gestione Spese</h1>
-        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
+    <div className="expenses-dashboard-container">
+      <div className="expenses-header">
+        <h1>Gestione Spese</h1>
+        <div className="expenses-header-actions">
           <Link to="/expenses/summary" className="btn btn-secondary">
             <span><BarChartIcon size={20} /></span>
             <span className="btn-text" style={{ marginLeft: '0.25rem' }}>Riepilogo Generale</span>
@@ -79,12 +80,12 @@ const Dashboard = () => {
       </div>
 
       {/* Filters and Sort Section */}
-      <div className="card" style={{ marginTop: '1.5rem' }}>
-        <div style={{ display: 'flex', gap: '1rem', alignItems: 'flex-start', flexWrap: 'wrap' }}>
+      <div className="expenses-filters-card">
+        <div className="expenses-filters-content">
           {/* Filters - Left side */}
-          <div style={{ flex: '1 1 auto', minWidth: '280px' }}>
-            <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-              <div className="form-group" style={{ marginBottom: 0, flex: '1 1 200px' }}>
+          <div className="expenses-filters-left">
+            <div className="expenses-filters-inputs">
+              <div className="form-group expenses-filter-group">
                 <label>Cerca gruppo</label>
                 <input
                   type="text"
@@ -93,7 +94,7 @@ const Dashboard = () => {
                   onChange={(e) => setSearchTerm(e.target.value)}
                 />
               </div>
-              <div className="form-group" style={{ marginBottom: 0, flex: '0 1 150px' }}>
+              <div className="form-group expenses-filter-group-small">
                 <label>Min. membri</label>
                 <input
                   type="number"
@@ -105,17 +106,16 @@ const Dashboard = () => {
               </div>
             </div>
             {(searchTerm || minMembers) && (
-              <div style={{ marginTop: '0.75rem', display: 'flex', gap: '0.5rem', alignItems: 'center', flexWrap: 'wrap' }}>
-                <span style={{ fontSize: '0.85rem', color: '#7f8c8d' }}>
+              <div className="expenses-filters-status">
+                <span className="expenses-filters-count">
                   {filteredAndSortedGroups.length} di {groups.length} gruppi
                 </span>
                 <button
-                  className="btn btn-secondary"
+                  className="btn btn-secondary expenses-filters-clear"
                   onClick={() => {
                     setSearchTerm('');
                     setMinMembers('');
                   }}
-                  style={{ padding: '0.2rem 0.6rem', fontSize: '0.8rem' }}
                 >
                   <span className="btn-icon"><XIcon size={16} /></span>
                   <span className="btn-text">Cancella</span>
@@ -125,13 +125,12 @@ const Dashboard = () => {
           </div>
 
           {/* Sort - Right side */}
-          <div style={{ flex: '0 0 auto', minWidth: '180px' }}>
-            <div className="form-group" style={{ marginBottom: 0 }}>
-              <label style={{ fontSize: '0.9rem' }}>Ordina</label>
+          <div className="expenses-filters-right">
+            <div className="form-group">
+              <label>Ordina</label>
               <select
                 value={sortOrder}
                 onChange={(e) => setSortOrder(e.target.value)}
-                style={{ fontSize: '0.9rem' }}
               >
                 <option value="asc">A-Z</option>
                 <option value="desc">Z-A</option>
@@ -142,43 +141,43 @@ const Dashboard = () => {
       </div>
 
       {filteredAndSortedGroups.length === 0 ? (
-        <div className="card" style={{ marginTop: '1rem', textAlign: 'center', padding: '2rem' }}>
-          <p style={{ color: '#7f8c8d', fontSize: '1.1rem' }}>
-            {groups.length === 0 ? 'Nessun gruppo trovato. Crea il primo!' : 'Nessun gruppo corrisponde ai filtri.'}
-          </p>
+        <div className="expenses-empty-state">
+          <div className="expenses-empty-icon">
+            <UsersIcon size={64} />
+          </div>
+          <h3>{groups.length === 0 ? 'Nessun gruppo trovato' : 'Nessun gruppo corrisponde ai filtri'}</h3>
+          <p>{groups.length === 0 ? 'Crea il primo gruppo per iniziare a gestire le tue spese!' : 'Prova a modificare i filtri di ricerca.'}</p>
         </div>
       ) : (
-        <div className="grid" style={{ marginTop: '1rem' }}>
+        <div className="expenses-groups-grid">
           {filteredAndSortedGroups.map((group) => (
-          <Link key={group.id} to={`/expenses/groups/${group.id}`} style={{ textDecoration: 'none' }}>
-            <div className="card" style={{ cursor: 'pointer' }}>
+            <Link key={group.id} to={`/expenses/groups/${group.id}`} className="expenses-group-card">
               <h2>{group.nome}</h2>
-              <p style={{ color: '#7f8c8d' }}>{group.descrizione || 'Nessuna descrizione'}</p>
-              <p style={{ marginTop: '1rem', fontSize: '0.9rem', color: '#7f8c8d' }}>
-                {group.members?.length || 0} membri • {group.expenses?.length || 0} spese
-              </p>
-            </div>
-          </Link>
-        ))}
+              <p className="expenses-group-description">{group.descrizione || 'Nessuna descrizione'}</p>
+              <div className="expenses-group-stats">
+                <div className="expenses-group-stat">
+                  <span className="expenses-group-stat-icon">
+                    <UsersIcon size={18} />
+                  </span>
+                  <span>{group.members?.length || 0} membri</span>
+                </div>
+                <div className="expenses-group-stat">
+                  <span className="expenses-group-stat-icon">
+                    <BarChartIcon size={18} />
+                  </span>
+                  <span>{group.expenses?.length || 0} spese</span>
+                </div>
+              </div>
+            </Link>
+          ))}
         </div>
       )}
 
       {showModal && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: 'rgba(0,0,0,0.5)',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          zIndex: 1000,
-        }}>
-          <div className="card" style={{ width: '500px', maxWidth: '90%' }}>
+        <div className="expenses-modal-overlay">
+          <div className="expenses-modal-card">
             <h2>Nuovo Gruppo</h2>
-            <form onSubmit={handleCreateGroup}>
+            <form onSubmit={handleCreateGroup} className="expenses-modal-form">
               <div className="form-group">
                 <label>Nome</label>
                 <input
@@ -196,7 +195,7 @@ const Dashboard = () => {
                   rows="3"
                 />
               </div>
-              <div style={{ display: 'flex', gap: '1rem' }}>
+              <div className="expenses-modal-actions">
                 <button type="submit" className="btn btn-primary">
                   <span className="btn-icon"><CheckIcon size={20} /></span>
                   <span className="btn-text">Crea</span>

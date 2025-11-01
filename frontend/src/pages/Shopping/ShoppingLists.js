@@ -2,7 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { shoppingAPI } from '../../services/api';
 import ShoppingAssistant from '../../components/ShoppingAssistant';
-import { PlusIcon, KeyIcon, CheckIcon, XIcon } from '../../components/Icons';
+import { PlusIcon, KeyIcon, CheckIcon, XIcon, ShoppingBagIcon } from '../../components/Icons';
+import './ShoppingLists.css';
 
 const ShoppingLists = () => {
   const [lists, setLists] = useState([]);
@@ -57,10 +58,10 @@ const ShoppingLists = () => {
   if (loading) return <div className="spinner"></div>;
 
   return (
-    <div className="container">
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '2rem' }}>
+    <div className="shopping-lists-container">
+      <div className="shopping-lists-header">
         <h1>Liste della Spesa</h1>
-        <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+        <div className="shopping-lists-actions">
           <button className="btn btn-secondary" onClick={() => setShowShareModal(true)}>
             <span className="btn-icon"><KeyIcon size={20} /></span>
             <span className="btn-text">Accedi con Token</span>
@@ -72,39 +73,44 @@ const ShoppingLists = () => {
         </div>
       </div>
 
-      <div className="grid" style={{ marginTop: '2rem' }}>
-        {lists.map((list) => (
-          <Link key={list.id} to={`/shopping/${list.id}`} style={{ textDecoration: 'none' }}>
-            <div className="card" style={{ cursor: 'pointer' }}>
+      {lists.length === 0 ? (
+        <div className="shopping-lists-empty">
+          <div className="shopping-lists-empty-icon">
+            <ShoppingBagIcon size={64} />
+          </div>
+          <h3>Nessuna lista trovata</h3>
+          <p>Crea la tua prima lista della spesa per iniziare!</p>
+        </div>
+      ) : (
+        <div className="shopping-lists-grid">
+          {lists.map((list) => (
+            <Link key={list.id} to={`/shopping/${list.id}`} className="shopping-list-card">
               <h2>{list.nome}</h2>
-              <p style={{ marginTop: '1rem', fontSize: '0.9rem', color: '#7f8c8d' }}>
-                {list.items?.length || 0} articoli
-              </p>
-              <p style={{ marginTop: '0.5rem', fontSize: '0.8rem', color: '#7f8c8d' }}>
-                Token: {list.share_token?.substring(0, 10)}...
-              </p>
-            </div>
-          </Link>
-        ))}
-      </div>
+              <div className="shopping-list-info">
+                <div className="shopping-list-stat">
+                  <span className="shopping-list-stat-icon">
+                    <ShoppingBagIcon size={18} />
+                  </span>
+                  <span>{list.items?.length || 0} articoli</span>
+                </div>
+              </div>
+              <div className="shopping-list-token">
+                <div className="shopping-list-token-label">Token</div>
+                <div className="shopping-list-token-value">
+                  {list.share_token?.substring(0, 10)}...
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+      )}
 
       {/* Create Modal */}
       {showModal && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: 'rgba(0,0,0,0.5)',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          zIndex: 1000,
-        }}>
-          <div className="card" style={{ width: '500px', maxWidth: '90%' }}>
+        <div className="shopping-modal-overlay">
+          <div className="shopping-modal-card">
             <h2>Nuova Lista</h2>
-            <form onSubmit={handleCreateList}>
+            <form onSubmit={handleCreateList} className="shopping-modal-form">
               <div className="form-group">
                 <label>Nome</label>
                 <input
@@ -114,7 +120,7 @@ const ShoppingLists = () => {
                   required
                 />
               </div>
-              <div style={{ display: 'flex', gap: '1rem' }}>
+              <div className="shopping-modal-actions">
                 <button type="submit" className="btn btn-primary">
                   <span className="btn-icon"><CheckIcon size={20} /></span>
                   <span className="btn-text">Crea</span>
@@ -131,21 +137,10 @@ const ShoppingLists = () => {
 
       {/* Share Modal */}
       {showShareModal && (
-        <div style={{
-          position: 'fixed',
-          top: 0,
-          left: 0,
-          right: 0,
-          bottom: 0,
-          backgroundColor: 'rgba(0,0,0,0.5)',
-          display: 'flex',
-          justifyContent: 'center',
-          alignItems: 'center',
-          zIndex: 1000,
-        }}>
-          <div className="card" style={{ width: '500px', maxWidth: '90%' }}>
+        <div className="shopping-modal-overlay">
+          <div className="shopping-modal-card">
             <h2>Accedi con Token</h2>
-            <form onSubmit={handleAccessSharedList}>
+            <form onSubmit={handleAccessSharedList} className="shopping-modal-form">
               <div className="form-group">
                 <label>Token di Condivisione</label>
                 <input
@@ -156,7 +151,7 @@ const ShoppingLists = () => {
                   required
                 />
               </div>
-              <div style={{ display: 'flex', gap: '1rem' }}>
+              <div className="shopping-modal-actions">
                 <button type="submit" className="btn btn-primary">
                   <span className="btn-icon"><CheckIcon size={20} /></span>
                   <span className="btn-text">Accedi</span>

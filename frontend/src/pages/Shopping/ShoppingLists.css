@@ -1,0 +1,261 @@
+/* Shopping Lists - Modern App-like Design */
+
+.shopping-lists-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.shopping-lists-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+}
+
+.shopping-lists-header h1 {
+  margin: 0;
+  font-size: 2rem;
+  color: #1a202c;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+.shopping-lists-actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+/* Shopping List Cards Grid */
+.shopping-lists-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.shopping-list-card {
+  background: white;
+  border-radius: 16px;
+  padding: 1.5rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  cursor: pointer;
+  text-decoration: none;
+  border: 1px solid rgba(0, 0, 0, 0.04);
+  position: relative;
+  overflow: hidden;
+}
+
+.shopping-list-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.shopping-list-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(39, 174, 96, 0.15), 0 6px 12px rgba(39, 174, 96, 0.08);
+  border-color: rgba(39, 174, 96, 0.1);
+}
+
+.shopping-list-card:hover::before {
+  transform: scaleX(1);
+}
+
+.shopping-list-card h2 {
+  margin: 0 0 1rem 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1a202c;
+  letter-spacing: -0.015em;
+}
+
+.shopping-list-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.shopping-list-stat {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.9rem;
+  color: #6b7280;
+}
+
+.shopping-list-stat-icon {
+  color: #27ae60;
+}
+
+.shopping-list-token {
+  margin-top: 0.75rem;
+  padding: 0.5rem;
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+  border-radius: 8px;
+  border: 1px solid #bbf7d0;
+}
+
+.shopping-list-token-label {
+  font-size: 0.75rem;
+  color: #15803d;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: 0.25rem;
+}
+
+.shopping-list-token-value {
+  font-size: 0.8rem;
+  color: #166534;
+  font-family: 'Monaco', 'Courier New', monospace;
+  font-weight: 500;
+}
+
+/* Modal Styles */
+.shopping-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 1rem;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.shopping-modal-card {
+  background: white;
+  border-radius: 20px;
+  width: 100%;
+  max-width: 500px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25), 0 8px 20px rgba(0, 0, 0, 0.15);
+  animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(40px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.shopping-modal-card h2 {
+  padding: 1.5rem;
+  margin: 0;
+  border-bottom: 1px solid #e9ecef;
+  font-size: 1.5rem;
+  color: #1a202c;
+  font-weight: 700;
+}
+
+.shopping-modal-form {
+  padding: 1.5rem;
+}
+
+.shopping-modal-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+}
+
+/* Empty State */
+.shopping-lists-empty {
+  text-align: center;
+  padding: 4rem 2rem;
+  background: white;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.shopping-lists-empty-icon {
+  font-size: 4rem;
+  color: #cbd5e0;
+  margin-bottom: 1rem;
+}
+
+.shopping-lists-empty h3 {
+  margin: 0 0 0.5rem 0;
+  color: #2d3748;
+  font-size: 1.25rem;
+}
+
+.shopping-lists-empty p {
+  margin: 0 0 1.5rem 0;
+  color: #718096;
+  font-size: 0.95rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .shopping-lists-container {
+    padding: 1rem;
+  }
+
+  .shopping-lists-header h1 {
+    font-size: 1.5rem;
+  }
+
+  .shopping-lists-grid {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
+
+  .shopping-list-card {
+    padding: 1.25rem;
+  }
+
+  .shopping-modal-card h2 {
+    font-size: 1.25rem;
+    padding: 1.25rem;
+  }
+
+  .shopping-modal-form {
+    padding: 1.25rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .shopping-lists-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .shopping-lists-actions {
+    width: 100%;
+  }
+
+  .shopping-lists-actions .btn {
+    flex: 1;
+  }
+}

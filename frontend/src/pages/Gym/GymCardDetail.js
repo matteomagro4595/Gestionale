@@ -37,6 +37,7 @@ const GymCardDetail = () => {
   const [isSaving, setIsSaving] = useState(false);
   const lastTouchMoveTime = React.useRef(0);
   const exerciseRefs = React.useRef({});
+  const [isDragging, setIsDragging] = useState(false);
 
   useEffect(() => {
     loadCard();
@@ -54,8 +55,16 @@ const GymCardDetail = () => {
   // Register non-passive touch event listeners
   useEffect(() => {
     const handleTouchMoveNonPassive = (e) => {
-      if (draggedExercise && Math.abs(e.touches[0].clientY - touchStartY) > 10) {
-        e.preventDefault();
+      // Only prevent if we have a dragged exercise and event is cancelable
+      if (draggedExercise && e.cancelable) {
+        const touch = e.touches[0];
+        if (touch && touchStartY !== null) {
+          const deltaY = Math.abs(touch.clientY - touchStartY);
+          // Prevent only if moved more than threshold (15px for better scroll tolerance)
+          if (deltaY > 15) {
+            e.preventDefault();
+          }
+        }
       }
     };
 
@@ -75,6 +84,25 @@ const GymCardDetail = () => {
       });
     };
   }, [card?.days, draggedExercise, touchStartY]);
+
+  // Register global mouse event listeners for drag
+  useEffect(() => {
+    if (!isDragging) return;
+
+    const currentDay = card?.days?.[activeDay];
+    if (!currentDay) return;
+
+    const handleGlobalMouseMove = (e) => handleMouseMove(e);
+    const handleGlobalMouseUp = (e) => handleMouseUp(e, activeDay, currentDay.id);
+
+    document.addEventListener('mousemove', handleGlobalMouseMove);
+    document.addEventListener('mouseup', handleGlobalMouseUp);
+
+    return () => {
+      document.removeEventListener('mousemove', handleGlobalMouseMove);
+      document.removeEventListener('mouseup', handleGlobalMouseUp);
+    };
+  }, [isDragging, activeDay, card?.days]);
 
   const loadCard = async () => {
     try {
@@ -281,50 +309,101 @@ const GymCardDetail = () => {
     saveOrderToBackend(dayId, updatedExercises);
   };
 
-  // Drag and drop handlers (desktop)
-  const handleDragStart = (e, exercise) => {
+  // Mouse drag handlers (desktop)
+  const handleMouseDown = (e, exercise) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    const exerciseCard = e.currentTarget.closest('.gym-exercise-card');
+    if (!exerciseCard) return;
+
+    setTouchStartY(e.clientY);
+    setTouchCurrentY(e.clientY);
     setDraggedExercise(exercise);
-    e.dataTransfer.effectAllowed = 'move';
-    e.currentTarget.style.opacity = '0.5';
+    setDraggedRow(exerciseCard);
+    setIsDragging(true);
+    lastTouchMoveTime.current = 0;
+
+    exerciseCard.classList.add('dragging');
   };
 
-  const handleDragEnd = (e) => {
-    e.currentTarget.style.opacity = '1';
+  const handleMouseMove = (e) => {
+    if (!isDragging || !draggedExercise || !draggedRow) return;
+
+    const deltaY = e.clientY - touchStartY;
+
+    // Only update if moved more than 5px
+    if (Math.abs(deltaY) > 5) {
+      // Throttle updates
+      const now = Date.now();
+      if (now - lastTouchMoveTime.current < 16) return;
+      lastTouchMoveTime.current = now;
+
+      setTouchCurrentY(e.clientY);
+
+      requestAnimationFrame(() => {
+        if (draggedRow) {
+          draggedRow.style.willChange = 'transform';
+          draggedRow.style.transform = `translateY(${deltaY}px)`;
+        }
+      });
+    }
+  };
+
+  const handleMouseUp = (e, dayIndex, dayId) => {
+    if (!isDragging || !draggedExercise || !draggedRow) return;
+
+    draggedRow.classList.remove('dragging');
+    draggedRow.style.willChange = 'auto';
+    draggedRow.style.transform = '';
+
+    const deltaY = touchCurrentY - touchStartY;
+    const threshold = 40;
+
+    if (Math.abs(deltaY) > threshold) {
+      const currentDay = card.days[dayIndex];
+      const sortedExercises = [...currentDay.exercises].sort((a, b) => a.ordine - b.ordine);
+      const draggedIndex = sortedExercises.findIndex(ex => ex.id === draggedExercise.id);
+
+      let targetIndex = draggedIndex;
+      if (deltaY < 0 && draggedIndex > 0) {
+        targetIndex = draggedIndex - 1;
+      } else if (deltaY > 0 && draggedIndex < sortedExercises.length - 1) {
+        targetIndex = draggedIndex + 1;
+      }
+
+      if (targetIndex !== draggedIndex) {
+        const newExercises = [...sortedExercises];
+        newExercises.splice(draggedIndex, 1);
+        newExercises.splice(targetIndex, 0, draggedExercise);
+        reorderExercises(dayIndex, dayId, newExercises);
+      }
+    }
+
     setDraggedExercise(null);
-  };
-
-  const handleDragOver = (e) => {
-    e.preventDefault();
-    e.dataTransfer.dropEffect = 'move';
-  };
-
-  const handleDrop = (e, targetExercise, dayIndex, dayId) => {
-    e.preventDefault();
-    if (!draggedExercise || draggedExercise.id === targetExercise.id) return;
-
-    const currentDay = card.days[dayIndex];
-    const sortedExercises = [...currentDay.exercises].sort((a, b) => a.ordine - b.ordine);
-    const draggedIndex = sortedExercises.findIndex(ex => ex.id === draggedExercise.id);
-    const targetIndex = sortedExercises.findIndex(ex => ex.id === targetExercise.id);
-
-    const newExercises = [...sortedExercises];
-    newExercises.splice(draggedIndex, 1);
-    newExercises.splice(targetIndex, 0, draggedExercise);
-
-    reorderExercises(dayIndex, dayId, newExercises);
+    setTouchStartY(null);
+    setTouchCurrentY(null);
+    setDraggedRow(null);
+    setIsDragging(false);
+    lastTouchMoveTime.current = 0;
   };
 
   // Touch handlers for mobile drag and drop
   const handleTouchStart = (e, exercise) => {
+    e.stopPropagation();
+
+    const exerciseCard = e.currentTarget.closest('.gym-exercise-card');
+    if (!exerciseCard) return;
+
     const touch = e.touches[0];
     setTouchStartY(touch.clientY);
     setTouchCurrentY(touch.clientY);
     setDraggedExercise(exercise);
-    setDraggedRow(e.currentTarget);
+    setDraggedRow(exerciseCard);
     lastTouchMoveTime.current = 0; // Reset throttle timer
 
     // Add dragging class for CSS transitions
-    e.currentTarget.classList.add('dragging');
+    exerciseCard.classList.add('dragging');
   };
 
   const handleTouchMove = (e, exercise) => {
@@ -333,8 +412,8 @@ const GymCardDetail = () => {
     const touch = e.touches[0];
     const deltaY = touch.clientY - touchStartY;
 
-    // Only update if user is actually dragging (moved more than 10px)
-    if (Math.abs(deltaY) > 10) {
+    // Only update if user is actually dragging (moved more than 15px for consistency)
+    if (Math.abs(deltaY) > 15) {
       // Throttle updates to ~60fps (16ms) for better performance
       const now = Date.now();
       if (now - lastTouchMoveTime.current < 16) return;
@@ -513,16 +592,14 @@ const GymCardDetail = () => {
                         key={exercise.id}
                         ref={(el) => exerciseRefs.current[exercise.id] = el}
                         className="gym-exercise-card"
-                        draggable
-                        onDragStart={(e) => handleDragStart(e, exercise)}
-                        onDragEnd={handleDragEnd}
-                        onDragOver={handleDragOver}
-                        onDrop={(e) => handleDrop(e, exercise, activeDay, currentDay.id)}
-                        onTouchStart={(e) => handleTouchStart(e, exercise)}
-                        onTouchMove={(e) => handleTouchMove(e, exercise)}
-                        onTouchEnd={(e) => handleTouchEnd(e, activeDay, currentDay.id)}
                       >
-                        <div className="gym-grip-handle">
+                        <div
+                          className="gym-grip-handle"
+                          onTouchStart={(e) => handleTouchStart(e, exercise)}
+                          onTouchMove={(e) => handleTouchMove(e, exercise)}
+                          onTouchEnd={(e) => handleTouchEnd(e, activeDay, currentDay.id)}
+                          onMouseDown={(e) => handleMouseDown(e, exercise)}
+                        >
                           <GripIcon size={18} />
                         </div>
                         <div className="gym-exercise-info">

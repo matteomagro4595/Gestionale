@@ -150,12 +150,7 @@
   justify-content: space-between;
   align-items: flex-start;
   transition: border-color 0.2s, box-shadow 0.2s;
-  touch-action: pan-y;
-  cursor: move;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
+  touch-action: manipulation; /* Allow pan and zoom, but not double-tap zoom */
   position: relative;
   /* Enable hardware acceleration */
   transform: translateZ(0);
@@ -169,15 +164,12 @@
   box-shadow: 0 2px 4px rgba(99, 102, 241, 0.1);
 }
 
-.gym-exercise-card:active {
-  cursor: grabbing;
-}
-
 .gym-exercise-card.dragging {
   opacity: 0.7;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   z-index: 1000;
   transition: none;
+  touch-action: none; /* Completely disable touch when dragging */
   /* Optimize for transform */
   will-change: transform;
   transform: translateZ(0);
@@ -194,6 +186,21 @@
   margin-right: 0.5rem;
   cursor: grab;
   flex-shrink: 0;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+  transition: color 0.2s;
+}
+
+.gym-grip-handle:hover {
+  color: #6366f1;
+}
+
+.gym-grip-handle:active,
+.gym-exercise-card.dragging .gym-grip-handle {
+  cursor: grabbing;
+  color: #4f46e5;
 }
 
 .gym-exercise-info h4 {
@@ -454,7 +461,6 @@
     gap: 0.5rem;
     /* Better touch handling on mobile */
     -webkit-tap-highlight-color: transparent;
-    cursor: default;
   }
 
   .gym-exercise-card.dragging {

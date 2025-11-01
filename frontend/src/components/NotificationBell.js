@@ -1,60 +1,11 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import { notificationsAPI } from '../services/api';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import useNotificationWebSocket from '../hooks/useNotificationWebSocket';
+import { useNotifications } from '../context/NotificationContext';
 import './NotificationBell.css';
 
 const NotificationBell = () => {
-  const [unreadCount, setUnreadCount] = useState(0);
+  const { unreadCount, isConnected } = useNotifications();
   const navigate = useNavigate();
-
-  // Fetch unread count
-  const fetchUnreadCount = async () => {
-    try {
-      const response = await notificationsAPI.getUnreadCount();
-      setUnreadCount(response.data.count);
-    } catch (error) {
-      console.error('Failed to fetch unread count:', error);
-    }
-  };
-
-  // Handle incoming WebSocket notification
-  const handleWebSocketNotification = useCallback((notification) => {
-    console.log('Received push notification:', notification);
-
-    // Increment unread count
-    setUnreadCount(prev => prev + 1);
-
-    // Show browser notification if permission granted
-    if ('Notification' in window && Notification.permission === 'granted') {
-      new Notification(notification.title, {
-        body: notification.message,
-        icon: '/logo192.png',
-        badge: '/logo192.png'
-      });
-    }
-  }, []);
-
-  // Connect to WebSocket for real-time notifications
-  const { isConnected } = useNotificationWebSocket(handleWebSocketNotification);
-
-  // Initial fetch on mount and request browser notification permission
-  useEffect(() => {
-    fetchUnreadCount();
-
-    // Request browser notification permission if not already granted
-    if ('Notification' in window && Notification.permission === 'default') {
-      // Only request after user interaction to avoid being intrusive
-      const requestPermission = () => {
-        Notification.requestPermission().then(permission => {
-          console.log('Notification permission:', permission);
-        });
-      };
-
-      // Request permission after a small delay
-      setTimeout(requestPermission, 3000);
-    }
-  }, []);
 
   const handleBellClick = () => {
     navigate('/notifications');

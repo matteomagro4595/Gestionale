@@ -1,67 +1,44 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { notificationsAPI } from '../../services/api';
-import useNotificationWebSocket from '../../hooks/useNotificationWebSocket';
+import { useNotifications } from '../../context/NotificationContext';
 import './Notifications.css';
 
 const Notifications = () => {
-  const [notifications, setNotifications] = useState([]);
+  const {
+    notifications: contextNotifications,
+    isConnected,
+    markAsRead,
+    markAllAsRead,
+    deleteNotification,
+    fetchNotifications
+  } = useNotifications();
+
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState('all'); // all, unread
   const navigate = useNavigate();
 
-  // Fetch notifications
-  const fetchNotifications = async () => {
-    setLoading(true);
-    try {
-      const params = filter === 'unread' ? { unread_only: true } : {};
-      const response = await notificationsAPI.getNotifications(params);
-      setNotifications(response.data);
-    } catch (error) {
-      console.error('Failed to fetch notifications:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Handle incoming WebSocket notification
-  const handleWebSocketNotification = useCallback((notification) => {
-    console.log('Received push notification:', notification);
-
-    // Add notification to the list if not already there
-    setNotifications(prev => {
-      const exists = prev.some(n => n.id === notification.id);
-      if (!exists) {
-        return [notification, ...prev];
-      }
-      return prev;
-    });
-
-    // Show browser notification if permission granted
-    if ('Notification' in window && Notification.permission === 'granted') {
-      new Notification(notification.title, {
-        body: notification.message,
-        icon: '/logo192.png',
-        badge: '/logo192.png'
-      });
-    }
-  }, []);
-
-  // Connect to WebSocket
-  const { isConnected } = useNotificationWebSocket(handleWebSocketNotification);
-
+  // Fetch notifications on mount and filter change
   useEffect(() => {
-    fetchNotifications();
-  }, [filter]);
+    const loadNotifications = async () => {
+      setLoading(true);
+      try {
+        const params = filter === 'unread' ? { unread_only: true } : {};
+        await fetchNotifications(params);
+      } catch (error) {
+        console.error('Failed to fetch notifications:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    loadNotifications();
+  }, [filter, fetchNotifications]);
 
   const handleNotificationClick = async (notification) => {
     // Mark as read
     if (!notification.is_read) {
       try {
-        await notificationsAPI.markAsRead(notification.id, true);
-        setNotifications(prev =>
-          prev.map(n => n.id === notification.id ? { ...n, is_read: true } : n)
-        );
+        await markAsRead(notification.id);
       } catch (error) {
         console.error('Failed to mark notification as read:', error);
       }
@@ -77,8 +54,7 @@ const Notifications = () => {
 
   const handleMarkAllAsRead = async () => {
     try {
-      await notificationsAPI.markAllAsRead();
-      setNotifications(prev => prev.map(n => ({ ...n, is_read: true })));
+      await markAllAsRead();
     } catch (error) {
       console.error('Failed to mark all as read:', error);
     }
@@ -87,8 +63,7 @@ const Notifications = () => {
   const handleDeleteNotification = async (e, notificationId) => {
     e.stopPropagation();
     try {
-      await notificationsAPI.deleteNotification(notificationId);
-      setNotifications(prev => prev.filter(n => n.id !== notificationId));
+      await deleteNotification(notificationId);
     } catch (error) {
       console.error('Failed to delete notification:', error);
     }
@@ -109,10 +84,10 @@ const Notifications = () => {
     return date.toLocaleDateString('it-IT', { day: 'numeric', month: 'short', year: 'numeric' });
   };
 
-  const unreadCount = notifications.filter(n => !n.is_read).length;
+  const unreadCount = contextNotifications.filter(n => !n.is_read).length;
   const filteredNotifications = filter === 'unread'
-    ? notifications.filter(n => !n.is_read)
-    : notifications;
+    ? contextNotifications.filter(n => !n.is_read)
+    : contextNotifications;
 
   return (
     <div className="notifications-page">
@@ -150,7 +125,7 @@ const Notifications = () => {
             className={`filter-btn ${filter === 'all' ? 'active' : ''}`}
             onClick={() => setFilter('all')}
           >
-            Tutte ({notifications.length})
+            Tutte ({contextNotifications.length})
           </button>
           <button
             className={`filter-btn ${filter === 'unread' ? 'active' : ''}`}

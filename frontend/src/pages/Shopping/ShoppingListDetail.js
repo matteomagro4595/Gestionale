@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { shoppingAPI, authAPI } from '../../services/api';
-import { PlusIcon, TrashIcon, ClipboardIcon, LinkIcon, WhatsAppIcon, CheckIcon, XIcon } from '../../components/Icons';
+import { PlusIcon, TrashIcon, ClipboardIcon, LinkIcon, WhatsAppIcon, CheckIcon, XIcon, EditIcon } from '../../components/Icons';
 
 const ShoppingListDetail = () => {
   const { listId } = useParams();
@@ -10,6 +10,7 @@ const ShoppingListDetail = () => {
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
   const [newItem, setNewItem] = useState({ nome: '', quantita: '', note: '' });
+  const [editingItem, setEditingItem] = useState(null);
   const [currentUser, setCurrentUser] = useState(null);
   const [suggestions, setSuggestions] = useState([]);
   const [showSuggestions, setShowSuggestions] = useState(false);
@@ -61,6 +62,13 @@ const ShoppingListDetail = () => {
   const handleNameChange = (e) => {
     const value = e.target.value;
     setNewItem({ ...newItem, nome: value });
+
+    // Don't show suggestions when editing an item
+    if (editingItem) {
+      setSuggestions([]);
+      setShowSuggestions(false);
+      return;
+    }
 
     // Filter existing items that match the input
     if (value.trim().length > 0) {
@@ -125,6 +133,37 @@ const ShoppingListDetail = () => {
     setShowSuggestions(false);
     setShowModal(false);
     loadList();
+  };
+
+  const handleUpdateItem = async (e) => {
+    e.preventDefault();
+
+    try {
+      await shoppingAPI.updateItem(listId, editingItem.id, {
+        nome: newItem.nome,
+        quantita: newItem.quantita,
+        note: newItem.note
+      });
+      setNewItem({ nome: '', quantita: '', note: '' });
+      setEditingItem(null);
+      setSuggestions([]);
+      setShowSuggestions(false);
+      setShowModal(false);
+      loadList();
+    } catch (error) {
+      console.error('Error updating item:', error);
+      alert('Errore durante l\'aggiornamento dell\'articolo');
+    }
+  };
+
+  const openEditModal = (item) => {
+    setEditingItem(item);
+    setNewItem({
+      nome: item.nome,
+      quantita: item.quantita || '',
+      note: item.note || ''
+    });
+    setShowModal(true);
   };
 
   const handleToggleItem = async (itemId, completed) => {
@@ -399,7 +438,13 @@ Clicca sul link per accedere: ${shareUrl}`;
       <div className="card">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
           <h2 style={{ margin: 0 }}>Articoli</h2>
-          <button className="btn btn-primary" onClick={() => setShowModal(true)}>
+          <button className="btn btn-primary" onClick={() => {
+            setEditingItem(null);
+            setNewItem({ nome: '', quantita: '', note: '' });
+            setSuggestions([]);
+            setShowSuggestions(false);
+            setShowModal(true);
+          }}>
             <span className="btn-icon"><PlusIcon size={20} /></span>
             <span className="btn-text">Nuovo Articolo</span>
           </button>
@@ -446,14 +491,24 @@ Clicca sul link per accedere: ${shareUrl}`;
                   )}
                 </div>
               </div>
-              <button
-                className="btn btn-danger"
-                onClick={() => handleDeleteItem(item.id)}
-                style={{ marginLeft: '1rem' }}
-              >
-                <span className="btn-icon"><TrashIcon size={18} /></span>
-                <span className="btn-text">Elimina</span>
-              </button>
+              <div style={{ display: 'flex', gap: '0.5rem', marginLeft: '1rem' }}>
+                <button
+                  className="btn btn-secondary"
+                  onClick={() => openEditModal(item)}
+                  title="Modifica articolo"
+                >
+                  <span className="btn-icon"><EditIcon size={18} /></span>
+                  <span className="btn-text">Modifica</span>
+                </button>
+                <button
+                  className="btn btn-danger"
+                  onClick={() => handleDeleteItem(item.id)}
+                  title="Elimina articolo"
+                >
+                  <span className="btn-icon"><TrashIcon size={18} /></span>
+                  <span className="btn-text">Elimina</span>
+                </button>
+              </div>
             </div>
           ))}
         </div>
@@ -474,8 +529,8 @@ Clicca sul link per accedere: ${shareUrl}`;
           zIndex: 1000,
         }}>
           <div className="card" style={{ width: '500px', maxWidth: '90%' }}>
-            <h2>Nuovo Articolo</h2>
-            <form onSubmit={handleCreateItem}>
+            <h2>{editingItem ? 'Modifica Articolo' : 'Nuovo Articolo'}</h2>
+            <form onSubmit={editingItem ? handleUpdateItem : handleCreateItem}>
               <div className="form-group" style={{ position: 'relative' }}>
                 <label>Nome</label>
                 <input
@@ -573,9 +628,15 @@ Clicca sul link per accedere: ${shareUrl}`;
               <div style={{ display: 'flex', gap: '1rem' }}>
                 <button type="submit" className="btn btn-primary">
                   <span className="btn-icon"><CheckIcon size={20} /></span>
-                  <span className="btn-text">Aggiungi</span>
+                  <span className="btn-text">{editingItem ? 'Salva' : 'Aggiungi'}</span>
                 </button>
-                <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>
+                <button type="button" className="btn btn-secondary" onClick={() => {
+                  setShowModal(false);
+                  setEditingItem(null);
+                  setNewItem({ nome: '', quantita: '', note: '' });
+                  setSuggestions([]);
+                  setShowSuggestions(false);
+                }}>
                   <span className="btn-icon"><XIcon size={20} /></span>
                   <span className="btn-text">Annulla</span>
                 </button>

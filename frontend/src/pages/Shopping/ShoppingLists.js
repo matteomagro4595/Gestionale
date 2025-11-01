@@ -55,6 +55,14 @@ const ShoppingLists = () => {
     }
   };
 
+  // Sort lists alphabetically by name
+  const getSortedLists = () => {
+    if (!lists) return [];
+    return [...lists].sort((a, b) => {
+      return a.nome.toLowerCase().localeCompare(b.nome.toLowerCase());
+    });
+  };
+
   if (loading) return <div className="spinner"></div>;
 
   return (
@@ -83,7 +91,7 @@ const ShoppingLists = () => {
         </div>
       ) : (
         <div className="shopping-lists-grid">
-          {lists.map((list) => (
+          {getSortedLists().map((list) => (
             <Link key={list.id} to={`/shopping/${list.id}`} className="shopping-list-card">
               <h2>{list.nome}</h2>
               <div className="shopping-list-info">
@@ -92,12 +100,6 @@ const ShoppingLists = () => {
                     <ShoppingBagIcon size={18} />
                   </span>
                   <span>{list.items?.length || 0} articoli</span>
-                </div>
-              </div>
-              <div className="shopping-list-token">
-                <div className="shopping-list-token-label">Token</div>
-                <div className="shopping-list-token-value">
-                  {list.share_token?.substring(0, 10)}...
                 </div>
               </div>
             </Link>

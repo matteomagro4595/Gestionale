@@ -114,30 +114,6 @@
   color: #27ae60;
 }
 
-.shopping-list-token {
-  margin-top: 0.75rem;
-  padding: 0.5rem;
-  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
-  border-radius: 8px;
-  border: 1px solid #bbf7d0;
-}
-
-.shopping-list-token-label {
-  font-size: 0.75rem;
-  color: #15803d;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  margin-bottom: 0.25rem;
-}
-
-.shopping-list-token-value {
-  font-size: 0.8rem;
-  color: #166534;
-  font-family: 'Monaco', 'Courier New', monospace;
-  font-weight: 500;
-}
-
 /* Modal Styles */
 .shopping-modal-overlay {
   position: fixed;

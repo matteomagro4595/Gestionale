@@ -1,8 +1,16 @@
 from typing import Optional
-from pydantic_settings import BaseSettings
+from pydantic_settings import BaseSettings, SettingsConfigDict
 from pydantic import model_validator
 
 class Settings(BaseSettings):
+    # Pydantic v2 configuration
+    model_config = SettingsConfigDict(
+        env_file=".env",
+        env_file_encoding="utf-8",
+        case_sensitive=False,
+        extra="ignore"
+    )
+
     # Database
     DATABASE_URL: str = "postgresql://gestionale:gestionale_password@localhost:5432/gestionale_db"
 
@@ -27,8 +35,5 @@ class Settings(BaseSettings):
             backend = self.BACKEND_URL or "http://localhost:8000"
             self.GOOGLE_REDIRECT_URI = f"{backend}/api/oauth/google/callback"
         return self
-
-    class Config:
-        env_file = ".env"
 
 settings = Settings()

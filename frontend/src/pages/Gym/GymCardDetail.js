@@ -30,8 +30,8 @@ const GymCardDetail = () => {
 
   // Drag and drop state
   const [draggedExercise, setDraggedExercise] = useState(null);
-  const [touchStartY, setTouchStartY] = useState(null);
-  const [touchCurrentY, setTouchCurrentY] = useState(null);
+  const touchStartY = React.useRef(null);
+  const touchCurrentY = React.useRef(null);
   const [draggedRow, setDraggedRow] = useState(null);
   const [saveTimeout, setSaveTimeout] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
@@ -58,8 +58,8 @@ const GymCardDetail = () => {
       // Only prevent if we have a dragged exercise and event is cancelable
       if (draggedExercise && e.cancelable) {
         const touch = e.touches[0];
-        if (touch && touchStartY !== null) {
-          const deltaY = Math.abs(touch.clientY - touchStartY);
+        if (touch && touchStartY.current !== null) {
+          const deltaY = Math.abs(touch.clientY - touchStartY.current);
           // Prevent only if moved more than threshold (15px for better scroll tolerance)
           if (deltaY > 15) {
             e.preventDefault();
@@ -83,7 +83,7 @@ const GymCardDetail = () => {
         }
       });
     };
-  }, [card?.days, draggedExercise, touchStartY]);
+  }, [card?.days, draggedExercise]);
 
   // Register global mouse event listeners for drag
   useEffect(() => {
@@ -317,8 +317,8 @@ const GymCardDetail = () => {
     const exerciseCard = e.currentTarget.closest('.gym-exercise-card');
     if (!exerciseCard) return;
 
-    setTouchStartY(e.clientY);
-    setTouchCurrentY(e.clientY);
+    touchStartY.current = e.clientY;
+    touchCurrentY.current = e.clientY;
     setDraggedExercise(exercise);
     setDraggedRow(exerciseCard);
     setIsDragging(true);
@@ -330,7 +330,7 @@ const GymCardDetail = () => {
   const handleMouseMove = (e) => {
     if (!isDragging || !draggedExercise || !draggedRow) return;
 
-    const deltaY = e.clientY - touchStartY;
+    const deltaY = e.clientY - touchStartY.current;
 
     // Only update if moved more than 5px
     if (Math.abs(deltaY) > 5) {
@@ -339,12 +339,12 @@ const GymCardDetail = () => {
       if (now - lastTouchMoveTime.current < 16) return;
       lastTouchMoveTime.current = now;
 
-      setTouchCurrentY(e.clientY);
+      touchCurrentY.current = e.clientY;
 
       requestAnimationFrame(() => {
         if (draggedRow) {
           draggedRow.style.willChange = 'transform';
-          draggedRow.style.transform = `translateY(${deltaY}px)`;
+          draggedRow.style.transform = `translate3d(0, ${deltaY}px, 0)`;
         }
       });
     }
@@ -357,32 +357,30 @@ const GymCardDetail = () => {
     draggedRow.style.willChange = 'auto';
     draggedRow.style.transform = '';
 
-    const deltaY = touchCurrentY - touchStartY;
-    const threshold = 40;
+    const deltaY = touchCurrentY.current - touchStartY.current;
 
-    if (Math.abs(deltaY) > threshold) {
-      const currentDay = card.days[dayIndex];
-      const sortedExercises = [...currentDay.exercises].sort((a, b) => a.ordine - b.ordine);
-      const draggedIndex = sortedExercises.findIndex(ex => ex.id === draggedExercise.id);
+    const currentDay = card.days[dayIndex];
+    const sortedExercises = [...currentDay.exercises].sort((a, b) => a.ordine - b.ordine);
+    const draggedIndex = sortedExercises.findIndex(ex => ex.id === draggedExercise.id);
 
-      let targetIndex = draggedIndex;
-      if (deltaY < 0 && draggedIndex > 0) {
-        targetIndex = draggedIndex - 1;
-      } else if (deltaY > 0 && draggedIndex < sortedExercises.length - 1) {
-        targetIndex = draggedIndex + 1;
-      }
+    // Calculate how many positions to move based on distance
+    const cardHeight = draggedRow.offsetHeight + 16; // Card height + gap
+    const positionsToMove = Math.round(deltaY / cardHeight);
 
-      if (targetIndex !== draggedIndex) {
-        const newExercises = [...sortedExercises];
-        newExercises.splice(draggedIndex, 1);
-        newExercises.splice(targetIndex, 0, draggedExercise);
-        reorderExercises(dayIndex, dayId, newExercises);
-      }
+    let targetIndex = draggedIndex + positionsToMove;
+    // Clamp to valid range
+    targetIndex = Math.max(0, Math.min(sortedExercises.length - 1, targetIndex));
+
+    if (targetIndex !== draggedIndex) {
+      const newExercises = [...sortedExercises];
+      newExercises.splice(draggedIndex, 1);
+      newExercises.splice(targetIndex, 0, draggedExercise);
+      reorderExercises(dayIndex, dayId, newExercises);
     }
 
     setDraggedExercise(null);
-    setTouchStartY(null);
-    setTouchCurrentY(null);
+    touchStartY.current = null;
+    touchCurrentY.current = null;
     setDraggedRow(null);
     setIsDragging(false);
     lastTouchMoveTime.current = 0;
@@ -396,8 +394,8 @@ const GymCardDetail = () => {
     if (!exerciseCard) return;
 
     const touch = e.touches[0];
-    setTouchStartY(touch.clientY);
-    setTouchCurrentY(touch.clientY);
+    touchStartY.current = touch.clientY;
+    touchCurrentY.current = touch.clientY;
     setDraggedExercise(exercise);
     setDraggedRow(exerciseCard);
     lastTouchMoveTime.current = 0; // Reset throttle timer
@@ -410,7 +408,7 @@ const GymCardDetail = () => {
     if (!draggedExercise) return;
 
     const touch = e.touches[0];
-    const deltaY = touch.clientY - touchStartY;
+    const deltaY = touch.clientY - touchStartY.current;
 
     // Only update if user is actually dragging (moved more than 15px for consistency)
     if (Math.abs(deltaY) > 15) {
@@ -419,7 +417,7 @@ const GymCardDetail = () => {
       if (now - lastTouchMoveTime.current < 16) return;
       lastTouchMoveTime.current = now;
 
-      setTouchCurrentY(touch.clientY);
+      touchCurrentY.current = touch.clientY;
 
       // Visual feedback: move the row with transform
       if (draggedRow) {
@@ -427,7 +425,7 @@ const GymCardDetail = () => {
         requestAnimationFrame(() => {
           if (draggedRow) {
             draggedRow.style.willChange = 'transform';
-            draggedRow.style.transform = `translateY(${deltaY}px)`;
+            draggedRow.style.transform = `translate3d(0, ${deltaY}px, 0)`;
           }
         });
       }
@@ -445,35 +443,31 @@ const GymCardDetail = () => {
     draggedRow.style.transform = '';
 
     // Calculate if we should swap
-    const deltaY = touchCurrentY - touchStartY;
-    const threshold = 50; // pixels to trigger swap
+    const deltaY = touchCurrentY.current - touchStartY.current;
 
-    if (Math.abs(deltaY) > threshold) {
-      const currentDay = card.days[dayIndex];
-      const sortedExercises = [...currentDay.exercises].sort((a, b) => a.ordine - b.ordine);
-      const draggedIndex = sortedExercises.findIndex(ex => ex.id === draggedExercise.id);
+    const currentDay = card.days[dayIndex];
+    const sortedExercises = [...currentDay.exercises].sort((a, b) => a.ordine - b.ordine);
+    const draggedIndex = sortedExercises.findIndex(ex => ex.id === draggedExercise.id);
 
-      let targetIndex = draggedIndex;
-      if (deltaY < 0 && draggedIndex > 0) {
-        // Swiped up
-        targetIndex = draggedIndex - 1;
-      } else if (deltaY > 0 && draggedIndex < sortedExercises.length - 1) {
-        // Swiped down
-        targetIndex = draggedIndex + 1;
-      }
+    // Calculate how many positions to move based on distance
+    const cardHeight = draggedRow.offsetHeight + 16; // Card height + gap
+    const positionsToMove = Math.round(deltaY / cardHeight);
 
-      if (targetIndex !== draggedIndex) {
-        const newExercises = [...sortedExercises];
-        newExercises.splice(draggedIndex, 1);
-        newExercises.splice(targetIndex, 0, draggedExercise);
-        reorderExercises(dayIndex, dayId, newExercises);
-      }
+    let targetIndex = draggedIndex + positionsToMove;
+    // Clamp to valid range
+    targetIndex = Math.max(0, Math.min(sortedExercises.length - 1, targetIndex));
+
+    if (targetIndex !== draggedIndex) {
+      const newExercises = [...sortedExercises];
+      newExercises.splice(draggedIndex, 1);
+      newExercises.splice(targetIndex, 0, draggedExercise);
+      reorderExercises(dayIndex, dayId, newExercises);
     }
 
     // Reset state
     setDraggedExercise(null);
-    setTouchStartY(null);
-    setTouchCurrentY(null);
+    touchStartY.current = null;
+    touchCurrentY.current = null;
     setDraggedRow(null);
     lastTouchMoveTime.current = 0; // Reset throttle timer
   };

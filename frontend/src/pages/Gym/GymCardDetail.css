@@ -172,7 +172,8 @@
   touch-action: none; /* Completely disable touch when dragging */
   /* Optimize for transform */
   will-change: transform;
-  transform: translateZ(0);
+  /* Don't set transform here - let JavaScript handle it completely */
+  pointer-events: none; /* Prevent interactions during drag */
 }
 
 .gym-exercise-info {

@@ -1,11 +1,13 @@
-/* Modern Navbar Styles */
+/* Modern Navbar Styles - Enhanced app-like design */
 .navbar-modern {
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
   position: sticky;
   top: 0;
   z-index: 1000;
-  backdrop-filter: blur(10px);
-  transition: background 0.3s ease;
+  backdrop-filter: blur(16px) saturate(180%);
+  -webkit-backdrop-filter: blur(16px) saturate(180%);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 /* Theme Colors */
@@ -82,24 +84,27 @@
   padding: 0.75rem 1.25rem;
   color: rgba(255, 255, 255, 0.9);
   text-decoration: none;
-  border-radius: 8px;
-  font-weight: 500;
+  border-radius: 12px;
+  font-weight: 600;
   font-size: 1rem;
-  transition: all 0.3s ease;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   white-space: nowrap;
+  letter-spacing: 0.01em;
 }
 
 .nav-link:hover {
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.2);
   color: white;
   transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .nav-link.active {
-  background: rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.3);
   color: white;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2), inset 0 1px 2px rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(8px);
 }
 
 .nav-link.active::after {
@@ -108,10 +113,11 @@
   bottom: -0.75rem;
   left: 50%;
   transform: translateX(-50%);
-  width: 40%;
+  width: 50%;
   height: 3px;
   background: white;
-  border-radius: 2px;
+  border-radius: 3px;
+  box-shadow: 0 2px 8px rgba(255, 255, 255, 0.5);
 }
 
 .nav-icon {
@@ -131,17 +137,20 @@
   align-items: center;
   gap: 0.75rem;
   padding: 0.5rem 1rem;
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(255, 255, 255, 0.2);
   border-radius: 50px;
   cursor: pointer;
-  transition: all 0.3s ease;
-  backdrop-filter: blur(10px);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(12px) saturate(150%);
+  -webkit-backdrop-filter: blur(12px) saturate(150%);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .user-menu-trigger:hover {
-  background: rgba(255, 255, 255, 0.25);
+  background: rgba(255, 255, 255, 0.3);
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  border-color: rgba(255, 255, 255, 0.2);
 }
 
 .user-avatar {

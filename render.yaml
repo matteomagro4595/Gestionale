@@ -31,7 +31,7 @@ services:
       - key: GOOGLE_CLIENT_SECRET
         sync: false  # Set in Render dashboard
       - key: GOOGLE_REDIRECT_URI
-        value: https://gestionale-frontend-aa3q.onrender.com/auth/google/callback
+        value: https://gestionale-backend-ztow.onrender.com/api/oauth/google/callback
     healthCheckPath: /api/health
 
   # Frontend React

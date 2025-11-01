@@ -35,11 +35,13 @@ app = FastAPI(
 )
 
 # Add SessionMiddleware for OAuth (must be before CORS)
+# In production (HTTPS), set https_only=True for security
+is_production = settings.BACKEND_URL and settings.BACKEND_URL.startswith('https://')
 app.add_middleware(
     SessionMiddleware,
     secret_key=settings.SECRET_KEY,
     same_site='lax',
-    https_only=False  # Set to True in production with HTTPS
+    https_only=is_production
 )
 
 # Configure CORS

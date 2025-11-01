@@ -71,7 +71,7 @@ echo ""
 
 # Setup Database
 echo "🗄️  Setup Database PostgreSQL..."
-if docker-compose ps | grep -q "gestionale-db"; then
+if docker-compose ps | grep -q "gestionale_db"; then
     print_warning "Database già avviato"
 else
     docker-compose up -d
@@ -81,10 +81,10 @@ else
 fi
 
 # Test connessione database
-if docker exec gestionale-db pg_isready -U gestionale > /dev/null 2>&1; then
+if docker exec gestionale_db pg_isready -U gestionale > /dev/null 2>&1; then
     print_success "Database pronto e accessibile"
 else
-    print_error "Database non risponde. Controlla i log con: docker-compose logs db"
+    print_error "Database non risponde. Controlla i log con: docker-compose logs postgres"
     exit 1
 fi
 
@@ -218,7 +218,7 @@ echo ""
 echo "💡 Tips:"
 echo "   • Usa Ctrl+C per fermare backend/frontend"
 echo "   • docker-compose stop per fermare il database"
-echo "   • docker-compose logs db per vedere log database"
+echo "   • docker-compose logs postgres per vedere log database"
 echo ""
 
 print_success "Setup completato! Buon sviluppo! 🎉"

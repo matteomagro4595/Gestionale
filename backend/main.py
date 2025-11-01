@@ -1,8 +1,10 @@
 import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from starlette.middleware.sessions import SessionMiddleware
 from database import engine, Base
 from routers import auth, users, expenses, shopping_lists, gym, notifications, oauth
+from config import settings
 
 # Create database tables
 Base.metadata.create_all(bind=engine)
@@ -30,6 +32,14 @@ app = FastAPI(
     title="Gestionale API",
     description="API per la gestione di spese, liste della spesa e schede palestra",
     version="1.0.0"
+)
+
+# Add SessionMiddleware for OAuth (must be before CORS)
+app.add_middleware(
+    SessionMiddleware,
+    secret_key=settings.SECRET_KEY,
+    same_site='lax',
+    https_only=False  # Set to True in production with HTTPS
 )
 
 # Configure CORS

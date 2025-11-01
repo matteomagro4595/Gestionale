@@ -49,16 +49,40 @@ async def google_login(request: Request):
     return await oauth.google.authorize_redirect(request, redirect_uri)
 
 @router.get('/google/callback')
-async def google_callback(request: Request, db: Session = Depends(get_db)):
+async def google_callback(
+    request: Request,
+    code: str,
+    state: str,
+    db: Session = Depends(get_db)
+):
     """
     Handle Google OAuth callback and create/login user
     """
     try:
-        # Get access token from Google
-        token = await oauth.google.authorize_access_token(request)
+        # Exchange authorization code for access token manually
+        import httpx
 
-        # Get user info from Google
-        user_info = token.get('userinfo')
+        token_url = "https://oauth2.googleapis.com/token"
+        token_data = {
+            "code": code,
+            "client_id": GOOGLE_CLIENT_ID,
+            "client_secret": GOOGLE_CLIENT_SECRET,
+            "redirect_uri": GOOGLE_REDIRECT_URI,
+            "grant_type": "authorization_code"
+        }
+
+        async with httpx.AsyncClient() as client:
+            token_response = await client.post(token_url, data=token_data)
+            token_response.raise_for_status()
+            token_json = token_response.json()
+
+            # Get user info from Google
+            userinfo_url = "https://www.googleapis.com/oauth2/v2/userinfo"
+            headers = {"Authorization": f"Bearer {token_json['access_token']}"}
+            userinfo_response = await client.get(userinfo_url, headers=headers)
+            userinfo_response.raise_for_status()
+            user_info = userinfo_response.json()
+
         if not user_info:
             raise HTTPException(status_code=400, detail="Failed to get user info from Google")
 

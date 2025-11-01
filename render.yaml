@@ -24,6 +24,8 @@ services:
         value: 30
       - key: FRONTEND_URL
         value: https://gestionale-frontend-aa3q.onrender.com
+      - key: BACKEND_URL
+        value: https://gestionale-backend-ztow.onrender.com
     healthCheckPath: /api/health
 
   # Frontend React
@@ -35,7 +37,7 @@ services:
     plan: free
     envVars:
       - key: REACT_APP_API_URL
-        value: https://gestionale-backend.onrender.com
+        value: https://gestionale-backend-ztow.onrender.com
     routes:
       - type: rewrite
         source: /*

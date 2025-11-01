@@ -15,7 +15,14 @@ class Settings(BaseSettings):
     # Google OAuth (optional)
     GOOGLE_CLIENT_ID: Optional[str] = os.getenv("GOOGLE_CLIENT_ID", "")
     GOOGLE_CLIENT_SECRET: Optional[str] = os.getenv("GOOGLE_CLIENT_SECRET", "")
-    GOOGLE_REDIRECT_URI: Optional[str] = os.getenv("GOOGLE_REDIRECT_URI", "http://localhost:3000/auth/google/callback")
+    GOOGLE_REDIRECT_URI: Optional[str] = None
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        # Auto-configure redirect URI based on backend URL if not set
+        if not self.GOOGLE_REDIRECT_URI:
+            backend = self.BACKEND_URL or "http://localhost:8000"
+            self.GOOGLE_REDIRECT_URI = f"{backend}/api/oauth/google/callback"
 
     class Config:
         env_file = ".env"

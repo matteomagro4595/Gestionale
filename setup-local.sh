@@ -81,7 +81,7 @@ else
 fi
 
 # Test connessione database
-if docker exec gestionale_db pg_isready -U gestionale > /dev/null 2>&1; then
+if docker exec gestionale_db pg_isready -U gestionale -d gestionale_db > /dev/null 2>&1; then
     print_success "Database pronto e accessibile"
 else
     print_error "Database non risponde. Controlla i log con: docker-compose logs postgres"

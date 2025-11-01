@@ -282,12 +282,30 @@ Clicca sul link per accedere: ${shareUrl}`;
         </div>
         <div style={{ marginTop: '1rem' }}>
           <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
-            <button className="btn btn-secondary" onClick={copyShareToken}>
-              <span className="btn-icon"><ClipboardIcon size={20} /></span>
+            <button
+              className="btn"
+              onClick={copyShareToken}
+              style={{
+                backgroundColor: '#2563eb',
+                borderColor: '#2563eb',
+                color: 'white',
+                border: '1px solid #2563eb'
+              }}
+            >
+              <span className="btn-icon" style={{ color: 'white' }}><ClipboardIcon size={20} /></span>
               <span className="btn-text">Copia Token</span>
             </button>
-            <button className="btn btn-secondary" onClick={copyShareLink}>
-              <span className="btn-icon"><LinkIcon size={20} /></span>
+            <button
+              className="btn"
+              onClick={copyShareLink}
+              style={{
+                backgroundColor: '#2563eb',
+                borderColor: '#2563eb',
+                color: 'white',
+                border: '1px solid #2563eb'
+              }}
+            >
+              <span className="btn-icon" style={{ color: 'white' }}><LinkIcon size={20} /></span>
               <span className="btn-text">Copia Link</span>
             </button>
             <button
@@ -303,30 +321,6 @@ Clicca sul link per accedere: ${shareUrl}`;
               <span className="btn-icon" style={{ color: 'white' }}><WhatsAppIcon size={20} /></span>
               <span className="btn-text" style={{ marginLeft: '0.25rem' }}>Condividi su WhatsApp</span>
             </button>
-          </div>
-          <div style={{
-            marginTop: '0.5rem',
-            padding: '0.5rem',
-            backgroundColor: '#f8f9fa',
-            borderRadius: '4px',
-            border: '1px solid #e2e8f0'
-          }}>
-            <p style={{ fontSize: '0.85rem', color: '#7f8c8d', margin: '0 0 0.25rem 0' }}>
-              Token:
-            </p>
-            <div style={{
-              overflowX: 'auto',
-              whiteSpace: 'nowrap',
-              fontSize: '0.85rem',
-              fontFamily: 'monospace',
-              color: '#2c3e50',
-              padding: '0.25rem',
-              backgroundColor: '#ffffff',
-              borderRadius: '3px',
-              border: '1px solid #dee2e6'
-            }}>
-              {list?.share_token}
-            </div>
           </div>
         </div>
 

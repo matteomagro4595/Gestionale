@@ -1,6 +1,7 @@
 import os
 from typing import Optional
 from pydantic_settings import BaseSettings
+from pydantic import model_validator
 
 class Settings(BaseSettings):
     DATABASE_URL: str = os.getenv("DATABASE_URL", "postgresql://gestionale:gestionale_password@localhost:5432/gestionale_db")
@@ -15,14 +16,15 @@ class Settings(BaseSettings):
     # Google OAuth (optional)
     GOOGLE_CLIENT_ID: Optional[str] = os.getenv("GOOGLE_CLIENT_ID", "")
     GOOGLE_CLIENT_SECRET: Optional[str] = os.getenv("GOOGLE_CLIENT_SECRET", "")
-    GOOGLE_REDIRECT_URI: Optional[str] = None
+    GOOGLE_REDIRECT_URI: Optional[str] = os.getenv("GOOGLE_REDIRECT_URI")
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+    @model_validator(mode='after')
+    def set_redirect_uri(self):
         # Auto-configure redirect URI based on backend URL if not set
         if not self.GOOGLE_REDIRECT_URI:
             backend = self.BACKEND_URL or "http://localhost:8000"
             self.GOOGLE_REDIRECT_URI = f"{backend}/api/oauth/google/callback"
+        return self
 
     class Config:
         env_file = ".env"

@@ -26,6 +26,12 @@ services:
         value: https://gestionale-frontend-aa3q.onrender.com
       - key: BACKEND_URL
         value: https://gestionale-backend-ztow.onrender.com
+      - key: GOOGLE_CLIENT_ID
+        sync: false  # Set in Render dashboard
+      - key: GOOGLE_CLIENT_SECRET
+        sync: false  # Set in Render dashboard
+      - key: GOOGLE_REDIRECT_URI
+        value: https://gestionale-frontend-aa3q.onrender.com/auth/google/callback
     healthCheckPath: /api/health
 
   # Frontend React

@@ -5,6 +5,7 @@ import { AuthProvider, useAuth } from './context/AuthContext';
 // Pages
 import Login from './pages/Auth/Login';
 import Register from './pages/Auth/Register';
+import GoogleCallback from './pages/Auth/GoogleCallback';
 import Home from './pages/Home';
 import ExpensesDashboard from './pages/Expenses/Dashboard';
 import ExpensesSummary from './pages/Expenses/Summary';
@@ -97,6 +98,18 @@ function AppContent() {
                 <Register />
               </PublicRoute>
             }
+          />
+          <Route
+            path="/auth/google/success"
+            element={<GoogleCallback />}
+          />
+          <Route
+            path="/auth/google/error"
+            element={<GoogleCallback />}
+          />
+          <Route
+            path="/auth/google/callback"
+            element={<GoogleCallback />}
           />
 
           {/* Protected routes */}

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import GoogleLoginButton from '../../components/GoogleLoginButton';
 
 const Login = () => {
   const [email, setEmail] = useState('');
@@ -54,6 +55,20 @@ const Login = () => {
             {loading ? 'Accesso in corso...' : 'Accedi'}
           </button>
         </form>
+
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          margin: '1.5rem 0',
+          gap: '1rem'
+        }}>
+          <div style={{ flex: 1, height: '1px', backgroundColor: '#ddd' }}></div>
+          <span style={{ color: '#666', fontSize: '14px' }}>oppure</span>
+          <div style={{ flex: 1, height: '1px', backgroundColor: '#ddd' }}></div>
+        </div>
+
+        <GoogleLoginButton />
+
         <p style={{ marginTop: '1rem', textAlign: 'center' }}>
           Non hai un account? <Link to="/register">Registrati</Link>
         </p>

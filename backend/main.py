@@ -2,7 +2,7 @@ import os
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from database import engine, Base
-from routers import auth, users, expenses, shopping_lists, gym, notifications
+from routers import auth, users, expenses, shopping_lists, gym, notifications, oauth
 
 # Create database tables
 Base.metadata.create_all(bind=engine)
@@ -50,6 +50,7 @@ app.add_middleware(
 
 # Include routers
 app.include_router(auth.router, prefix="/api/auth", tags=["Authentication"])
+app.include_router(oauth.router, prefix="/api/oauth", tags=["OAuth"])
 app.include_router(users.router, prefix="/api/users", tags=["Users"])
 app.include_router(expenses.router, prefix="/api/expenses", tags=["Gestione Spese"])
 app.include_router(shopping_lists.router, prefix="/api/shopping-lists", tags=["Lista della Spesa"])

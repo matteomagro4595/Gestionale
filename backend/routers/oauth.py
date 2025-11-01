@@ -139,19 +139,3 @@ async def google_oauth_status():
         "configured": bool(GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET),
         "redirect_uri": GOOGLE_REDIRECT_URI
     }
-
-@router.get('/debug/settings')
-async def debug_settings():
-    """
-    DEBUG ENDPOINT - Show current settings (REMOVE IN PRODUCTION)
-    """
-    import os
-    return {
-        "backend_url_from_settings": settings.BACKEND_URL,
-        "frontend_url_from_settings": settings.FRONTEND_URL,
-        "google_redirect_uri_from_settings": settings.GOOGLE_REDIRECT_URI,
-        "backend_url_from_env": os.getenv("BACKEND_URL"),
-        "frontend_url_from_env": os.getenv("FRONTEND_URL"),
-        "google_client_id_present": bool(GOOGLE_CLIENT_ID),
-        "google_client_secret_present": bool(GOOGLE_CLIENT_SECRET)
-    }

@@ -1,0 +1,70 @@
+{
+  "packageId": "com.onrender.gestionale_frontend_aa3q.twa",
+  "host": "gestionale-frontend-aa3q.onrender.com",
+  "name": "Gestionale - Spese, Shopping, Palestra",
+  "launcherName": "Gestionale",
+  "display": "fullscreen",
+  "themeColor": "#667EEA",
+  "themeColorDark": "#000000",
+  "navigationColor": "#000000",
+  "navigationColorDark": "#000000",
+  "navigationDividerColor": "#000000",
+  "navigationDividerColorDark": "#000000",
+  "backgroundColor": "#F8F9FA",
+  "enableNotifications": true,
+  "startUrl": "/",
+  "iconUrl": "https://gestionale-frontend-aa3q.onrender.com/favicon.svg",
+  "maskableIconUrl": "https://gestionale-frontend-aa3q.onrender.com/logo.svg",
+  "splashScreenFadeOutDuration": 300,
+  "signingKey": {
+    "path": "/home/matteo/Documenti/GitHub/Gestionale/android.keystore",
+    "alias": "android"
+  },
+  "appVersionName": "3",
+  "appVersionCode": 3,
+  "shortcuts": [
+    {
+      "name": "Spese",
+      "shortName": "Spese",
+      "url": "https://gestionale-frontend-aa3q.onrender.com/expenses",
+      "chosenIconUrl": "https://gestionale-frontend-aa3q.onrender.com/icons/icon-192.png"
+    },
+    {
+      "name": "Shopping",
+      "shortName": "Shopping",
+      "url": "https://gestionale-frontend-aa3q.onrender.com/shopping",
+      "chosenIconUrl": "https://gestionale-frontend-aa3q.onrender.com/icons/icon-192.png"
+    },
+    {
+      "name": "Palestra",
+      "shortName": "Palestra",
+      "url": "https://gestionale-frontend-aa3q.onrender.com/workouts",
+      "chosenIconUrl": "https://gestionale-frontend-aa3q.onrender.com/icons/icon-192.png"
+    }
+  ],
+  "generatorApp": "bubblewrap-cli",
+  "webManifestUrl": "https://gestionale-frontend-aa3q.onrender.com/manifest.json",
+  "fallbackType": "customtabs",
+  "features": {},
+  "alphaDependencies": {
+    "enabled": false
+  },
+  "enableSiteSettingsShortcut": true,
+  "isChromeOSOnly": false,
+  "isMetaQuest": false,
+  "fullScopeUrl": "https://gestionale-frontend-aa3q.onrender.com/",
+  "minSdkVersion": 21,
+  "orientation": "portrait-primary",
+  "fingerprints": [],
+  "additionalTrustedOrigins": [],
+  "retainedBundles": [],
+  "protocolHandlers": [],
+  "fileHandlers": [],
+  "launchHandlerClientMode": "",
+  "displayOverride": [
+    "window-controls-overlay",
+    "fullscreen",
+    "minimal-ui"
+  ],
+  "appVersion": "3"
+}

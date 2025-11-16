@@ -40,16 +40,10 @@ const GymCards = () => {
   if (loading) return <div className="spinner"></div>;
 
   return (
+    <>
     <div className="container">
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem', marginTop: '2rem' }}>
         <h1 style={{ margin: 0 }}>Schede Palestra</h1>
-        <button
-          className="btn btn-primary"
-          onClick={() => setShowModal(true)}
-        >
-          <span className="btn-icon"><PlusIcon size={20} /></span>
-          <span className="btn-text">Nuova Scheda</span>
-        </button>
       </div>
 
       <div className="grid" style={{ marginTop: '2rem' }}>
@@ -120,6 +114,17 @@ const GymCards = () => {
 
       <GymAssistant />
     </div>
+
+    {/* FAB Button for New Card */}
+    <button
+      className="btn btn-primary btn-fab"
+      onClick={() => setShowModal(true)}
+      title="Nuova Scheda"
+    >
+      <span className="btn-icon"><PlusIcon size={20} /></span>
+      <span className="btn-text">Nuova Scheda</span>
+    </button>
+    </>
   );
 };
 

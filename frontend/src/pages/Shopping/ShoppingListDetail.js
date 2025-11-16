@@ -243,6 +243,7 @@ Clicca sul link per accedere: ${shareUrl}`;
   if (loading) return <div className="spinner"></div>;
 
   return (
+    <>
     <div className="container">
       <button
         onClick={() => navigate('/shopping')}
@@ -438,16 +439,6 @@ Clicca sul link per accedere: ${shareUrl}`;
       <div className="card">
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
           <h2 style={{ margin: 0 }}>Articoli</h2>
-          <button className="btn btn-primary" onClick={() => {
-            setEditingItem(null);
-            setNewItem({ nome: '', quantita: '', note: '' });
-            setSuggestions([]);
-            setShowSuggestions(false);
-            setShowModal(true);
-          }}>
-            <span className="btn-icon"><PlusIcon size={20} /></span>
-            <span className="btn-text">Nuovo Articolo</span>
-          </button>
         </div>
 
         <div style={{ marginTop: '1rem' }}>
@@ -634,6 +625,23 @@ Clicca sul link per accedere: ${shareUrl}`;
         </div>
       )}
     </div>
+
+    {/* FAB Button for New Item */}
+    <button
+      className="btn btn-primary btn-fab"
+      onClick={() => {
+        setEditingItem(null);
+        setNewItem({ nome: '', quantita: '', note: '' });
+        setSuggestions([]);
+        setShowSuggestions(false);
+        setShowModal(true);
+      }}
+      title="Nuovo Articolo"
+    >
+      <span className="btn-icon"><PlusIcon size={20} /></span>
+      <span className="btn-text">Nuovo Articolo</span>
+    </button>
+    </>
   );
 };
 

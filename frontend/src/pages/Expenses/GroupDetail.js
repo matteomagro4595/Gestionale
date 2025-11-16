@@ -181,6 +181,7 @@ Clicca sul link per accedere: ${shareUrl}`;
   if (loading) return <div className="spinner"></div>;
 
   return (
+    <>
     <div className="container">
       <button
         onClick={() => navigate('/expenses')}
@@ -441,10 +442,6 @@ Clicca sul link per accedere: ${shareUrl}`;
       <div className="card" style={{ marginTop: '1rem' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '1rem' }}>
           <h2 style={{ margin: 0 }}>Spese</h2>
-          <button className="btn btn-primary" onClick={() => setShowExpenseModal(true)}>
-            <span className="btn-icon"><PlusIcon size={20} /></span>
-            <span className="btn-text">Nuova Spesa</span>
-          </button>
         </div>
         {expenses.length === 0 ? (
           <p style={{ marginTop: '1rem', color: '#7f8c8d', textAlign: 'center' }}>
@@ -769,6 +766,17 @@ Clicca sul link per accedere: ${shareUrl}`;
         </div>
       )}
     </div>
+
+    {/* FAB Button for New Expense */}
+    <button
+      className="btn btn-primary btn-fab"
+      onClick={() => setShowExpenseModal(true)}
+      title="Nuova Spesa"
+    >
+      <span className="btn-icon"><PlusIcon size={20} /></span>
+      <span className="btn-text">Nuova Spesa</span>
+    </button>
+    </>
   );
 };
 

@@ -66,6 +66,7 @@ const ShoppingLists = () => {
   if (loading) return <div className="spinner"></div>;
 
   return (
+    <>
     <div className="shopping-lists-container">
       <div className="shopping-lists-header">
         <h1>Liste della Spesa</h1>
@@ -73,10 +74,6 @@ const ShoppingLists = () => {
           <button className="btn btn-secondary" onClick={() => setShowShareModal(true)}>
             <span className="btn-icon"><KeyIcon size={20} /></span>
             <span className="btn-text">Accedi con Token</span>
-          </button>
-          <button className="btn btn-primary" onClick={() => setShowModal(true)}>
-            <span className="btn-icon"><PlusIcon size={20} /></span>
-            <span className="btn-text">Nuova Lista</span>
           </button>
         </div>
       </div>
@@ -170,6 +167,17 @@ const ShoppingLists = () => {
 
       <ShoppingAssistant />
     </div>
+
+    {/* FAB Button for New List */}
+    <button
+      className="btn btn-primary btn-fab"
+      onClick={() => setShowModal(true)}
+      title="Nuova Lista"
+    >
+      <span className="btn-icon"><PlusIcon size={20} /></span>
+      <span className="btn-text">Nuova Lista</span>
+    </button>
+    </>
   );
 };
 

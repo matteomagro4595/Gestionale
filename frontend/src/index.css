@@ -755,3 +755,69 @@ img {
     opacity: 1;
   }
 }
+
+/* FAB (Floating Action Button) - Fixed position */
+.btn-fab {
+  position: fixed !important;
+  bottom: 2rem;
+  right: 2rem;
+  left: auto;
+  top: auto;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  padding: 0 !important;
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-fab:hover {
+  transform: translateY(-4px) scale(1.05);
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.3);
+}
+
+.btn-fab:active {
+  transform: translateY(-2px) scale(1);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+}
+
+.btn-fab .btn-text {
+  display: none;
+}
+
+.btn-fab .btn-icon {
+  display: flex !important;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-fab .btn-icon svg {
+  width: 28px;
+  height: 28px;
+}
+
+/* Safe area padding for iOS notch - FAB */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .btn-fab {
+    bottom: calc(2rem + env(safe-area-inset-bottom));
+  }
+}
+
+/* Mobile adjustments for FAB */
+@media (max-width: 768px) {
+  .btn-fab {
+    width: 56px;
+    height: 56px;
+    bottom: 1.5rem;
+    right: 1.5rem;
+  }
+
+  .btn-fab .btn-icon svg {
+    width: 26px;
+    height: 26px;
+  }
+}

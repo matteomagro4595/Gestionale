@@ -64,6 +64,7 @@ const Dashboard = () => {
   if (loading) return <div className="spinner"></div>;
 
   return (
+    <>
     <div className="expenses-dashboard-container">
       <div className="expenses-header">
         <h1>Gestione Spese</h1>
@@ -72,10 +73,6 @@ const Dashboard = () => {
             <span><BarChartIcon size={20} /></span>
             <span className="btn-text" style={{ marginLeft: '0.25rem' }}>Riepilogo Generale</span>
           </Link>
-          <button className="btn btn-primary" onClick={() => setShowModal(true)}>
-            <span className="btn-icon"><PlusIcon size={20} /></span>
-            <span className="btn-text">Nuovo Gruppo</span>
-          </button>
         </div>
       </div>
 
@@ -212,6 +209,17 @@ const Dashboard = () => {
 
       <ExpensesAssistant />
     </div>
+
+    {/* FAB Button for New Group */}
+    <button
+      className="btn btn-primary btn-fab"
+      onClick={() => setShowModal(true)}
+      title="Nuovo Gruppo"
+    >
+      <span className="btn-icon"><PlusIcon size={20} /></span>
+      <span className="btn-text">Nuovo Gruppo</span>
+    </button>
+    </>
   );
 };
 

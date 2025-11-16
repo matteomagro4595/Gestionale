@@ -57,8 +57,8 @@ android {
         applicationId "com.onrender.gestionale_frontend_aa3q.twa"
         minSdkVersion 21
         targetSdkVersion 35
-        versionCode 3
-        versionName "3"
+        versionCode 1
+        versionName "1"
 
         // The name for the application
         resValue "string", "appName", twaManifest.name

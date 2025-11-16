@@ -12,8 +12,8 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background: linear-gradient(to bottom, #f8f9fa 0%, #e9ecef 100%);
   min-height: 100vh;
-  /* iOS safe area for notch */
-  padding-bottom: env(safe-area-inset-bottom);
+  /* iOS safe area for notch + extra space for FAB button */
+  padding-bottom: calc(env(safe-area-inset-bottom) + 100px);
 }
 
 code {

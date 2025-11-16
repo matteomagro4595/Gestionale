@@ -213,6 +213,18 @@ def create_shopping_item(
                 detail="Non hai accesso a questa lista"
             )
 
+    # Check if item with same name already exists (case-insensitive)
+    existing_item = db.query(ShoppingItem).filter(
+        ShoppingItem.shopping_list_id == list_id,
+        ShoppingItem.nome.ilike(item.nome.strip())
+    ).first()
+
+    if existing_item:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=f"L'articolo '{item.nome}' è già presente nella lista"
+        )
+
     db_item = ShoppingItem(**item.dict(), shopping_list_id=list_id)
     db.add(db_item)
     db.commit()

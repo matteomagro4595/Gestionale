@@ -125,6 +125,11 @@ const ShoppingListDetail = () => {
         await shoppingAPI.createItem(listId, newItem);
       } catch (error) {
         console.error('Error creating item:', error);
+        if (error.response && error.response.data && error.response.data.detail) {
+          alert(error.response.data.detail);
+        } else {
+          alert('Errore durante la creazione dell\'articolo');
+        }
         return;
       }
     }
